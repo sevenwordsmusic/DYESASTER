@@ -8,19 +8,19 @@
 >> + **Rapidez:** pese a todas las posibilidades de acción que tiene cada jugador durante el juego para dificultar el camino al resto, al final lo más importante es ser el primero, lo cual sólo se podrá conseguir con reflejos y movimientos rápidos.
 -----
 ### Integrantes del equipo
->Nombre: Pablo López Pérez-Esparza
+> **Pablo López Pérez-Esparza:**
 >> + **Correo universidad:** p.lopezpe.2017@alumnos.urjc.es
 >> + **Cuenta github:** pablolpe@outlook.com
 >
->Nombre: María Fuentes Rodríguez
+> **María Fuentes Rodríguez:**
 >> + **Correo universidad:** m.fuentes.2017@alumnos.urjc.es
 >> + **Cuenta github:** m.fuentes.2017@alumnos.urjc.es
 >
->Nombre: Alberto Alcázar Martín
+> **Alberto Alcázar Martín:**
 >> + **Correo universidad:** a.alcazarm.2017@alumnos.urjc.es
 >> + **Cuenta github:** sevenwordsmusic@gmail.com
 >
->Nombre: Belén González Mateo
+> **Belén González Mateo:**
 >> + **Correo universidad:** b.gonzalezm.2017@alumnos.urjc.es
 >> + **Cuenta github:** belen.gm15@gmail.com
 >
