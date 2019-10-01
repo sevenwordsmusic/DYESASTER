@@ -8,22 +8,22 @@
 >> + **Rapidez:** pese a todas las posibilidades de acción que tiene cada jugador durante el juego para dificultar el camino al resto, al final lo más importante es ser el primero, lo cual sólo se podrá conseguir con reflejos y movimientos rápidos.
 -----
 ### Integrantes del equipo
->Nombre:
->> + **Correo universidad:**  
->> + **Cuenta github:** 
+>Nombre: Pablo López Pérez-Esparza
+>> + **Correo universidad:** p.lopezpe.2017@alumnos.urjc.es
+>> + **Cuenta github:** pablolpe@outlook.com
 >
->Nombre:
->> + **Correo universidad:**  
->> + **Cuenta github:** 
+>Nombre: María Fuentes Rodríguez
+>> + **Correo universidad:** m.fuentes.2017@alumnos.urjc.es
+>> + **Cuenta github:** m.fuentes.2017@alumnos.urjc.es
 >
->Nombre:
->> + **Correo universidad:**  
->> + **Cuenta github:** 
+>Nombre: Alberto Alcázar Martín
+>> + **Correo universidad:** a.alcazarm.2017@alumnos.urjc.es
+>> + **Cuenta github:** sevenwordsmusic@gmail.com
 >
->Nombre:
->> + **Correo universidad:**  
->> + **Cuenta github:** 
+>Nombre: Belén González Mateo
+>> + **Correo universidad:** b.gonzalezm.2017@alumnos.urjc.es
+>> + **Cuenta github:** belen.gm15@gmail.com
 >
 -----
 ### Enlaces externos
-> **Trello:** 
+> **Trello:** <https://trello.com/b/zI3NdsXB/dyesaster>
