@@ -98,5 +98,4 @@
 -----
 ### Enlaces externos
 > **Trello:** <https://trello.com/b/zI3NdsXB/dyesaster>
->
 > **Presentación:** <https://prezi.com/krbozzr-ajd-/?utm_campaign=share&utm_medium=copy>
