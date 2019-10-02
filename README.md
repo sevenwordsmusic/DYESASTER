@@ -39,7 +39,9 @@
 > ## **4. Gameplay**
 > ### **4.1. Gameflow**
 >
-> # Imagen 1
+> ![alt text](/Imagenes/p1.JPG)
+>
+> ![alt text](/Imagenes/p2.JPG)
 >
 > ### **4.2. Modos de juego**
 > Serán partidas a dos bandos, 1vs1, 2vs2, 3vs3 o 4vs4. Existirá un modo multijugador local y uno online, en el local todos los jugadores ven la misma pantalla y sólo se permite el 1vs1, mientras
@@ -69,9 +71,9 @@
 > Es fácil imaginar cómo todo esto encaja a la perfección con plataformas de colores en una estación espacial que es absorbida por un agujero negro, con láseres multicolor al ritmo de la música ochentera.
 >
 > ## **5.2. Concept art**
-> Concept simple que nos otorga una visión general de los elementos que constituyen un nivel, sus posiciones respecto de la pantalla y un ligero atisbo de la línea estética que se seguirá (Colores seleccionados, inclusión de efectos como ruido, etc).
+> ![alt text](/Imagenes/nivel.JPG)
 >
-> # Imagen 2
+> Concept simple que nos otorga una visión general de los elementos que constituyen un nivel, sus posiciones respecto de la pantalla y un ligero atisbo de la línea estética que se seguirá (Colores seleccionados, inclusión de efectos como ruido, etc).
 >
 > ## **5.3. Sonido**
 > Los sonidos para botones, menús e interacciones serán de reminiscencia Vaporwave, es decir, generados con sintetizadores, basados en aparatos retro o bien en efectos sonoros de computadores PC o Mac de los 80. Para los efectos sonoros de disparos, saltos y similar el tono será entre realista y cartoon. La banda sonora musical será de género vaporwave.
