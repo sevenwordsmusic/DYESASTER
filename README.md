@@ -1,6 +1,6 @@
 # Dyesaster
 -----
-> ## 1. Información general
+## 1. Información general
 >
 > ### **1.1 Resumen y caracteristicas generales**
 >En Dyesaster tomamos el control de un trabajador de una gran estación espacial. Debido a un fallo en el sistema hemos generado un agujero negro que está expandiéndose y absorbiendo todo desde abajo, mientras al mismo tiempo expulsa objetos. Sólo hay sitio para un equipo en la cápsula de escape de emergencia situada arriba así que nuestro objetivo será ser el primero.
@@ -11,7 +11,7 @@
 > ### **1.2 Género**
 > Dyesaster es un videojuego de plataformas 2D run and gun en el que el protagonista se desplaza a pie con la posibilidad de saltar. La perspectiva de desplazamiento es vertical y presenta movimiento multidireccional. 
 -----
-> ## **2. Marketing**
+## **2. Marketing**
 > ### **2.1. Público objetivo**
 > Dyesaster es un juego enfocado a un público joven de edades entre 15 y 25 años. En concreto jugadores con gustos en juegos casuales sin mucha trama ni complicación pero que se puedan disfrutar con amigos. Un ejemplo son grupos de estudiantes de instituto/universidad que quieran distraerse un rato después de las clases.
 >
@@ -29,14 +29,14 @@
 >
 > Para la producción de la música del juego emplearemos FL Studio y Pro Tools.
 -----
-> ## **3. Historia**
+## **3. Historia**
 > Dyesaster comienza en un futuro lejano con la aparición de un agujero negro en la estación espacial donde se encuentran todos los personajes. En esta estación conviven un gran número de científicos de planetas diferentes y el agujero se ha generado a causa de un fallo del sistema que surge mientras hacían experimentos. 
 >
 >Poco a poco el agujero está absorbiendo toda la energía de la nave y sus elementos, expandiéndose en todas las direcciones y no sólo eso sino que también expulsa objetos extraños. 
 >
 > En la cima de la estación espacial hay una única cápsula de emergencia que se pueda usar para escapar pues el resto se situaba en una zona que ya ha sido absorbida. Cada equipo intentará como pueda llegar a esa cápsula y luchar por su vida.
 -----
-> ## **4. Gameplay**
+## **4. Gameplay**
 > ### **4.1. Gameflow**
 >
 > ![alt text](/Imagenes/p1.JPG)
@@ -60,7 +60,7 @@
 > ### **4.5. HUDs**
 > Durante el juego el interfaz que tiene el jugador en pantalla se basa únicamente en una barra con los colores disponibles en ese momento con los que poder cambiarse. Esto será así tanto en el local como en el online con la única diferencia que en local aparecerán los colores disponibles de los respectivos jugadores a lados opuestos de la pantalla.
 -----
-> ## **5. Arte y temática**
+## **5. Arte y temática**
 > ### **5.1. Estética**
 > La temática para el proyecto será Vaporwave. Sabíamos que queríamos un estilo artístico que aunase imagen y sonido en una estética a su vez relacionada con los principales elementos jugables y mecánicas, también quisimos apostar por algo dentro del espectro wave/cyberpunk tan popular en la actualidad para aprovechar el tirón del mismo contando con un amplio nicho de mercado.
 >
