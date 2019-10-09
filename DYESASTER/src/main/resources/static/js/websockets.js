@@ -51,6 +51,12 @@ window.onload = function() {
 					console.log('[DEBUG] NEW_LEVEL_RETURN new tilemap generated.');
 				}
 			break
+			case 'BLACKHOLE':
+				game.global.blackHolePosition=msg.blackHolePosition;
+				if (game.global.DEBUG_MODE) {
+					console.log('[DEBUG] BLACKHOLE update.');
+				}
+			break
 			default :
 			break
 		}

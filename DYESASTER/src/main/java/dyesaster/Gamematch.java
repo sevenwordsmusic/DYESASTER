@@ -1,16 +1,20 @@
 package dyesaster;
 
-import java.io.IOException;
-
-public class Gamematch {
-
-	private void exec(Player player) throws IOException {
-
-
+public class Gamematch{
+	private final Player creator;
+	private final Level level;
+	
+	public Gamematch(Player player){
+		this.creator= player;
+		this.level= new Level();
+	}
+	
+	public Player getCreator() {
+		return creator;
 	}
 
-	public Gamematch(Player player) throws IOException {
-		exec(player);
+	public Level getLevel() {
+		return level;
 	}
 	
 }

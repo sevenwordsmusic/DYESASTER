@@ -41,14 +41,13 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					msg.put("event", "TEST_CONFIRMATION");
 					player.WSSession().sendMessage(new TextMessage(msg.toString()));
 					break;
-				case "NEW_GAME":
-
-					break;
 				case "NEW_LEVEL":
+					game= new Gamematch(player);
 					msg.put("id", player.getPlayerId());
 					msg.put("event", "NEW_LEVEL_RETURN");
-					msg.put("tilemap", new Level().randomize());
+					msg.put("tilemap", game.getLevel().randomize());
 					player.WSSession().sendMessage(new TextMessage(msg.toString()));
+					game.getLevel().start(player);
 					break;
 				default:
 					break;

@@ -17,6 +17,7 @@ var GameScene = new Phaser.Class({
 		
 		// tiles in spritesheet 
 		this.load.spritesheet('tiles', 'assets/tiles/00.png', {frameWidth: 96, frameHeight: 96});
+
 		// simple coin image
 		this.load.image('coin', 'assets/coinGold.png');
 		this.load.image('bullet', 'assets/coinGold.png');
@@ -28,16 +29,19 @@ var GameScene = new Phaser.Class({
 		this.load.image('bg-4', 'assets/bg-4.png');
 		this.load.image('bg-5', 'assets/bg-5.png');
 		
-		this.load.image('blackHole', 'assets/blackHole.png');
-
 		// player animations
 		this.load.atlas('player1', 'assets/player.png', 'assets/player.json');
-		this.load.atlas('player2', 'assets/player.png', 'assets/player.json'); 
-				
+		this.load.atlas('player2', 'assets/player.png', 'assets/player.json');
+		
+
+
     },
 
     create: function ()
     {
+
+        // start dat.gui
+ 
         getNewLevel();
 		
     },
@@ -63,7 +67,7 @@ function getNewLevel(){
 }
 
 var config = {
-	    type: Phaser.WEBGL,
+	    type: Phaser.AUTO,
 	    scale: {
 	        mode: Phaser.Scale.FIT,
 	        autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -84,7 +88,6 @@ var config = {
 var map;
 var player1, player2;
 var cursors1, cursors2;
-var groundLayer, coinLayer;
 var text;
 var score = 0;
 

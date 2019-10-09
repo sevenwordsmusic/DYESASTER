@@ -24,6 +24,9 @@ var LevelScene = new Phaser.Class({
             }
         }, this);
         
+        
+		this.load.scenePlugin('AnimatedTiles', 'AnimatedTiles.js', 'animatedTiles', 'animatedTiles');
+        
 		cursors1 = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'left': Phaser.Input.Keyboard.KeyCodes.LEFT, 'right': Phaser.Input.Keyboard.KeyCodes.RIGHT, 'shoot': Phaser.Input.Keyboard.KeyCodes.CONTROL });
 		cursors2 = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.W, 'left': Phaser.Input.Keyboard.KeyCodes.A, 'right': Phaser.Input.Keyboard.KeyCodes.D, 'shoot': Phaser.Input.Keyboard.KeyCodes.SHIFT });
     },
@@ -63,12 +66,19 @@ var LevelScene = new Phaser.Class({
 		map = this.make.tilemap({key: 'map'});
 		
 		// tiles for the ground layer
-		var groundTiles = map.addTilesetImage('tiles');
+		allTiles = map.addTilesetImage('tiles');
 		// create the ground layer
-		groundLayer = map.createDynamicLayer('World', groundTiles, 0, 0);
+		groundLayer = map.createDynamicLayer('World', allTiles, 0, 0);
 		// the player will collide with this layer
 		groundLayer.setCollisionByExclusion([-1]);
+		
+		
+		blackHoleLayer = map.createDynamicLayer('BlackHole', allTiles, 0, 0);
+		blackHoleLayer.setCollisionByExclusion([-1]);
+		blackHoleLayer.setPosition(0, 96);
 
+    	//this.animatedTiles.init(map);
+		
 		// coin image used as tileset
 		//var coinTiles = map.addTilesetImage('coin');
 		// add coins as tiles
@@ -79,11 +89,11 @@ var LevelScene = new Phaser.Class({
 		this.physics.world.bounds.height = groundLayer.height;
 
 		// create the player sprite    
-		player1 = this.physics.add.sprite(200, 8800, 'player1');
+		player1 = this.physics.add.sprite(200, 8688, 'player1');
 		player1.setBounce(0.2); // our player will bounce from items
 		player1.setCollideWorldBounds(true); // don't go out of the map
 		
-		player2 = this.physics.add.sprite(600, 8800, 'player2');
+		player2 = this.physics.add.sprite(600, 8688, 'player2');
 		player2.setBounce(0.2); // our player will bounce from items
 		player2.setCollideWorldBounds(true); // don't go out of the map
 		
@@ -93,25 +103,17 @@ var LevelScene = new Phaser.Class({
 		
 		// player will collide with the level tiles 
 		this.physics.add.collider(groundLayer, player1);
-
-		
-
-		
 		
 		// small fix to our player images, we resize the physics body object slightly
 		player2.body.setSize(player2.width, player2.height-8);
 		this.physics.add.collider(groundLayer, player2);
 		
-		
-		
 		this.physics.add.collider(player1, player2);
 		this.physics.add.collider(player2, player1);
 		
-		//coinLayer.setTileIndexCallback(17, collectCoin, this);
-		// when the player overlaps with a tile with index 17, collectCoin 
-		// will be called    
-		this.physics.add.overlap(player1, coinLayer);
-		this.physics.add.overlap(player2, coinLayer);
+		blackHoleLayer.setTileIndexCallback(211, deathByBlackHole, this);
+		this.physics.add.overlap(player1, blackHoleLayer);
+		this.physics.add.overlap(player2, blackHoleLayer);
 		
 		// player walk animation
 		this.anims.create({
@@ -142,10 +144,10 @@ var LevelScene = new Phaser.Class({
 			frameRate: 10,
 		});
 	
-		// set bounds so the camera won't go outside the game world
+
 		this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-		// make the camera follow the player
-		this.cameras.main.startFollow(player1);
+		this.cameraDolly = new Phaser.Geom.Point(player1.x, player1.y);
+		this.cameras.main.startFollow(this.cameraDolly);
 
 		// this text will show the score
 		text = this.add.text(20, 570, '0', {
@@ -157,58 +159,70 @@ var LevelScene = new Phaser.Class({
 		
     },
 	
-    update: function (time, delta) {
-		if (cursors1.left.isDown)
-		{
-			player1.body.setVelocityX(-200);
-			player1.anims.play('walk1', true); // walk left
-			player1.flipX = true; // flip the sprite to the left
-		}
-		else if (cursors1.right.isDown)
-		{
-			player1.body.setVelocityX(200);
-			player1.anims.play('walk1', true);
-			player1.flipX = false; // use the original sprite looking to the right
-		} else {
-			player1.body.setVelocityX(0);
-			player1.anims.play('idle1', true);
-		}
-		// jump 
-		if (cursors1.up.isDown && player1.body.onFloor())
-		{
-			player1.body.setVelocityY(-500);        
-		}
-		//FIRE
-		if (cursors1.shoot.isDown )
-		{
-			
-		}
-		
-		if (cursors2.left.isDown)
-		{
-			player2.body.setVelocityX(-200);
-			player2.anims.play('walk2', true); // walk left
-			player2.flipX = true; // flip the sprite to the left
-		}
-		else if (cursors2.right.isDown)
-		{
-			player2.body.setVelocityX(200);
-			player2.anims.play('walk2', true);
-			player2.flipX = false; // use the original sprite looking to the right
-		} else {
-			player2.body.setVelocityX(0);
-			player2.anims.play('idle2', true);
-		}
-		// jump 
-		if (cursors2.up.isDown && player2.body.onFloor())
-		{
-			player2.body.setVelocityY(-500);        
-		}
-		//FIRE
-		if (cursors2.shoot.isDown )
-		{
-
-		}
+    update: function (time, delta) {   	
+        this.cameraDolly.x = Math.floor(player1.x);
+        this.cameraDolly.y = Math.floor(player1.y);
+    	
+    	blackHoleLayer.y= game.global.blackHolePosition;
+    	this.physics.world.bounds.height = groundLayer.height - 96 + game.global.blackHolePosition;
+    	this.cameras.main.setBounds(0, 0, map.widthInPixels, this.physics.world.bounds.height);
+    	
+    	
+    	if(player1.body){
+			if (cursors1.left.isDown)
+			{
+				player1.body.setVelocityX(-200);
+				player1.anims.play('walk1', true); // walk left
+				player1.flipX = true; // flip the sprite to the left
+			}
+			else if (cursors1.right.isDown)
+			{
+				player1.body.setVelocityX(200);
+				player1.anims.play('walk1', true);
+				player1.flipX = false; // use the original sprite looking to the right
+			} else {
+				player1.body.setVelocityX(0);
+				player1.anims.play('idle1', true);
+			}
+			// jump 
+			if (cursors1.up.isDown && player1.body.onFloor())
+			{
+				player1.body.setVelocityY(-500);        
+			}
+			//FIRE
+			if (cursors1.shoot.isDown )
+			{
+				
+			}
+    	}
+    	
+    	if(player2.body){
+			if (cursors2.left.isDown)
+			{
+				player2.body.setVelocityX(-200);
+				player2.anims.play('walk2', true); // walk left
+				player2.flipX = true; // flip the sprite to the left
+			}
+			else if (cursors2.right.isDown)
+			{
+				player2.body.setVelocityX(200);
+				player2.anims.play('walk2', true);
+				player2.flipX = false; // use the original sprite looking to the right
+			} else {
+				player2.body.setVelocityX(0);
+				player2.anims.play('idle2', true);
+			}
+			// jump 
+			if (cursors2.up.isDown && player2.body.onFloor())
+			{
+				player2.body.setVelocityY(-500);        
+			}
+			//FIRE
+			if (cursors2.shoot.isDown )
+			{
+	
+			}
+    	}
 		
 		// scroll the texture of the tilesprites proportionally to the camera scroll
 		this.bg_1.tilePositionX = this.cameras.main.scrollX * .2;
@@ -226,15 +240,11 @@ var LevelScene = new Phaser.Class({
 });
 
 
-function collectCoin(sprite, tile) {
-    coinLayer.removeTileAt(tile.x, tile.y); // remove the tile/coin
-    score++; // add 10 points to the score
+function deathByBlackHole(sprite, tile) {
+	console.log(sprite);
+    sprite.destroy();
     return false;
 }
-
 var shootTime= 0;
 var bullets;
-
-
-
-
+var groundLayer, blackHoleLayer, coinLayer;

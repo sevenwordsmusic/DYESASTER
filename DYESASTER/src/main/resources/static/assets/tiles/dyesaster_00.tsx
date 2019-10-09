@@ -51,4 +51,23 @@
    <object id="1" x="10" y="11" width="78.5" height="80"/>
   </objectgroup>
  </tile>
+ <tile id="210">
+  <animation>
+   <frame tileid="210" duration="75"/>
+   <frame tileid="211" duration="75"/>
+   <frame tileid="212" duration="75"/>
+   <frame tileid="213" duration="75"/>
+   <frame tileid="214" duration="75"/>
+   <frame tileid="215" duration="75"/>
+   <frame tileid="216" duration="75"/>
+   <frame tileid="217" duration="75"/>
+   <frame tileid="218" duration="75"/>
+   <frame tileid="219" duration="75"/>
+   <frame tileid="220" duration="75"/>
+   <frame tileid="221" duration="75"/>
+   <frame tileid="222" duration="75"/>
+   <frame tileid="223" duration="75"/>
+   <frame tileid="224" duration="75"/>
+  </animation>
+ </tile>
 </tileset>

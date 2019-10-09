@@ -1,21 +1,39 @@
 package dyesaster;
 
+import java.io.IOException;
+
+import org.springframework.web.socket.TextMessage;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 public class Level {
-	private int xLength;
-	private int yLength;
+	private final int xLength;
+	private final int yLength;
 	private int platformCount;
+	private String[][] tileMap;
+	private int[][] stateMap;
+	private double blackHolePosition;
+	private long updateBlackHolePosition;
+	private final long updateBlackHoleTime;
+	private ObjectMapper mapper = new ObjectMapper();
+
 
 	public Level() {
 		this.xLength=64;
 		this.yLength=96;
 		this.platformCount=(int) Math.floor(Math.random() * 5);
+		this.tileMap= new String[xLength][yLength];
+		this.stateMap= new int[xLength][yLength];
+		this.blackHolePosition= 96;
+		this.updateBlackHoleTime= 25;
 	}
 
 	public String randomize() {
 		String newTileMap="";
 		int platformRange=8, platformLevel=0;
 		for(int y=0; y < yLength; y++) {
-				if(y < 94 ) {
+				if(y < 91 ) {
 					if((y+2)%3 == 0) {
 						if(platformLevel < 3) {
 							newTileMap+= generatePlatforms(platformRange);
@@ -23,7 +41,7 @@ public class Level {
 						}else {
 							newTileMap+= generatePlatforms(platformRange);
 							platformLevel=0;
-							platformRange+=7;
+							platformRange+=8;
 						}						
 					} else {
 						newTileMap+= fullSpace(0);
@@ -33,6 +51,16 @@ public class Level {
 				}
 				
 		}
+		String[] parts = newTileMap.split(",");
+		int counter=0;
+		for(int y=0; y < yLength; y++) {
+			for(int x=0; x < xLength; x++) {
+				tileMap[x][y]=parts[counter];
+				stateMap[x][y]=0;
+				counter++;
+			}
+		}
+		
 		return newTileMap;
 	}
 
@@ -44,13 +72,13 @@ public class Level {
 			x++;
 		}
 		while( x < padding + range) {
-			if((int)Math.floor(Math.random() * 3)>0) {
+			if((int)Math.floor(Math.random() * 2) == 0) {
 				if((x + 4) < (padding + range)) {
 					spaceLine+= spacePlatform();
 					x+=4;
 				}
 			}else {
-				rndMargin= (int)Math.floor(Math.random() * 4) + 1;
+				rndMargin= (int)Math.floor(Math.random() * 5) + 1;
 				if((x + rndMargin) < (padding + range)) {
 					for(int margin= 0; margin< rndMargin; margin++){
 						spaceLine+= "0,";
@@ -114,6 +142,34 @@ public class Level {
 		}
 		return spaceLine;
 	}
+
+	public String[][] getTileMap() {
+		return tileMap;
+	}
 	
+	public void start(Player player) {
+		new Thread(() -> {
+			try {
+				blackHole(player);
+			} catch (IOException e) {}
+		}).start();
+	}
+
+	private void blackHole(Player player) throws IOException {
+		ObjectNode msg = mapper.createObjectNode();
+		updateBlackHolePosition= System.currentTimeMillis() + updateBlackHoleTime;
+		while (true) {
+			synchronized(player){
+				if(System.currentTimeMillis() > updateBlackHolePosition) {
+					msg.put("event", "BLACKHOLE");
+					msg.put("blackHolePosition", blackHolePosition);
+					player.WSSession().sendMessage(new TextMessage(msg.toString()));
+					blackHolePosition--;
+					updateBlackHolePosition= System.currentTimeMillis() + updateBlackHoleTime;
+				}
+			}
+		}
+		
+	}
 	
 }
