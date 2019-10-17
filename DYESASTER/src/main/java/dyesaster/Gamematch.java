@@ -2,6 +2,9 @@ package dyesaster;
 
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.web.socket.TextMessage;
 
@@ -13,19 +16,17 @@ public class Gamematch{
 	private final Player creator;
 	private final Level level;
 	private LinkedList<Player> players= new LinkedList<Player>();
-	private final long updateTime;
+	private final long TICK_DELAY= 1000/30;
 	private double blackHolePosition;
-	private final long updateBlackHoleTime;
+	private final int BLACKHOLE_SPEED= 4;
 	private ObjectMapper mapper = new ObjectMapper();
-	private boolean go;
+	private Thread tickThread;
+	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	
 	public Gamematch(Player player){
 		this.creator= player;
 		this.level= new Level();
-		this.updateTime= 25;
 		this.blackHolePosition= 96;
-		this.updateBlackHoleTime= 25;
-		this.go= true;
 	}
 	
 	public Player getCreator() {
@@ -53,31 +54,19 @@ public class Gamematch{
 	}
 
 	public void stop() {
-		go=false;
+		if (scheduler != null) {
+			scheduler.shutdown();
+		}
 	}
 
-	public void start() {
-		new Thread(() -> {
-			try {
-				updateBlackHole();
-			} catch (IOException e) {}
-		}).start();
-		new Thread(() -> {
-			try {
-				sendUpdate();
-			} catch (IOException e) {}
-		}).start();
-	}
-	
-	private void sendUpdate() throws IOException {
+	private void tick() throws IOException {
 		ObjectNode msg= mapper.createObjectNode();
-		long update= System.currentTimeMillis() + updateTime;
-		while(go) {
-			if(System.currentTimeMillis() > update) {
-				ArrayNode playerArrayNode= mapper.createArrayNode();
-				synchronized(players){
+		ObjectNode player = mapper.createObjectNode();
+		ArrayNode playerArrayNode= mapper.createArrayNode();
+				synchronized(players) {
+					blackHolePosition-=BLACKHOLE_SPEED;
 					for(int i= 0; i< players.size(); i++) {
-						ObjectNode player = mapper.createObjectNode();
+						players.get(i).updateMovement();
 						player.put("posX", players.get(i).getPosX());
 						player.put("posY", players.get(i).getPosY());
 						player.put("colorId", players.get(i).getColorId());
@@ -91,23 +80,28 @@ public class Gamematch{
 					for(int i= 0; i< players.size(); i++) {
 						msg.put("id", players.get(i).getPlayerId());
 						msg.put("index",  i);
-						players.get(i).WSSession().sendMessage(new TextMessage(msg.toString()));
+						try {
+							players.get(i).WSSession().sendMessage(new TextMessage(msg.toString()));
+						} catch (IOException e) {}
 					}
-					update= System.currentTimeMillis() + updateTime;
 				}
-			}
-		}
 		
 	}
-	
-	private void updateBlackHole() throws IOException {
-		long updateBlackHolePosition= System.currentTimeMillis() + updateBlackHoleTime;
-		while (go) {
-			if(System.currentTimeMillis() > updateBlackHolePosition) {
-				blackHolePosition--;
-				updateBlackHolePosition= System.currentTimeMillis() + updateBlackHoleTime;
-			}
+
+		public void start() {
+			tickThread = new Thread(() -> startGameLoop());
+			tickThread.start();
 		}
-	}
-	
+
+		private void startGameLoop() {
+			scheduler = Executors.newScheduledThreadPool(1);	
+			scheduler.scheduleAtFixedRate(() -> {
+				try {
+					tick();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}, TICK_DELAY, TICK_DELAY, TimeUnit.MILLISECONDS);
+		}		
+
 }

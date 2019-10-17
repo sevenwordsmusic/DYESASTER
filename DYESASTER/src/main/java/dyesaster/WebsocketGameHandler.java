@@ -70,7 +70,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					player.WSSession().sendMessage(new TextMessage(msg.toString()));
 					break;
 				case "UPDATE_CONTROLS":
-					player.move(node.get("direction").asText());
+					player.setDirection(node.get("direction").asText());
 					break;
 				default:
 					break;
@@ -84,16 +84,14 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		/*
 		Player player;
 		synchronized(this) {
 			player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
 		}
 
-		games.get(player.getGameId()).getLevel().stop();
-		games.remove(player.getGameId());
+		games.peek().stop();
 		player.stop();
-		*/
+
 	}	
 	
 }

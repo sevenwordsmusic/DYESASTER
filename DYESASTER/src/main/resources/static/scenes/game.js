@@ -101,7 +101,6 @@ var GameScene = new Phaser.Class({
 		// small fix to our player images, we resize the physics body object slightly
 		player[1].body.setSize(player[1].width, player[1].height-8);
 
-
 		
 		// player will collide with the level tiles 
 		this.physics.add.collider(groundLayer, player[0]);
@@ -119,14 +118,14 @@ var GameScene = new Phaser.Class({
 		this.anims.create({
 			key: 'walk',
 			frames: this.anims.generateFrameNames('player', {prefix: 'p1_walk', start: 1, end: 11, zeroPad: 2}),
-			frameRate: 10,
+			frameRate: 15,
 			repeat: -1
 		});
 		// idle with only one frame, so repeat is not neaded
 		this.anims.create({
 			key: 'idle',
 			frames: [{key: 'player', frame: 'p1_stand'}],
-			frameRate: 10,
+			frameRate: 15,
 		});
 		
 		
@@ -140,28 +139,10 @@ var GameScene = new Phaser.Class({
 	
     update: function (time, delta) {
     	
-		if (cursors.left.isDown)
-		{
-			updateControls("left");
-			//player.body.setVelocityX(-200);
-		}
-		else if (cursors.right.isDown)
-		{
-			updateControls("right");
-			//player.body.setVelocityX(200);
-		}
+
+
 		
-		// jump 
-		if (cursors.up.isDown)
-		{
-			updateControls("jump");
-			//player.body.setVelocityY(-500);        
-		}
-		//FIRE
-		if (cursors.shoot.isDown )
-		{}
-		
-		//if(game.global.receivedMsg=='UPDATE_GAMEMATCH'){
+
 	    	blackHoleLayer.y= game.global.blackHolePosition;
 			for(var i=0; i<game.global.length; i++) {
 				player[i].setPosition(game.global.player[i].x,game.global.player[i].y);
@@ -182,13 +163,35 @@ var GameScene = new Phaser.Class({
 					}
 		    	}
 			}
-	        this.cameraDolly.x = player[game.global.index].x;
-	        this.cameraDolly.y = player[game.global.index].y;
-	    	this.physics.world.bounds.height = groundLayer.height - 96 + game.global.blackHolePosition;
-	    	this.cameras.main.setBounds(0, 0, map.widthInPixels, this.physics.world.bounds.height);
-	    	
-		//}
+
+			
+			//FIRE
+			if (cursors.shoot.isDown )
+			{}
+			
+	    this.physics.world.bounds.height = groundLayer.height - 96 + game.global.blackHolePosition;
+	    this.cameras.main.setBounds(0, 0, map.widthInPixels, this.physics.world.bounds.height);
     	
+        this.cameraDolly.x = player[game.global.index].x;
+        this.cameraDolly.y = player[game.global.index].y; 
+		
+    	let msg = new Object();
+    	msg.event = 'UPDATE_CONTROLS';
+		if (cursors.left.isDown)
+		{
+			msg.direction = "left";
+		}
+		else if (cursors.right.isDown)
+		{
+			msg.direction = "right";
+		}else if (cursors.up.isDown)
+		{
+			msg.direction = "jump";      
+		}else{
+			msg.direction = "idle";
+		}
+		game.global.socket.send(JSON.stringify(msg));
+		
 		// scroll the texture of the tilesprites proportionally to the camera scroll
 		this.bg_1.tilePositionX = this.cameras.main.scrollX * .2;
 		this.bg_2.tilePositionX = this.cameras.main.scrollX * .4;
@@ -198,17 +201,13 @@ var GameScene = new Phaser.Class({
 		this.bg_1.tilePositionY = this.cameras.main.scrollY * .2;
 		this.bg_2.tilePositionY = this.cameras.main.scrollY * .4;
 		this.bg_3.tilePositionY = this.cameras.main.scrollY * .6;
-		this.bg_4.tilePositionY = this.cameras.main.scrollY * .8;	
+		this.bg_4.tilePositionY = this.cameras.main.scrollY * .8;
 	}
+
+
 
 });
 
-function updateControls(direction){
-	let msg = new Object();
-	msg.event = 'UPDATE_CONTROLS';
-	msg.direction = direction;
-	game.global.socket.send(JSON.stringify(msg));
-}
 
 function deathByBlackHole(sprite, tile) {
     sprite.destroy();

@@ -11,18 +11,18 @@ function startUp() {
 		receivedMsg : "",
 		info : "",
 		blackHolePosition : 96,
-		index : -1,
+		index : 0,
 		length : 1,
 		player : [{
 			x : 200,
 			y : 8800,
 			colorId : 0,
-			direction : ""
+			direction : "idle"
 		},{
 			x : 400,
 			y : 8800,
 			colorId : 0,
-			direction : ""
+			direction : "idle"
 		}]
 	}
 

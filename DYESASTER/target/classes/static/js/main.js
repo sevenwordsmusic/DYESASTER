@@ -68,18 +68,9 @@ var config = {
 	        height: 864
 	    },
 	    physics: {
-	        default: 'arcade',
-	        arcade: {
-	            gravity: { y: 0 },
-	            debug: false
-	        }
+	        default: 'arcade'
 	    },
 	    scene: [MainScene, LoadScene, GameScene],
-	    fps: {
-	    	  target: 15,
-	    	  min: 5,
-	    	  forceSetTimeOut: true
-	    },
 	    roundPixels: true
 	};
 

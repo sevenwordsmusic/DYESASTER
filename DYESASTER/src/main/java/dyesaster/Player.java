@@ -1,6 +1,9 @@
 package dyesaster;
 
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -14,15 +17,19 @@ public class Player {
 	private double posX;
 	private double posY;
 	private long updateJumpPosition;
-	private final long updateJumpTime;
+	private final long JUMP_LAPSE= 500;
 	private boolean onGround;
 	private boolean onJump;
 	private int gameId= 999999;
 	private boolean go;
 	private String direction;
-	private final long updatePlayerTime;
+	private final long UPDATE_DELAY= 1000/60;
+	private final int WALK_SPEED= 8;
+	private final int JUMP_SPEED= 6;
+	//private final int GRAVITY= 12;
 	private int colorId;
-
+	private Thread tickThread;
+	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	
 	public Player(int playerId, WebSocketSession session) {
 		this.playerId= playerId;
@@ -30,13 +37,11 @@ public class Player {
 		this.isAlive= true;
 		this.setPosX(200);
 		this.setPosY(8400);
-		this.updateJumpTime= 500;
 		this.onGround= true;
 		this.onJump= false;
 		this.go= true;
-		this.setDirection("");
-		this.updatePlayerTime= 10;
-		this.setColorId(0);
+		this.direction= "";
+		this.colorId=0;
 	}
 
 	public int getPlayerId() {
@@ -59,54 +64,65 @@ public class Player {
 		this.isAlive = isAlive;
 	}
 
-	public void move(String direction) {
-		String newDirection="";
-		switch (direction) {
-			case "left":
-				posX--;
-				newDirection=direction;
-				break;
-			case "right":
-				posX++;
-				newDirection=direction;
-				break;
-			case "jump":
-				if(onGround && !onJump) {
-					updateJumpPosition= System.currentTimeMillis() + updateJumpTime;
-					onJump= true;
-				}
-				newDirection=direction;
-				break;
-			default:
-				break;
-		}
-		this.setDirection(newDirection);	
+	public void updateMovement() {
+					switch (this.direction) {
+						case "left":
+							posX-=WALK_SPEED;
+							break;
+						case "right":
+							posX+=WALK_SPEED;
+							break;
+						case "jump":
+							if(onGround && !onJump) {
+								posY-=JUMP_SPEED;
+								onJump= true;
+								updateJumpPosition= System.currentTimeMillis() + JUMP_LAPSE;
+							}
+							break;
+						default:
+							break;
+					}
 	}
 	
+
 	public void start() {
-		new Thread(() -> {
-			try {
-				updatePhysics();
-			} catch (IOException e) {}
-		}).start();
+		tickThread = new Thread(() -> startPhysicsLoop());
+		tickThread.start();
 	}
 
-	private void updatePhysics() throws IOException {
-		long updatePlayerPhysics= System.currentTimeMillis() + updatePlayerTime;
+	private void startPhysicsLoop() {
+		scheduler = Executors.newScheduledThreadPool(1);	
+		scheduler.scheduleAtFixedRate(() -> {
+			try {
+				update();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}, UPDATE_DELAY, UPDATE_DELAY, TimeUnit.MILLISECONDS);
+	}	
+
+
+	public void stop() {
+		if (scheduler != null) {
+			scheduler.shutdown();
+		}
+	}
+	
+	private void update() throws IOException {
+		long updatePlayerPhysics= System.currentTimeMillis() + UPDATE_DELAY;
 		while(go) {
-			synchronized(this){
 				if(System.currentTimeMillis() > updatePlayerPhysics) {
 					if(System.currentTimeMillis() < updateJumpPosition) {
-						posY--;
+						posY-=JUMP_SPEED;
 					}else {
 						onJump=false;
-						//posY+=4;
 					}
-					updatePlayerPhysics= System.currentTimeMillis() + updatePlayerTime;
+					if(!onJump) {
+						//posY+=GRAVITY;
+					}
+					updatePlayerPhysics= System.currentTimeMillis() + UPDATE_DELAY;
 				}
-			}
 		}
-		
 	}
 	
 	public int getGameId() {
@@ -115,10 +131,6 @@ public class Player {
 
 	public void setGameId(int gameId) {
 		this.gameId = gameId;
-	}
-	
-	public void stop() {
-		go=false;
 	}
 
 	public double getPosX() {
@@ -160,5 +172,6 @@ public class Player {
 	public void setIndex(int index) {
 		this.index = index;
 	}
+
 	
 }
