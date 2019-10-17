@@ -31,21 +31,25 @@ var MainScene = new Phaser.Class({
 		
 		// player animations
 		this.load.atlas('player', 'assets/player.png', 'assets/player.json');
+		this.load.atlas('player2', 'assets/player.png', 'assets/player.json');
+		
+
 
     },
 
     create: function ()
     {
-    	newGamematch();	
+    	getGamematch();	
     },
     
     update: function ()
     {
     	if(game.global.receivedMsg=='NEW_LEVEL_RETURN'){
+			game.global.receivedMsg=null;
 			this.cache.tilemap.entries.entries.map.data.layers[0].data = game.global.info.split(',');
-			this.scene.start('loadScene');
+			this.scene.start('gameScene');
 			if (game.global.DEBUG_MODE) {
-				console.log('[DEBUG] Switching to loadScene.');
+				console.log('[DEBUG] Switching to levelScene.');
 			}
     	}
     }
@@ -53,9 +57,9 @@ var MainScene = new Phaser.Class({
 });
 
 
-function newGamematch(){
+function getGamematch(){
 	let msg = new Object();
-	msg.event = 'NEW_GAMEMATCH';
+	msg.event = 'GET_GAMEMATCH';
 	game.global.socket.send(JSON.stringify(msg));
 }
 
@@ -74,7 +78,7 @@ var config = {
 	            debug: false
 	        }
 	    },
-	    scene: [MainScene, LoadScene, GameScene],
+	    scene: [MainScene, GameScene],
 	    fps: {
 	    	  target: 15,
 	    	  min: 5,
@@ -84,11 +88,9 @@ var config = {
 	};
 
 var map;
-var player=[""];
-var cursors;
+var player1, player2;
+var cursors1, cursors2;
 var text;
 var score = 0;
 
 var game = new Phaser.Game(config);
-
-startUp();

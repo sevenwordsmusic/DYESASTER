@@ -1,12 +1,12 @@
-var GameScene = new Phaser.Class({
+var MainScene = new Phaser.Class({
 
     Extends: Phaser.Scene,
 
     initialize:
 
-    function GameScene ()
+    function MainScene ()
     {
-        Phaser.Scene.call(this, { key: 'gameScene', active: true });
+        Phaser.Scene.call(this, { key: 'mainScene', active: true });
 
     },
 
@@ -30,39 +30,32 @@ var GameScene = new Phaser.Class({
 		this.load.image('bg-5', 'assets/bg-5.png');
 		
 		// player animations
-		this.load.atlas('player1', 'assets/player.png', 'assets/player.json');
-		this.load.atlas('player2', 'assets/player.png', 'assets/player.json');
-		
-
+		this.load.atlas('player', 'assets/player.png', 'assets/player.json');
 
     },
 
     create: function ()
     {
-
-        // start dat.gui
- 
-        getNewLevel();
-		
+    	newGamematch();	
     },
     
     update: function ()
     {
     	if(game.global.receivedMsg=='NEW_LEVEL_RETURN'){
-			game.global.receivedMsg=null;
 			this.cache.tilemap.entries.entries.map.data.layers[0].data = game.global.info.split(',');
-			this.scene.start('levelScene');
+			this.scene.start('loadScene');
 			if (game.global.DEBUG_MODE) {
-				console.log('[DEBUG] Switching to levelScene.');
+				console.log('[DEBUG] Switching to loadScene.');
 			}
     	}
     }
 
 });
 
-function getNewLevel(){
+
+function newGamematch(){
 	let msg = new Object();
-	msg.event = 'NEW_LEVEL';
+	msg.event = 'NEW_GAMEMATCH';
 	game.global.socket.send(JSON.stringify(msg));
 }
 
@@ -77,18 +70,25 @@ var config = {
 	    physics: {
 	        default: 'arcade',
 	        arcade: {
-	            gravity: { y: 400 },
+	            gravity: { y: 0 },
 	            debug: false
 	        }
 	    },
-	    scene: [GameScene, LevelScene],
+	    scene: [MainScene, LoadScene, GameScene],
+	    fps: {
+	    	  target: 15,
+	    	  min: 5,
+	    	  forceSetTimeOut: true
+	    },
 	    roundPixels: true
 	};
 
 var map;
-var player1, player2;
-var cursors1, cursors2;
+var player=[""];
+var cursors;
 var text;
 var score = 0;
 
 var game = new Phaser.Game(config);
+
+startUp();

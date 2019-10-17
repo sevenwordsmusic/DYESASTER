@@ -1,14 +1,29 @@
 //var ip = "192.168.0.176"
 var ip = "127.0.0.1";
 	
-window.onload = function() {
+function startUp() {
 
 	// GLOBAL VARIABLES
 	game.global = {
-		DEBUG_MODE : true,
+		DEBUG_MODE : false,
 		socket : "",
-		receivedMsg : null,
-		info : ""
+		event : "",
+		receivedMsg : "",
+		info : "",
+		blackHolePosition : 96,
+		index : -1,
+		length : 1,
+		player : [{
+			x : 200,
+			y : 8800,
+			colorId : 0,
+			direction : ""
+		},{
+			x : 400,
+			y : 8800,
+			colorId : 0,
+			direction : ""
+		}]
 	}
 
 	// WEBSOCKET CONFIGURATOR
@@ -41,9 +56,21 @@ window.onload = function() {
 					console.log('[DEBUG] TEST_CONFIRMATION received, all is well for player #' + msg.id + ' <3');
 				}	
 			break
-			case 'UPDATE':
-				
-				break
+			case 'UPDATE_GAMEMATCH':
+				game.global.receivedMsg=msg.event;
+				game.global.blackHolePosition=msg.blackHolePosition;
+				game.global.index=msg.index;
+				game.global.length=msg.length;
+				for(var i=0; i<msg.length; i++) {
+					game.global.player[i].x=msg.player[i].posX;
+					game.global.player[i].y=msg.player[i].posY;
+					game.global.player[i].colorId=msg.player[i].colorId;
+					game.global.player[i].direction=msg.player[i].direction;
+				}
+				if (game.global.DEBUG_MODE) {
+					console.log('[DEBUG] UPDATE_GAMEMATCH for player #' + msg.id + '.');
+				}
+			break
 			case 'NEW_LEVEL_RETURN':
 				game.global.receivedMsg=msg.event;
 				game.global.info=msg.tilemap;
@@ -51,10 +78,10 @@ window.onload = function() {
 					console.log('[DEBUG] NEW_LEVEL_RETURN new tilemap generated.');
 				}
 			break
-			case 'BLACKHOLE':
-				game.global.blackHolePosition=msg.blackHolePosition;
+			case 'START_GAMEMATCH':
+				game.global.receivedMsg=msg.event;
 				if (game.global.DEBUG_MODE) {
-					console.log('[DEBUG] BLACKHOLE update.');
+					console.log('[DEBUG] START_GAMEMATCH the game has started.');
 				}
 			break
 			default :

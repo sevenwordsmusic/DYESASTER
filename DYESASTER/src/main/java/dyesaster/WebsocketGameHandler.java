@@ -1,5 +1,6 @@
 package dyesaster;
 
+import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -9,12 +10,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-
 public class WebsocketGameHandler extends TextWebSocketHandler {
 	private static final String PLAYER_ATTRIBUTE = "PLAYER";
 	private ObjectMapper mapper = new ObjectMapper();
 	private AtomicInteger playerId = new AtomicInteger(0);
-	private Gamematch game;
+	private static LinkedList<Gamematch>  games= new LinkedList<Gamematch>();
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -34,20 +34,43 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			
 			Player player;
 			player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
-
+			
 			switch (node.get("event").asText()) {
 				case "TEST":
 					msg.put("id", player.getPlayerId());
 					msg.put("event", "TEST_CONFIRMATION");
 					player.WSSession().sendMessage(new TextMessage(msg.toString()));
 					break;
-				case "NEW_LEVEL":
-					game= new Gamematch(player);
+				case "NEW_GAMEMATCH":
+					player.setIndex(0);
+					Gamematch newGamematch= new Gamematch(player);
+					newGamematch.addPlayer(player);
+					games.add(newGamematch);
+					player.setGameId(games.indexOf(newGamematch));
 					msg.put("id", player.getPlayerId());
 					msg.put("event", "NEW_LEVEL_RETURN");
-					msg.put("tilemap", game.getLevel().randomize());
+					msg.put("tilemap", newGamematch.getLevel().randomize());
 					player.WSSession().sendMessage(new TextMessage(msg.toString()));
-					game.getLevel().start(player);
+					break;
+				case "GET_GAMEMATCH":
+					player.setIndex(games.peek().getPlayers().size());
+					games.peek().addPlayer(player);
+					msg.put("id", player.getPlayerId());
+					msg.put("event", "NEW_LEVEL_RETURN");
+					msg.put("tilemap", games.peek().getLevel().getTileMapString());
+					player.WSSession().sendMessage(new TextMessage(msg.toString()));
+					break;
+				case "START_GAMEMATCH":
+					player.start();
+					if(player==games.peek().getCreator()) {
+						games.peek().start();
+					}
+					msg.put("id", player.getPlayerId());
+					msg.put("event", "START_GAMEMATCH");
+					player.WSSession().sendMessage(new TextMessage(msg.toString()));
+					break;
+				case "UPDATE_CONTROLS":
+					player.move(node.get("direction").asText());
 					break;
 				default:
 					break;
@@ -61,14 +84,16 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		
-	}
+		/*
+		Player player;
+		synchronized(this) {
+			player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
+		}
 
-	public Gamematch getGame() {
-		return game;
-	}
-
-	public void setGamematch (Gamematch game) {
-		this.game = game;
-	}
+		games.get(player.getGameId()).getLevel().stop();
+		games.remove(player.getGameId());
+		player.stop();
+		*/
+	}	
+	
 }

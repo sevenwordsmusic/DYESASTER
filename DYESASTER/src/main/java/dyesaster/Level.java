@@ -1,57 +1,50 @@
 package dyesaster;
 
-import java.io.IOException;
-
-import org.springframework.web.socket.TextMessage;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 public class Level {
 	private final int xLength;
 	private final int yLength;
 	private int platformCount;
+	private String tileMapString;
 	private String[][] tileMap;
 	private int[][] stateMap;
-	private double blackHolePosition;
-	private long updateBlackHolePosition;
-	private final long updateBlackHoleTime;
-	private ObjectMapper mapper = new ObjectMapper();
-
-
+	
 	public Level() {
 		this.xLength=64;
 		this.yLength=96;
 		this.platformCount=(int) Math.floor(Math.random() * 5);
+		this.tileMapString= "";
 		this.tileMap= new String[xLength][yLength];
 		this.stateMap= new int[xLength][yLength];
-		this.blackHolePosition= 96;
-		this.updateBlackHoleTime= 25;
 	}
 
+	public String getTileMapString() {
+		return tileMapString;
+	}
+	
+		
+		
 	public String randomize() {
-		String newTileMap="";
 		int platformRange=8, platformLevel=0;
 		for(int y=0; y < yLength; y++) {
 				if(y < 91 ) {
 					if((y+2)%3 == 0) {
 						if(platformLevel < 3) {
-							newTileMap+= generatePlatforms(platformRange);
+							tileMapString+= generatePlatforms(platformRange);
 							platformLevel++;
 						}else {
-							newTileMap+= generatePlatforms(platformRange);
+							tileMapString+= generatePlatforms(platformRange);
 							platformLevel=0;
 							platformRange+=8;
 						}						
 					} else {
-						newTileMap+= fullSpace(0);
+						tileMapString+= fullSpace(0);
 					}
 				} else {
-					newTileMap+= fullSpace(1);
+					tileMapString+= fullSpace(1);
 				}
 				
 		}
-		String[] parts = newTileMap.split(",");
+		String[] parts = tileMapString.split(",");
 		int counter=0;
 		for(int y=0; y < yLength; y++) {
 			for(int x=0; x < xLength; x++) {
@@ -60,8 +53,7 @@ public class Level {
 				counter++;
 			}
 		}
-		
-		return newTileMap;
+		return tileMapString;
 	}
 
 	private String generatePlatforms(int range) {
@@ -72,7 +64,7 @@ public class Level {
 			x++;
 		}
 		while( x < padding + range) {
-			if((int)Math.floor(Math.random() * 2) == 0) {
+			if((int)Math.floor(Math.random() * 2) == 1) {
 				if((x + 4) < (padding + range)) {
 					spaceLine+= spacePlatform();
 					x+=4;
@@ -146,30 +138,5 @@ public class Level {
 	public String[][] getTileMap() {
 		return tileMap;
 	}
-	
-	public void start(Player player) {
-		new Thread(() -> {
-			try {
-				blackHole(player);
-			} catch (IOException e) {}
-		}).start();
-	}
-
-	private void blackHole(Player player) throws IOException {
-		ObjectNode msg = mapper.createObjectNode();
-		updateBlackHolePosition= System.currentTimeMillis() + updateBlackHoleTime;
-		while (true) {
-			synchronized(player){
-				if(System.currentTimeMillis() > updateBlackHolePosition) {
-					msg.put("event", "BLACKHOLE");
-					msg.put("blackHolePosition", blackHolePosition);
-					player.WSSession().sendMessage(new TextMessage(msg.toString()));
-					blackHolePosition--;
-					updateBlackHolePosition= System.currentTimeMillis() + updateBlackHoleTime;
-				}
-			}
-		}
 		
-	}
-	
 }
