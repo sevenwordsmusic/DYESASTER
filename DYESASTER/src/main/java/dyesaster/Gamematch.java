@@ -61,11 +61,11 @@ public class Gamematch{
 
 	private void tick() throws IOException {
 		ObjectNode msg= mapper.createObjectNode();
-		ObjectNode player = mapper.createObjectNode();
 		ArrayNode playerArrayNode= mapper.createArrayNode();
 				synchronized(players) {
 					blackHolePosition-=BLACKHOLE_SPEED;
 					for(int i= 0; i< players.size(); i++) {
+						ObjectNode player = mapper.createObjectNode();
 						players.get(i).updateMovement();
 						player.put("posX", players.get(i).getPosX());
 						player.put("posY", players.get(i).getPosY());

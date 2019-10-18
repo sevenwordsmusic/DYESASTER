@@ -31,7 +31,7 @@ var MainScene = new Phaser.Class({
 		
 		// player animations
 		this.load.atlas('player', 'assets/player.png', 'assets/player.json');
-
+		this.load.atlas('player2', 'assets/player.png', 'assets/player.json');
     },
 
     create: function ()
@@ -45,7 +45,7 @@ var MainScene = new Phaser.Class({
 			this.cache.tilemap.entries.entries.map.data.layers[0].data = game.global.info.split(',');
 			this.scene.start('loadScene');
 			if (game.global.DEBUG_MODE) {
-				console.log('[DEBUG] Switching to loadScene.');
+				console.log('[DEBUG] Switching to LoadScene.');
 			}
     	}
     }

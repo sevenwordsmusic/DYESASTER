@@ -13,7 +13,7 @@ var MainScene = new Phaser.Class({
     preload: function ()
     {   
 		// map made with Tiled in JSON format
-		this.load.tilemapTiledJSON('map', 'assets/map.json');  
+		this.load.tilemapTiledJSON('map', 'assets/map.json');
 		
 		// tiles in spritesheet 
 		this.load.spritesheet('tiles', 'assets/tiles/00.png', {frameWidth: 96, frameHeight: 96});
@@ -32,24 +32,20 @@ var MainScene = new Phaser.Class({
 		// player animations
 		this.load.atlas('player', 'assets/player.png', 'assets/player.json');
 		this.load.atlas('player2', 'assets/player.png', 'assets/player.json');
-		
-
-
     },
 
     create: function ()
     {
-    	getGamematch();	
+    	newGamematch();	
     },
     
     update: function ()
     {
     	if(game.global.receivedMsg=='NEW_LEVEL_RETURN'){
-			game.global.receivedMsg=null;
 			this.cache.tilemap.entries.entries.map.data.layers[0].data = game.global.info.split(',');
 			this.scene.start('gameScene');
 			if (game.global.DEBUG_MODE) {
-				console.log('[DEBUG] Switching to levelScene.');
+				console.log('[DEBUG] Switching to GameScene.');
 			}
     	}
     }
@@ -57,7 +53,7 @@ var MainScene = new Phaser.Class({
 });
 
 
-function getGamematch(){
+function newGamematch(){
 	let msg = new Object();
 	msg.event = 'GET_GAMEMATCH';
 	game.global.socket.send(JSON.stringify(msg));
@@ -72,25 +68,18 @@ var config = {
 	        height: 864
 	    },
 	    physics: {
-	        default: 'arcade',
-	        arcade: {
-	            gravity: { y: 0 },
-	            debug: false
-	        }
+	        default: 'arcade'
 	    },
-	    scene: [MainScene, GameScene],
-	    fps: {
-	    	  target: 15,
-	    	  min: 5,
-	    	  forceSetTimeOut: true
-	    },
+	    scene: [MainScene, LoadScene, GameScene],
 	    roundPixels: true
 	};
 
 var map;
-var player1, player2;
-var cursors1, cursors2;
+var player=[""];
+var cursors;
 var text;
 var score = 0;
 
 var game = new Phaser.Game(config);
+
+startUp();

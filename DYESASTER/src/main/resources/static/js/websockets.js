@@ -15,12 +15,12 @@ function startUp() {
 		length : 1,
 		player : [{
 			x : 200,
-			y : 8800,
+			y : 8400,
 			colorId : 0,
 			direction : "idle"
 		},{
 			x : 400,
-			y : 8800,
+			y : 8400,
 			colorId : 0,
 			direction : "idle"
 		}]

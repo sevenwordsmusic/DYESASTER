@@ -95,7 +95,7 @@ var GameScene = new Phaser.Class({
 		player[0].body.setSize(player[0].width, player[0].height-8);
 		
 
-		player[1] = this.physics.add.sprite(600, 8688, 'player');
+		player[1] = this.physics.add.sprite(600, 8688, 'player2');
 		player[1].setBounce(0.2); // our player will bounce from items
 		player[1].setCollideWorldBounds(true); // don't go out of the map
 		// small fix to our player images, we resize the physics body object slightly
@@ -128,6 +128,20 @@ var GameScene = new Phaser.Class({
 			frameRate: 15,
 		});
 		
+		
+		// player walk animation
+		this.anims.create({
+			key: 'walk',
+			frames: this.anims.generateFrameNames('player2', {prefix: 'p1_walk', start: 1, end: 11, zeroPad: 2}),
+			frameRate: 15,
+			repeat: -1
+		});
+		// idle with only one frame, so repeat is not neaded
+		this.anims.create({
+			key: 'idle',
+			frames: [{key: 'player2', frame: 'p1_stand'}],
+			frameRate: 15,
+		});
 		
 		this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 		this.cameraDolly = new Phaser.Geom.Point(player[0].x, player[0].y);

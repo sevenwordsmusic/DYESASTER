@@ -55,6 +55,8 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				case "GET_GAMEMATCH":
 					player.setIndex(games.peek().getPlayers().size());
 					games.peek().addPlayer(player);
+					games.peek().start();
+					player.start();
 					msg.put("id", player.getPlayerId());
 					msg.put("event", "NEW_LEVEL_RETURN");
 					msg.put("tilemap", games.peek().getLevel().getTileMapString());
@@ -62,9 +64,6 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					break;
 				case "START_GAMEMATCH":
 					player.start();
-					if(player==games.peek().getCreator()) {
-						games.peek().start();
-					}
 					msg.put("id", player.getPlayerId());
 					msg.put("event", "START_GAMEMATCH");
 					player.WSSession().sendMessage(new TextMessage(msg.toString()));

@@ -35,8 +35,8 @@ public class Player {
 		this.playerId= playerId;
 		this.session= session;
 		this.isAlive= true;
-		this.setPosX(200);
-		this.setPosY(8400);
+		this.posX= 200;
+		this.posY= 7000;
 		this.onGround= true;
 		this.onJump= false;
 		this.go= true;
@@ -171,6 +171,7 @@ public class Player {
 
 	public void setIndex(int index) {
 		this.index = index;
+		this.posX= (this.index+1)*200;
 	}
 
 	
