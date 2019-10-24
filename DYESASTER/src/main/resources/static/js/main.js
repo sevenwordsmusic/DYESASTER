@@ -55,7 +55,7 @@ var MainScene = new Phaser.Class({
 
 function newGamematch(){
 	let msg = new Object();
-	msg.event = 'NEW_GAMEMATCH';
+	msg.event = 'TEST';
 	game.global.socket.send(JSON.stringify(msg));
 }
 
@@ -81,5 +81,3 @@ var text;
 var score = 0;
 
 var game = new Phaser.Game(config);
-
-startUp();

@@ -1,10 +1,11 @@
 //var ip = "192.168.0.176"
 var ip = "127.0.0.1";
 	
-function startUp() {
+function startUp(typeOfGame) {
 
 	// GLOBAL VARIABLES
 	game.global = {
+		typeOfGame : typeOfGame,
 		DEBUG_MODE : false,
 		socket : "",
 		event : "",
@@ -27,7 +28,7 @@ function startUp() {
 	}
 
 	// WEBSOCKET CONFIGURATOR
-	game.global.socket = new WebSocket("ws://"+ip+":8080/dyesaster")
+	game.global.socket = new WebSocket("ws://"+ip+"/dyesaster)
 	
 	game.global.socket.onopen = () => {
 		if (game.global.DEBUG_MODE) {
@@ -54,7 +55,11 @@ function startUp() {
 			case 'TEST_CONFIRMATION':
 				if (game.global.DEBUG_MODE) {
 					console.log('[DEBUG] TEST_CONFIRMATION received, all is well for player #' + msg.id + ' <3');
-				}	
+				}
+		    	let msg = new Object();
+		    	msg.event = 'NEW_GAMEMATCH';
+		    	msg.typeOfGame = typeOfGame;
+				game.global.socket.send(JSON.stringify(msg));
 			break
 			case 'UPDATE_GAMEMATCH':
 				game.global.receivedMsg=msg.event;

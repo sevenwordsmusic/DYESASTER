@@ -14,7 +14,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	private static final String PLAYER_ATTRIBUTE = "PLAYER";
 	private ObjectMapper mapper = new ObjectMapper();
 	private AtomicInteger playerId = new AtomicInteger(0);
-	private static LinkedList<Gamematch>  games= new LinkedList<Gamematch>();
+	private static LinkedList<Gamematch> games= new LinkedList<Gamematch>();
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -91,6 +91,6 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		games.peek().stop();
 		player.stop();
 
-	}	
+	}
 	
 }
