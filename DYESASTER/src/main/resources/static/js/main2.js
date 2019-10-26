@@ -13,7 +13,7 @@ var MainScene = new Phaser.Class({
     preload: function ()
     {   
 		// map made with Tiled in JSON format
-		this.load.tilemapTiledJSON('map', 'assets/map.json');  
+		this.load.tilemapTiledJSON('map', 'assets/map.json');
 		
 		// tiles in spritesheet 
 		this.load.spritesheet('tiles', 'assets/tiles/00.png', {frameWidth: 96, frameHeight: 96});
@@ -43,9 +43,9 @@ var MainScene = new Phaser.Class({
     {
     	if(game.global.receivedMsg=='NEW_LEVEL_RETURN'){
 			this.cache.tilemap.entries.entries.map.data.layers[0].data = game.global.info.split(',');
-			this.scene.start('loadScene');
+			this.scene.start('gameScene');
 			if (game.global.DEBUG_MODE) {
-				console.log('[DEBUG] Switching to LoadScene.');
+				console.log('[DEBUG] Switching to GameScene.');
 			}
     	}
     }
@@ -55,7 +55,7 @@ var MainScene = new Phaser.Class({
 
 function newGamematch(){
 	let msg = new Object();
-	msg.event = 'TEST';
+	msg.event = 'GET_GAMEMATCH';
 	game.global.socket.send(JSON.stringify(msg));
 }
 
@@ -81,3 +81,5 @@ var text;
 var score = 0;
 
 var game = new Phaser.Game(config);
+
+startUp();
