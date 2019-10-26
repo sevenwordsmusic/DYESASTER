@@ -23,9 +23,8 @@ var GameScene = new Phaser.Class({
                 this.scale.startFullscreen();
             }
         }, this);
-		this.load.scenePlugin('AnimatedTiles', 'AnimatedTiles.js', 'animatedTiles', 'animatedTiles');
         
-		cursors = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'left': Phaser.Input.Keyboard.KeyCodes.LEFT, 'right': Phaser.Input.Keyboard.KeyCodes.RIGHT, 'shoot': Phaser.Input.Keyboard.KeyCodes.CONTROL });
+		cursors = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'left': Phaser.Input.Keyboard.KeyCodes.LEFT, 'right': Phaser.Input.Keyboard.KeyCodes.RIGHT, 'shoot': Phaser.Input.Keyboard.KeyCodes.CONTROL, 'color': Phaser.Input.Keyboard.KeyCodes.SPACE });
     },
     
     create: function ()
@@ -85,17 +84,15 @@ var GameScene = new Phaser.Class({
 		this.physics.world.bounds.width = groundLayer.width;
 		this.physics.world.bounds.height = groundLayer.height;
 
-		
-		
+
 		// create the player sprite    
-		player[0] = this.physics.add.sprite(200, 8688, 'player');
+		player[0] = this.physics.add.sprite(200, 8688, 'playerSprite-0');
 		player[0].setBounce(0.2); // our player will bounce from items
 		player[0].setCollideWorldBounds(true); // don't go out of the map
 		// small fix to our player images, we resize the physics body object slightly
 		player[0].body.setSize(player[0].width, player[0].height-8);
 		
-
-		player[1] = this.physics.add.sprite(600, 8688, 'player2');
+		player[1] = this.physics.add.sprite(600, 8688, 'playerSprite-0');
 		player[1].setBounce(0.2); // our player will bounce from items
 		player[1].setCollideWorldBounds(true); // don't go out of the map
 		// small fix to our player images, we resize the physics body object slightly
@@ -113,35 +110,28 @@ var GameScene = new Phaser.Class({
 		blackHoleLayer.setTileIndexCallback(211, deathByBlackHole, this);
 		this.physics.add.overlap(player[0], blackHoleLayer);
 		this.physics.add.overlap(player[1], blackHoleLayer);
-		
-		// player walk animation
-		this.anims.create({
-			key: 'walk',
-			frames: this.anims.generateFrameNames('player', {prefix: 'p1_walk', start: 1, end: 11, zeroPad: 2}),
-			frameRate: 15,
-			repeat: -1
-		});
-		// idle with only one frame, so repeat is not neaded
-		this.anims.create({
-			key: 'idle',
-			frames: [{key: 'player', frame: 'p1_stand'}],
-			frameRate: 15,
-		});
+
 		
 		
-		// player walk animation
-		this.anims.create({
-			key: 'walk',
-			frames: this.anims.generateFrameNames('player2', {prefix: 'p1_walk', start: 1, end: 11, zeroPad: 2}),
-			frameRate: 15,
-			repeat: -1
-		});
-		// idle with only one frame, so repeat is not neaded
-		this.anims.create({
-			key: 'idle',
-			frames: [{key: 'player2', frame: 'p1_stand'}],
-			frameRate: 15,
-		});
+
+		for(var c=0; c<4; c++){//For every color:
+			// player walk animation
+				this.anims.create({
+					key: 'walk-'+c,	//We create 4 walk anims...
+					frames: this.anims.generateFrameNames('playerSprite-'+c, {prefix: 'p1_walk', start: 1, end: 11, zeroPad: 2}),
+					frameRate: 15,
+					repeat: -1
+				});
+				// idle with only one frame, so repeat is not neaded
+				this.anims.create({
+					key: 'idle-'+c,	//And 4 idle anims...
+					frames: [{key: 'playerSprite-'+c, frame: 'p1_stand'}],
+					frameRate: 15,
+				});
+		}
+		
+
+
 		
 		this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 		this.cameraDolly = new Phaser.Geom.Point(player[0].x, player[0].y);
@@ -152,11 +142,6 @@ var GameScene = new Phaser.Class({
     },
 	
     update: function (time, delta) {
-    	
-
-
-		
-
 	    	blackHoleLayer.y= game.global.blackHolePosition;
 			for(var i=0; i<game.global.length; i++) {
 				player[i].setPosition(game.global.player[i].x,game.global.player[i].y);
@@ -164,25 +149,20 @@ var GameScene = new Phaser.Class({
 		    	if(player[i].body){			
 					switch(game.global.player[i].direction){
 						case 'left':
-							player[i].anims.play('walk', true); // walk left
+							player[i].anims.play('walk-'+game.global.player[i].colorId, true); // walk left
 							player[i].flipX = true; // flip the sprite to the left
 						break
 						case 'right':
-							player[i].anims.play('walk', true);
+							player[i].anims.play('walk-'+game.global.player[i].colorId, true);
 							player[i].flipX = false; // use the original sprite looking to the right
 						break
 						default :
-							player[i].anims.play('idle', true);
+							player[i].anims.play('idle-'+game.global.player[i].colorId, true);
 						break
 					}
 		    	}
 			}
-
-			
-			//FIRE
-			if (cursors.shoot.isDown )
-			{}
-			
+					
 	    this.physics.world.bounds.height = groundLayer.height - 96 + game.global.blackHolePosition;
 	    this.cameras.main.setBounds(0, 0, map.widthInPixels, this.physics.world.bounds.height);
     	
@@ -204,6 +184,12 @@ var GameScene = new Phaser.Class({
 		}else{
 			msg.direction = "idle";
 		}
+		//COLOR
+		msg.changeColor = cursors.color.isDown;
+		//FIRE
+		if (cursors.shoot.isDown )
+		{}
+		//JUST ONE CONTROLS MSG IS SENT.
 		game.global.socket.send(JSON.stringify(msg));
 		
 		// scroll the texture of the tilesprites proportionally to the camera scroll

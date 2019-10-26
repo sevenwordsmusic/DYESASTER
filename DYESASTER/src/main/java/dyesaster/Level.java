@@ -3,6 +3,7 @@ package dyesaster;
 public class Level {
 	private final int xLength;
 	private final int yLength;
+	
 	private int platformCount;
 	private String tileMapString;
 	private String[][] tileMap;

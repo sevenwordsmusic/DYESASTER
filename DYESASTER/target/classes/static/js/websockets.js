@@ -1,12 +1,17 @@
 //var ip = "192.168.0.176"
 var ip = "127.0.0.1";
-	
-function startUp(typeOfGame) {
+var map;
+var player=[""];
 
+function startUp(typeOfGame) {
+	
+	document.getElementById('mainMenu').style.display='none';
+	
+	game = new Phaser.Game(config);
 	// GLOBAL VARIABLES
 	game.global = {
 		typeOfGame : typeOfGame,
-		DEBUG_MODE : false,
+		DEBUG_MODE : true,
 		socket : "",
 		event : "",
 		receivedMsg : "",
@@ -26,20 +31,13 @@ function startUp(typeOfGame) {
 			direction : "idle"
 		}]
 	}
-
+	
 	// WEBSOCKET CONFIGURATOR
-	game.global.socket = new WebSocket("ws://"+ip+"/dyesaster)
+	game.global.socket = new WebSocket("ws://"+ip+":8080/dyesaster");
 	
 	game.global.socket.onopen = () => {
 		if (game.global.DEBUG_MODE) {
-			console.log('[DEBUG] WebSocket connection opened.')
-		}
-			let msg = new Object();
-			msg.event = 'TEST';
-			game.global.socket.send(JSON.stringify(msg));
-			
-		if (game.global.DEBUG_MODE) {
-			console.log('[DEBUG] TEST msg sent, waiting for confirmation...');
+			console.log('[DEBUG] WebSocket connection opened.');
 		}
 	}
 
@@ -50,16 +48,20 @@ function startUp(typeOfGame) {
 	}
 	
 	game.global.socket.onmessage = (message) => {
-		var msg = JSON.parse(message.data)
+		var msg = JSON.parse(message.data);
 		switch (msg.event) {
-			case 'TEST_CONFIRMATION':
+			case 'NEW_LEVEL_RETURN':
+				game.global.receivedMsg=msg.event;
+				game.global.info=msg.tilemap;
 				if (game.global.DEBUG_MODE) {
-					console.log('[DEBUG] TEST_CONFIRMATION received, all is well for player #' + msg.id + ' <3');
+					console.log('[DEBUG] NEW_LEVEL_RETURN new tilemap generated.');
 				}
-		    	let msg = new Object();
-		    	msg.event = 'NEW_GAMEMATCH';
-		    	msg.typeOfGame = typeOfGame;
-				game.global.socket.send(JSON.stringify(msg));
+			break
+			case 'START_GAMEMATCH':
+				game.global.receivedMsg=msg.event;
+				if (game.global.DEBUG_MODE) {
+					console.log('[DEBUG] START_GAMEMATCH the game has started.');
+				}
 			break
 			case 'UPDATE_GAMEMATCH':
 				game.global.receivedMsg=msg.event;
@@ -74,19 +76,6 @@ function startUp(typeOfGame) {
 				}
 				if (game.global.DEBUG_MODE) {
 					console.log('[DEBUG] UPDATE_GAMEMATCH for player #' + msg.id + '.');
-				}
-			break
-			case 'NEW_LEVEL_RETURN':
-				game.global.receivedMsg=msg.event;
-				game.global.info=msg.tilemap;
-				if (game.global.DEBUG_MODE) {
-					console.log('[DEBUG] NEW_LEVEL_RETURN new tilemap generated.');
-				}
-			break
-			case 'START_GAMEMATCH':
-				game.global.receivedMsg=msg.event;
-				if (game.global.DEBUG_MODE) {
-					console.log('[DEBUG] START_GAMEMATCH the game has started.');
 				}
 			break
 			default :

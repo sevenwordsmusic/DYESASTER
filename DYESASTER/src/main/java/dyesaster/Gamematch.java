@@ -13,28 +13,29 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class Gamematch{
-	private final Player creator;
-	private final Level level;
-	private LinkedList<Player> players= new LinkedList<Player>();
-	private final long TICK_DELAY= 1000/30;
-	private double blackHolePosition;
+	private final Player CREATOR;
+	private final Level LEVEL;
 	private final int BLACKHOLE_SPEED= 4;
+	private final long TICK_DELAY= 1000/30;
+	
+	private LinkedList<Player> players= new LinkedList<Player>();
+	private double blackHolePosition;
 	private ObjectMapper mapper = new ObjectMapper();
 	private Thread tickThread;
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	
 	public Gamematch(Player player){
-		this.creator= player;
-		this.level= new Level();
+		this.CREATOR= player;
+		this.LEVEL= new Level();
 		this.blackHolePosition= 96;
 	}
 	
 	public Player getCreator() {
-		return creator;
+		return CREATOR;
 	}
 
 	public Level getLevel() {
-		return level;
+		return LEVEL;
 	}
 
 	public LinkedList<Player> getPlayers() {
@@ -91,6 +92,9 @@ public class Gamematch{
 		public void start() {
 			tickThread = new Thread(() -> startGameLoop());
 			tickThread.start();
+			for(int i= 0; i< players.size(); i++) {
+				players.get(i).start();
+			}
 		}
 
 		private void startGameLoop() {
