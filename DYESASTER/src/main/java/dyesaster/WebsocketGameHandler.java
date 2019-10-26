@@ -54,7 +54,6 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 							player.setGameId(node.get("gameMatch_code").asInt());
 							player.setIndex(games.get(player.getGameId()).getPlayers().size());
 							games.get(node.get("gameMatch_code").asInt()).addPlayer(player);
-							games.get(node.get("gameMatch_code").asInt()).start();
 							msg.put("id", player.getPlayerId());
 							msg.put("event", "NEW_LEVEL_RETURN");
 							msg.put("tilemap", games.get(node.get("gameMatch_code").asInt()).getLevel().getTileMapString());
@@ -62,7 +61,15 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 						}
 					}
 					break;
+				case "LOAD_GAMEMATCH":
+					msg.put("id", player.getPlayerId());
+					msg.put("event", "LOAD_GAMEMATCH");
+					player.WSSession().sendMessage(new TextMessage(msg.toString()));
+					break;
 				case "START_GAMEMATCH":
+					if(1==player.getIndex()) {
+						games.get(player.getGameId()).start();
+					}
 					msg.put("id", player.getPlayerId());
 					msg.put("event", "START_GAMEMATCH");
 					player.WSSession().sendMessage(new TextMessage(msg.toString()));

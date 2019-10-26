@@ -11,12 +11,14 @@ var LoadScene = new Phaser.Class({
 
     create: function ()
     {
-    	startGamematch();
+    	let msg = new Object();
+    	msg.event = 'LOAD_GAMEMATCH';
+    	game.global.socket.send(JSON.stringify(msg));
     },
     
     update: function ()
     {
-    	if(game.global.receivedMsg=='START_GAMEMATCH'){
+    	if(game.global.receivedMsg=='LOAD_GAMEMATCH'){
 			this.scene.start('gameScene');
 			if (game.global.DEBUG_MODE) {
 				console.log('[DEBUG] Switching to gameScene.');
@@ -25,10 +27,3 @@ var LoadScene = new Phaser.Class({
     }
 
 });
-
-
-function startGamematch(){
-	let msg = new Object();
-	msg.event = 'START_GAMEMATCH';
-	game.global.socket.send(JSON.stringify(msg));
-}
