@@ -1,8 +1,31 @@
 * {
-	background-color: #000000 !Important;
 	padding: 0px 0px 0px 0px !Important;
+	font-size: 4vw !Important;
+	font-family: Arial !Important;
 }
 body {
+	background-color: #000000 !Important;
 	margin: 0px 0px 0px 0px !Important;
 	overflow: hidden !Important;
+}
+
+div {
+	width: 100%;
+	text-align: center;
+}
+
+.hoverable, .spoiler {
+	background-color: #FFFFFF;
+}
+
+.spoiler {
+	display: none;
+}
+
+.hoverable:hover > .spoiler {
+	display: block;
+}
+
+.spoiler:hover {
+	display: visible;
 }

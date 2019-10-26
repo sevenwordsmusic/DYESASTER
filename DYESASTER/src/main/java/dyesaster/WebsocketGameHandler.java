@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class WebsocketGameHandler extends TextWebSocketHandler {
 	private static final String PLAYER_ATTRIBUTE = "PLAYER";
+	
 	private ObjectMapper mapper = new ObjectMapper();
 	private AtomicInteger playerId = new AtomicInteger(0);
 	private static LinkedList<Gamematch> games= new LinkedList<Gamematch>();
@@ -36,40 +37,41 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
 			
 			switch (node.get("event").asText()) {
-				case "TEST":
-					msg.put("id", player.getPlayerId());
-					msg.put("event", "TEST_CONFIRMATION");
-					player.WSSession().sendMessage(new TextMessage(msg.toString()));
-					break;
 				case "NEW_GAMEMATCH":
-					player.setIndex(0);
-					Gamematch newGamematch= new Gamematch(player);
-					newGamematch.addPlayer(player);
-					games.add(newGamematch);
-					player.setGameId(games.indexOf(newGamematch));
-					msg.put("id", player.getPlayerId());
-					msg.put("event", "NEW_LEVEL_RETURN");
-					msg.put("tilemap", newGamematch.getLevel().randomize());
-					player.WSSession().sendMessage(new TextMessage(msg.toString()));
-					break;
-				case "GET_GAMEMATCH":
-					player.setIndex(games.peek().getPlayers().size());
-					games.peek().addPlayer(player);
-					games.peek().start();
-					player.start();
-					msg.put("id", player.getPlayerId());
-					msg.put("event", "NEW_LEVEL_RETURN");
-					msg.put("tilemap", games.peek().getLevel().getTileMapString());
-					player.WSSession().sendMessage(new TextMessage(msg.toString()));
+					if(node.get("typeOfGame").asInt()==1) {
+						player.setIndex(0);
+						Gamematch newGamematch= new Gamematch(player);
+						newGamematch.addPlayer(player);
+						games.add(newGamematch);
+						System.out.println("NEW ID GENERATED :" + games.indexOf(newGamematch));
+						player.setGameId(games.indexOf(newGamematch));
+						msg.put("id", player.getPlayerId());
+						msg.put("event", "NEW_LEVEL_RETURN");
+						msg.put("tilemap", newGamematch.getLevel().randomize());
+						player.WSSession().sendMessage(new TextMessage(msg.toString()));
+					}else if(node.get("typeOfGame").asInt()==2) {
+						if(node.get("gameMatch_code").asInt() < games.size()){
+							player.setGameId(node.get("gameMatch_code").asInt());
+							player.setIndex(games.get(player.getGameId()).getPlayers().size());
+							games.get(node.get("gameMatch_code").asInt()).addPlayer(player);
+							games.get(node.get("gameMatch_code").asInt()).start();
+							msg.put("id", player.getPlayerId());
+							msg.put("event", "NEW_LEVEL_RETURN");
+							msg.put("tilemap", games.get(node.get("gameMatch_code").asInt()).getLevel().getTileMapString());
+							player.WSSession().sendMessage(new TextMessage(msg.toString()));
+						}
+					}
 					break;
 				case "START_GAMEMATCH":
-					player.start();
 					msg.put("id", player.getPlayerId());
 					msg.put("event", "START_GAMEMATCH");
 					player.WSSession().sendMessage(new TextMessage(msg.toString()));
 					break;
 				case "UPDATE_CONTROLS":
 					player.setDirection(node.get("direction").asText());
+					if(node.get("changeColor").asBoolean()) {
+						player.changeColor();
+					}
 					break;
 				default:
 					break;
@@ -87,8 +89,9 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		synchronized(this) {
 			player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
 		}
-
-		games.peek().stop();
+		if(games.get(player.getGameId()).getCreator().getPlayerId()==player.getPlayerId()) {
+			games.get(player.getGameId()).stop();
+		}
 		player.stop();
 
 	}

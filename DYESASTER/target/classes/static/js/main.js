@@ -30,13 +30,20 @@ var MainScene = new Phaser.Class({
 		this.load.image('bg-5', 'assets/bg-5.png');
 		
 		// player animations
-		this.load.atlas('player', 'assets/player.png', 'assets/player.json');
-		this.load.atlas('player2', 'assets/player.png', 'assets/player.json');
+			for(var c=0; c<4; c++){
+					this.load.atlas('playerSprite-'+c, 'assets/playerSprite-'+c+'.png', 'assets/player.json');
+			}
     },
 
     create: function ()
     {
-    	newGamematch();	
+    	let msg = new Object();
+    	msg.event = 'NEW_GAMEMATCH';
+    	msg.typeOfGame = game.global.typeOfGame;
+    	if(game.global.typeOfGame=2){
+    		msg.gameMatch_code=document.getElementById("gameMatch_code").value;
+    	}  	
+    	game.global.socket.send(JSON.stringify(msg));
     },
     
     update: function ()
@@ -51,13 +58,8 @@ var MainScene = new Phaser.Class({
     }
 
 });
-
-
-function newGamematch(){
-	let msg = new Object();
-	msg.event = 'TEST';
-	game.global.socket.send(JSON.stringify(msg));
-}
+var text;
+var score = 0;
 
 var config = {
 	    type: Phaser.AUTO,
@@ -72,12 +74,4 @@ var config = {
 	    },
 	    scene: [MainScene, LoadScene, GameScene],
 	    roundPixels: true
-	};
-
-var map;
-var player=[""];
-var cursors;
-var text;
-var score = 0;
-
-var game = new Phaser.Game(config);
+};

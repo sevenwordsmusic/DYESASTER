@@ -17,15 +17,18 @@ public class Player {
 	private double posX;
 	private double posY;
 	private long updateJumpPosition;
-	private final long JUMP_LAPSE= 500;
 	private boolean onGround;
 	private boolean onJump;
 	private int gameId= 999999;
-	private boolean go;
 	private String direction;
+	
 	private final long UPDATE_DELAY= 1000/60;
+	private final long UPDATE_LATENCY= 200;
+	private long updatePlayerColor;
 	private final int WALK_SPEED= 8;
-	private final int JUMP_SPEED= 6;
+	private final long JUMP_LAPSE= 600;
+	private final int JUMP_SPEED= 10;
+		
 	//private final int GRAVITY= 12;
 	private int colorId;
 	private Thread tickThread;
@@ -39,9 +42,9 @@ public class Player {
 		this.posY= 7000;
 		this.onGround= true;
 		this.onJump= false;
-		this.go= true;
 		this.direction= "";
 		this.colorId=0;
+		this.updatePlayerColor= System.currentTimeMillis();
 	}
 
 	public int getPlayerId() {
@@ -67,10 +70,10 @@ public class Player {
 	public void updateMovement() {
 					switch (this.direction) {
 						case "left":
-							posX-=WALK_SPEED;
+								posX-=WALK_SPEED;
 							break;
 						case "right":
-							posX+=WALK_SPEED;
+								posX+=WALK_SPEED;
 							break;
 						case "jump":
 							if(onGround && !onJump) {
@@ -84,7 +87,6 @@ public class Player {
 					}
 	}
 	
-
 	public void start() {
 		tickThread = new Thread(() -> startPhysicsLoop());
 		tickThread.start();
@@ -109,9 +111,6 @@ public class Player {
 	}
 	
 	private void update() throws IOException {
-		long updatePlayerPhysics= System.currentTimeMillis() + UPDATE_DELAY;
-		while(go) {
-				if(System.currentTimeMillis() > updatePlayerPhysics) {
 					if(System.currentTimeMillis() < updateJumpPosition) {
 						posY-=JUMP_SPEED;
 					}else {
@@ -120,9 +119,6 @@ public class Player {
 					if(!onJump) {
 						//posY+=GRAVITY;
 					}
-					updatePlayerPhysics= System.currentTimeMillis() + UPDATE_DELAY;
-				}
-		}
 	}
 	
 	public int getGameId() {
@@ -174,5 +170,14 @@ public class Player {
 		this.posX= (this.index+1)*200;
 	}
 
-	
+	public void changeColor() {
+		if(System.currentTimeMillis() > updatePlayerColor) {
+			if(colorId<=2) {
+				colorId++;
+			}else {
+				colorId=0;
+			}
+			updatePlayerColor=System.currentTimeMillis() + UPDATE_LATENCY;
+		}
+	}
 }
