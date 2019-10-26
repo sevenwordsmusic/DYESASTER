@@ -131,7 +131,9 @@ var GameScene = new Phaser.Class({
 		}
 		
 
-
+    	let msg = new Object();
+    	msg.event = 'START_GAMEMATCH';
+    	game.global.socket.send(JSON.stringify(msg));
 		
 		this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 		this.cameraDolly = new Phaser.Geom.Point(player[0].x, player[0].y);

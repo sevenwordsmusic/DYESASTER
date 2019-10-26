@@ -57,6 +57,12 @@ function startUp(typeOfGame) {
 					console.log('[DEBUG] NEW_LEVEL_RETURN new tilemap generated.');
 				}
 			break
+			case 'LOAD_GAMEMATCH':
+				game.global.receivedMsg=msg.event;
+				if (game.global.DEBUG_MODE) {
+					console.log('[DEBUG] LOAD_GAMEMATCH the game has been loaded.');
+				}
+			break
 			case 'START_GAMEMATCH':
 				game.global.receivedMsg=msg.event;
 				if (game.global.DEBUG_MODE) {
