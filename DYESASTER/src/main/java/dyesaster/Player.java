@@ -14,37 +14,43 @@ public class Player {
 	private final int playerId;
 	private int index;
 	private boolean isAlive;
-	private double posX;
-	private double posY;
+	private int posX;
+	private int posY;
 	private long updateJumpPosition;
 	private boolean onGround;
-	private boolean onJump;
 	private int gameId= 999999;
 	private String direction;
 	
 	private final long UPDATE_DELAY= 1000/60;
 	private final long UPDATE_LATENCY= 200;
 	private long updatePlayerColor;
-	private final int WALK_SPEED= 8;
-	private final long JUMP_LAPSE= 600;
-	private final int JUMP_SPEED= 10;
+	private final int WALK_SPEED= 10;
+	private final long JUMP_LAPSE= 800;
+	private final int JUMP_SPEED= 14;
 		
-	//private final int GRAVITY= 12;
+	private final int MAX_GRAVITY_SPEED= 12;
+	private final double CONST_GRAVITY_ACC= 0.04;
 	private int colorId;
 	private Thread tickThread;
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	private Level level;
+	private int[][] stateMap;
+	
+	private double angularTime;
+	private boolean jump;
 	
 	public Player(int playerId, WebSocketSession session) {
 		this.playerId= playerId;
 		this.session= session;
 		this.isAlive= true;
+		this.jump= false;
 		this.posX= 200;
 		this.posY= 7000;
 		this.onGround= true;
-		this.onJump= false;
 		this.direction= "";
 		this.colorId=0;
 		this.updatePlayerColor= System.currentTimeMillis();
+		this.angularTime=0.1;
 	}
 
 	public int getPlayerId() {
@@ -70,24 +76,32 @@ public class Player {
 	public void updateMovement() {
 					switch (this.direction) {
 						case "left":
-								posX-=WALK_SPEED;
+								if(stateMap[Math.floorDiv(posX-WALK_SPEED, 96)][Math.floorDiv(posY, 96)]==0) {
+									posX-=WALK_SPEED;
+								}else {
+									this.direction="idle";
+								}
 							break;
 						case "right":
+							if(stateMap[Math.floorDiv(posX+WALK_SPEED, 96)][Math.floorDiv(posY, 96)]==0) {
 								posX+=WALK_SPEED;
-							break;
-						case "jump":
-							if(onGround && !onJump) {
-								posY-=JUMP_SPEED;
-								onJump= true;
-								updateJumpPosition= System.currentTimeMillis() + JUMP_LAPSE;
-							}
+							}else {
+								this.direction="idle";
+							}	
 							break;
 						default:
 							break;
 					}
+		if(jump) {
+			if(onGround && stateMap[Math.floorDiv(posX, 96)][Math.floorDiv(posY-JUMP_SPEED, 96)]==0) {
+				posY-=JUMP_SPEED;
+				updateJumpPosition= System.currentTimeMillis() + JUMP_LAPSE;
+			}
+		}
 	}
 	
-	public void start() {
+	public void start(Level level) {
+		this.level=level;
 		tickThread = new Thread(() -> startPhysicsLoop());
 		tickThread.start();
 	}
@@ -111,13 +125,24 @@ public class Player {
 	}
 	
 	private void update() throws IOException {
-					if(System.currentTimeMillis() < updateJumpPosition) {
-						posY-=JUMP_SPEED;
+					stateMap=level.getStateMap();
+					if(System.currentTimeMillis() < updateJumpPosition && stateMap[Math.floorDiv(posX, 96)][Math.floorDiv(posY-JUMP_SPEED, 96)]==0) {
+						posY-=Math.floor(JUMP_SPEED*((double)(updateJumpPosition-System.currentTimeMillis())/(double)JUMP_LAPSE));
+						onGround=false;
+					}else if(stateMap[Math.floorDiv( posX , 96 )][Math.floorDiv( (int)Math.floor(posY+MAX_GRAVITY_SPEED*angularTime)+48 , 96 )]==0) {
+						if(System.currentTimeMillis() < updateJumpPosition) {
+							updateJumpPosition=System.currentTimeMillis();
+						}
+						posY+=Math.floor(MAX_GRAVITY_SPEED*angularTime);
+						onGround=false;
+						if(angularTime<1) {
+							angularTime+=CONST_GRAVITY_ACC;
+						}else {
+							angularTime=1;
+						}
 					}else {
-						onJump=false;
-					}
-					if(!onJump) {
-						//posY+=GRAVITY;
+						onGround=true;
+						angularTime=0.1;
 					}
 	}
 	
@@ -133,7 +158,7 @@ public class Player {
 		return posX;
 	}
 
-	public void setPosX(double posX) {
+	public void setPosX(int posX) {
 		this.posX = posX;
 	}
 
@@ -141,7 +166,7 @@ public class Player {
 		return posY;
 	}
 
-	public void setPosY(double posY) {
+	public void setPosY(int posY) {
 		this.posY = posY;
 	}
 
@@ -179,5 +204,9 @@ public class Player {
 			}
 			updatePlayerColor=System.currentTimeMillis() + UPDATE_LATENCY;
 		}
+	}
+
+	public void setJump(boolean jump) {
+		this.jump = jump;
 	}
 }

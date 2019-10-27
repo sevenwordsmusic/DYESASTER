@@ -15,17 +15,24 @@ div {
 }
 
 .hoverable, .spoiler {
-	background-color: #FFFFFF;
+	background-color: #999999;
 }
 
 .spoiler {
+	transition-delay: 0.2s;
+	transition-duration: 0.4s;
 	display: none;
 }
 
-.hoverable:hover > .spoiler {
+.hoverable:hover, .hoverable:hover > .spoiler {
 	display: block;
+	transition-delay: 0.0s;
+	transition-duration: 0.2s;
+	background-color: #CCCCCC;
 }
 
 .spoiler:hover {
-	display: visible;
+	transition-delay: 0.0s;
+	transition-duration: 0.2s;
+	display: block;
 }
