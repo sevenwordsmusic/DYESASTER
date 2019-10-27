@@ -76,6 +76,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					break;
 				case "UPDATE_CONTROLS":
 					player.setDirection(node.get("direction").asText());
+					player.setJump(node.get("jump").asBoolean());
 					if(node.get("changeColor").asBoolean()) {
 						player.changeColor();
 					}

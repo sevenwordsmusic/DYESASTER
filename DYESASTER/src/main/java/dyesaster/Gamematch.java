@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class Gamematch{
 	private final Player CREATOR;
 	private final Level LEVEL;
-	private final int BLACKHOLE_SPEED= 4;
+	private final int BLACKHOLE_SPEED= 2;
 	private final long TICK_DELAY= 1000/30;
 	
 	private LinkedList<Player> players= new LinkedList<Player>();
@@ -93,7 +93,7 @@ public class Gamematch{
 			tickThread = new Thread(() -> startGameLoop());
 			tickThread.start();
 			for(int i= 0; i< players.size(); i++) {
-				players.get(i).start();
+				players.get(i).start(LEVEL);
 			}
 		}
 

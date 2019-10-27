@@ -180,12 +180,11 @@ var GameScene = new Phaser.Class({
 		else if (cursors.right.isDown)
 		{
 			msg.direction = "right";
-		}else if (cursors.up.isDown)
-		{
-			msg.direction = "jump";      
 		}else{
 			msg.direction = "idle";
 		}
+		
+		msg.jump = cursors.up.isDown;
 		//COLOR
 		msg.changeColor = cursors.color.isDown;
 		//FIRE

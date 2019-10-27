@@ -50,10 +50,11 @@ public class Level {
 		for(int y=0; y < yLength; y++) {
 			for(int x=0; x < xLength; x++) {
 				tileMap[x][y]=parts[counter];
-				stateMap[x][y]=0;
+				stateMap[x][y]=Integer.parseInt(tileMap[x][y]);
 				counter++;
 			}
 		}
+
 		return tileMapString;
 	}
 
@@ -139,5 +140,8 @@ public class Level {
 	public String[][] getTileMap() {
 		return tileMap;
 	}
-		
+
+	public int[][] getStateMap() {
+		return stateMap;
+	}		
 }
