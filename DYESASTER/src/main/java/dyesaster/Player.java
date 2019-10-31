@@ -24,7 +24,7 @@ public class Player {
 	private final long UPDATE_DELAY= 1000/60;
 	private final long UPDATE_LATENCY= 200;
 	private long updatePlayerColor;
-	private final int WALK_SPEED= 10;
+	private final int WALK_SPEED= 5;
 	private final long JUMP_LAPSE= 800;
 	private final int JUMP_SPEED= 14;
 		
@@ -74,24 +74,30 @@ public class Player {
 	}
 
 	public void updateMovement() {
+
 					switch (this.direction) {
 						case "left":
+							if(posX>WALK_SPEED) {
 								if(stateMap[Math.floorDiv(posX-WALK_SPEED, 96)][Math.floorDiv(posY, 96)]==0) {
 									posX-=WALK_SPEED;
 								}else {
 									this.direction="idle";
 								}
+							}	
 							break;
 						case "right":
-							if(stateMap[Math.floorDiv(posX+WALK_SPEED, 96)][Math.floorDiv(posY, 96)]==0) {
-								posX+=WALK_SPEED;
-							}else {
-								this.direction="idle";
-							}	
+							if(posX<stateMap.length*96-WALK_SPEED) {
+								if(stateMap[Math.floorDiv(posX+WALK_SPEED, 96)][Math.floorDiv(posY, 96)]==0) {
+									posX+=WALK_SPEED;
+								}else {
+									this.direction="idle";
+								}	
+							}
 							break;
 						default:
 							break;
 					}
+	
 		if(jump) {
 			if(onGround && stateMap[Math.floorDiv(posX, 96)][Math.floorDiv(posY-JUMP_SPEED, 96)]==0) {
 				posY-=JUMP_SPEED;
@@ -129,7 +135,7 @@ public class Player {
 					if(System.currentTimeMillis() < updateJumpPosition && stateMap[Math.floorDiv(posX, 96)][Math.floorDiv(posY-JUMP_SPEED, 96)]==0) {
 						posY-=Math.floor(JUMP_SPEED*((double)(updateJumpPosition-System.currentTimeMillis())/(double)JUMP_LAPSE));
 						onGround=false;
-					}else if(stateMap[Math.floorDiv( posX , 96 )][Math.floorDiv( (int)Math.floor(posY+MAX_GRAVITY_SPEED*angularTime)+48 , 96 )]==0) {
+					}else if(stateMap[Math.floorDiv( posX , 96 )][Math.floorDiv((int)Math.floor((MAX_GRAVITY_SPEED*angularTime)+posY+48) , 96 )]==0) {
 						if(System.currentTimeMillis() < updateJumpPosition) {
 							updateJumpPosition=System.currentTimeMillis();
 						}

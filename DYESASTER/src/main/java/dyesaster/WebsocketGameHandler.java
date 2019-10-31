@@ -81,6 +81,18 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 						player.changeColor();
 					}
 					break;
+				case "UPDATE_CONTROLS_LOCAL":
+					player.setDirection(node.get("direction_P0").asText());
+					player.setJump(node.get("jump_P0").asBoolean());
+					if(node.get("changeColor_P0").asBoolean()) {
+						player.changeColor();
+					}
+					games.get(player.getGameId()).getPlayers().get(1).setDirection(node.get("direction_P1").asText());
+					games.get(player.getGameId()).getPlayers().get(1).setJump(node.get("jump_P1").asBoolean());
+					if(node.get("changeColor_P1").asBoolean()) {
+						games.get(player.getGameId()).getPlayers().get(1).changeColor();
+					}
+					break;
 				default:
 					break;
 			}

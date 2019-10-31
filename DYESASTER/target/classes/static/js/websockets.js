@@ -8,6 +8,7 @@ function startUp(typeOfGame) {
 	document.getElementById('mainMenu').style.display='none';
 	
 	game = new Phaser.Game(config);
+
 	// GLOBAL VARIABLES
 	game.global = {
 		typeOfGame : typeOfGame,

@@ -9,12 +9,12 @@ var MainScene = new Phaser.Class({
         Phaser.Scene.call(this, { key: 'mainScene', active: true });
 
     },
-
     preload: function ()
-    {   
+    { 	
 		// map made with Tiled in JSON format
 		this.load.tilemapTiledJSON('map', 'assets/map.json');  
-		
+
+
 		// tiles in spritesheet 
 		this.load.spritesheet('tiles', 'assets/tiles/00.png', {frameWidth: 96, frameHeight: 96});
 
@@ -29,6 +29,9 @@ var MainScene = new Phaser.Class({
 		this.load.image('bg-4', 'assets/bg-4.png');
 		this.load.image('bg-5', 'assets/bg-5.png');
 		
+	   	 
+
+		
 		// player animations
 			for(var c=0; c<4; c++){
 					this.load.atlas('playerSprite-'+c, 'assets/playerSprite-'+c+'.png', 'assets/player.json');
@@ -36,7 +39,7 @@ var MainScene = new Phaser.Class({
     },
 
     create: function ()
-    {
+    {   
     	let msg = new Object();
     	msg.event = 'NEW_GAMEMATCH';
     	msg.typeOfGame = game.global.typeOfGame;

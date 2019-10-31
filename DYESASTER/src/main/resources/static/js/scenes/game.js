@@ -24,7 +24,8 @@ var GameScene = new Phaser.Class({
             }
         }, this);
         
-		cursors = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'left': Phaser.Input.Keyboard.KeyCodes.LEFT, 'right': Phaser.Input.Keyboard.KeyCodes.RIGHT, 'shoot': Phaser.Input.Keyboard.KeyCodes.CONTROL, 'color': Phaser.Input.Keyboard.KeyCodes.SPACE });
+		cursors0 = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.W, 'left': Phaser.Input.Keyboard.KeyCodes.A, 'right': Phaser.Input.Keyboard.KeyCodes.D, 'shoot': Phaser.Input.Keyboard.KeyCodes.F, 'color': Phaser.Input.Keyboard.KeyCodes.G });
+		cursors1 = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'left': Phaser.Input.Keyboard.KeyCodes.LEFT, 'right': Phaser.Input.Keyboard.KeyCodes.RIGHT, 'shoot': Phaser.Input.Keyboard.KeyCodes.L, 'color': Phaser.Input.Keyboard.KeyCodes.K });
     },
     
     create: function ()
@@ -60,17 +61,17 @@ var GameScene = new Phaser.Class({
 		
 		// load the map 
 		map = this.make.tilemap({key: 'map'});
-		
+
 		// tiles for the ground layer
 		allTiles = map.addTilesetImage('tiles');
 		// create the ground layer
 		groundLayer = map.createDynamicLayer('World', allTiles, 0, 0);
 		// the player will collide with this layer
-		groundLayer.setCollisionByExclusion([-1]);
+		//groundLayer.setCollisionByExclusion([-1]);
 		
 		
 		blackHoleLayer = map.createDynamicLayer('BlackHole', allTiles, 0, 0);
-		blackHoleLayer.setCollisionByExclusion([-1]);
+		//blackHoleLayer.setCollisionByExclusion([-1]);
 		blackHoleLayer.setPosition(0, 96);
 
     	//this.animatedTiles.init(map);
@@ -108,12 +109,27 @@ var GameScene = new Phaser.Class({
 		this.physics.add.collider(player[1], player[0]);
 		
 		blackHoleLayer.setTileIndexCallback(211, deathByBlackHole, this);
+		blackHoleLayer.setTileIndexCallback(212, deathByBlackHole, this);
+		blackHoleLayer.setTileIndexCallback(213, deathByBlackHole, this);
+		blackHoleLayer.setTileIndexCallback(214, deathByBlackHole, this);
+		blackHoleLayer.setTileIndexCallback(215, deathByBlackHole, this);
+		
+		blackHoleLayer.setTileIndexCallback(216, deathByBlackHole, this);
+		blackHoleLayer.setTileIndexCallback(217, deathByBlackHole, this);
+		blackHoleLayer.setTileIndexCallback(218, deathByBlackHole, this);
+		blackHoleLayer.setTileIndexCallback(219, deathByBlackHole, this);
+		blackHoleLayer.setTileIndexCallback(220, deathByBlackHole, this);
+		
+		blackHoleLayer.setTileIndexCallback(221, deathByBlackHole, this);
+		blackHoleLayer.setTileIndexCallback(222, deathByBlackHole, this);
+		blackHoleLayer.setTileIndexCallback(223, deathByBlackHole, this);
+		blackHoleLayer.setTileIndexCallback(224, deathByBlackHole, this);
+		blackHoleLayer.setTileIndexCallback(225, deathByBlackHole, this);
+		
 		this.physics.add.overlap(player[0], blackHoleLayer);
 		this.physics.add.overlap(player[1], blackHoleLayer);
 
 		
-		
-
 		for(var c=0; c<4; c++){//For every color:
 			// player walk animation
 				this.anims.create({
@@ -135,11 +151,19 @@ var GameScene = new Phaser.Class({
     	msg.event = 'START_GAMEMATCH';
     	game.global.socket.send(JSON.stringify(msg));
 		
-		this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-		this.cameraDolly = new Phaser.Geom.Point(player[0].x, player[0].y);
-		this.cameras.main.startFollow(this.cameraDolly);
+    	
+        this.cameras.main.setSize(768, 864);
 
-
+        camera0 = this.cameras.main;
+        camera1 = this.cameras.add(768, 0, 768, 864);
+    	
+    	
+        camera0.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+        camera1.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+		this.cameraDolly0 = new Phaser.Geom.Point(player[0].x, player[0].y);
+		camera0.startFollow(this.cameraDolly0);
+		this.cameraDolly1 = new Phaser.Geom.Point(player[1].x, player[1].y);
+		camera1.startFollow(this.cameraDolly1);
 		
     },
 	
@@ -166,29 +190,49 @@ var GameScene = new Phaser.Class({
 			}
 					
 	    this.physics.world.bounds.height = groundLayer.height - 96 + game.global.blackHolePosition;
-	    this.cameras.main.setBounds(0, 0, map.widthInPixels, this.physics.world.bounds.height);
-    	
-        this.cameraDolly.x = player[game.global.index].x;
-        this.cameraDolly.y = player[game.global.index].y; 
-		
+        camera0.setBounds(0, 0, map.widthInPixels, this.physics.world.bounds.height);
+        camera1.setBounds(0, 0, map.widthInPixels, this.physics.world.bounds.height);
+        
+        this.cameraDolly0.x = player[0].x;
+        this.cameraDolly0.y = player[0].y; 
+        this.cameraDolly1.x = player[1].x;
+        this.cameraDolly1.y = player[1].y; 
+        
+        
     	let msg = new Object();
-    	msg.event = 'UPDATE_CONTROLS';
-		if (cursors.left.isDown)
+    	msg.event = 'UPDATE_CONTROLS_LOCAL';
+		if (cursors0.left.isDown)
 		{
-			msg.direction = "left";
+			msg.direction_P0 = "left";
 		}
-		else if (cursors.right.isDown)
+		else if (cursors0.right.isDown)
 		{
-			msg.direction = "right";
+			msg.direction_P0 = "right";
 		}else{
-			msg.direction = "idle";
+			msg.direction_P0 = "idle";
 		}
-		
-		msg.jump = cursors.up.isDown;
+		msg.jump_P0 = cursors0.up.isDown;
 		//COLOR
-		msg.changeColor = cursors.color.isDown;
+		msg.changeColor_P0 = cursors0.color.isDown;
 		//FIRE
-		if (cursors.shoot.isDown )
+		if (cursors0.shoot.isDown )
+		{}
+		
+		if (cursors1.left.isDown)
+		{
+			msg.direction_P1 = "left";
+		}
+		else if (cursors1.right.isDown)
+		{
+			msg.direction_P1 = "right";
+		}else{
+			msg.direction_P1 = "idle";
+		}
+		msg.jump_P1 = cursors1.up.isDown;
+		//COLOR
+		msg.changeColor_P1 = cursors1.color.isDown;
+		//FIRE
+		if (cursors1.shoot.isDown )
 		{}
 		//JUST ONE CONTROLS MSG IS SENT.
 		game.global.socket.send(JSON.stringify(msg));
@@ -203,12 +247,27 @@ var GameScene = new Phaser.Class({
 		this.bg_2.tilePositionY = this.cameras.main.scrollY * .4;
 		this.bg_3.tilePositionY = this.cameras.main.scrollY * .6;
 		this.bg_4.tilePositionY = this.cameras.main.scrollY * .8;
+
+
+		if(nextFrameUpdate<Date.now()){
+			animatedTilesBySeven(211,15);
+
+			nextFrameUpdate=Date.now()+updateLapse;
+		}
 	}
-
-
-
 });
+function animatedTilesBySeven(animatedTileId,totalFrames){
+	if(frameCount==totalFrames-1){
+		blackHoleLayer.replaceByIndex(animatedTileId+frameCount, animatedTileId);
+		frameCount=0;
+	}else{
+		blackHoleLayer.replaceByIndex(animatedTileId+frameCount, animatedTileId+frameCount+1);
+		frameCount++;
+	}	
+}
 
+
+var fps=15, frameCount=0, nextFrameUpdate=Date.now(), updateLapse=1000/fps;
 
 function deathByBlackHole(sprite, tile) {
     sprite.destroy();
@@ -218,3 +277,4 @@ function deathByBlackHole(sprite, tile) {
 var shootTime= 0;
 var bullets;
 var groundLayer, blackHoleLayer, coinLayer;
+var camera0, camera1;

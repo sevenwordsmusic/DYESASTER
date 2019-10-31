@@ -16,7 +16,7 @@ public class Gamematch{
 	private final Player CREATOR;
 	private final Level LEVEL;
 	private final int BLACKHOLE_SPEED= 2;
-	private final long TICK_DELAY= 1000/30;
+	private final long TICK_DELAY= 1000/60;
 	
 	private LinkedList<Player> players= new LinkedList<Player>();
 	private double blackHolePosition;
