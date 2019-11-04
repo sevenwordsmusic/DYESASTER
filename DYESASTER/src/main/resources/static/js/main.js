@@ -29,9 +29,7 @@ var MainScene = new Phaser.Class({
 		this.load.image('bg-4', 'assets/bg-4.png');
 		this.load.image('bg-5', 'assets/bg-5.png');
 		
-	   	 
-
-		
+	   	 		
 		// player animations
 			for(var c=0; c<4; c++){
 					this.load.atlas('playerSprite-'+c, 'assets/playerSprite-'+c+'.png', 'assets/player.json');
@@ -41,11 +39,13 @@ var MainScene = new Phaser.Class({
     create: function ()
     {   
     	let msg = new Object();
-    	msg.event = 'NEW_GAMEMATCH';
-    	msg.typeOfGame = game.global.typeOfGame;
-    	if(game.global.typeOfGame=2){
+    	if(game.global.typeOfGame==0){
+    		msg.event = 'NEW_LOCAL_GAMEMATCH';
+    	}else if(game.global.typeOfGame==2){
+    		msg.event = 'NEW_GAMEMATCH';
     		msg.gameMatch_code=document.getElementById("gameMatch_code").value;
-    	}  	
+    	}
+    	msg.typeOfGame = game.global.typeOfGame;
     	game.global.socket.send(JSON.stringify(msg));
     },
     

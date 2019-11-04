@@ -24,7 +24,7 @@ public class Player {
 	private final long UPDATE_DELAY= 1000/60;
 	private final long UPDATE_LATENCY= 200;
 	private long updatePlayerColor;
-	private final int WALK_SPEED= 5;
+	private final int WALK_SPEED= 10;
 	private final long JUMP_LAPSE= 800;
 	private final int JUMP_SPEED= 14;
 		

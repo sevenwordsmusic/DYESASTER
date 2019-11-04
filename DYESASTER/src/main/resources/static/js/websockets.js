@@ -82,7 +82,11 @@ function startUp(typeOfGame) {
 					game.global.player[i].direction=msg.player[i].direction;
 				}
 				if (game.global.DEBUG_MODE) {
-					console.log('[DEBUG] UPDATE_GAMEMATCH for player #' + msg.id + '.');
+					if(game.global.typeOfGame==0){
+						console.log('[DEBUG] UPDATE_GAMEMATCH in LOCAL mode.');
+					}else{
+						console.log('[DEBUG] UPDATE_GAMEMATCH for player #' + msg.id + '.');
+					}	
 				}
 			break
 			default :

@@ -12,7 +12,7 @@ var GameScene = new Phaser.Class({
 
     preload: function()
     {
-        var FKey = this.input.keyboard.addKey('F');
+        var FKey = this.input.keyboard.addKey('V');
         FKey.on('down', function () {
             if (this.scale.isFullscreen)
             {
@@ -24,8 +24,8 @@ var GameScene = new Phaser.Class({
             }
         }, this);
         
-		cursors0 = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.W, 'left': Phaser.Input.Keyboard.KeyCodes.A, 'right': Phaser.Input.Keyboard.KeyCodes.D, 'shoot': Phaser.Input.Keyboard.KeyCodes.F, 'color': Phaser.Input.Keyboard.KeyCodes.G });
-		cursors1 = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'left': Phaser.Input.Keyboard.KeyCodes.LEFT, 'right': Phaser.Input.Keyboard.KeyCodes.RIGHT, 'shoot': Phaser.Input.Keyboard.KeyCodes.L, 'color': Phaser.Input.Keyboard.KeyCodes.K });
+		cursors = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.W, 'left': Phaser.Input.Keyboard.KeyCodes.A, 'right': Phaser.Input.Keyboard.KeyCodes.D, 'shoot': Phaser.Input.Keyboard.KeyCodes.F, 'color': Phaser.Input.Keyboard.KeyCodes.G });
+		cursors_B = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'left': Phaser.Input.Keyboard.KeyCodes.LEFT, 'right': Phaser.Input.Keyboard.KeyCodes.RIGHT, 'shoot': Phaser.Input.Keyboard.KeyCodes.L, 'color': Phaser.Input.Keyboard.KeyCodes.K });
     },
     
     create: function ()
@@ -47,17 +47,10 @@ var GameScene = new Phaser.Class({
 		this.bg_2.setOrigin(0, 0);
 		this.bg_2.setScrollFactor(0);
 		
-		this.bg_3 = this.add.tileSprite(0, 0, game.config.width, game.config.height, "bg-3");
-		this.bg_3.setOrigin(0, 0);
-		this.bg_3.setScrollFactor(0);
+		//this.bg_3 = this.add.tileSprite(0, 0, game.config.width, game.config.height, "bg-3");
+		//this.bg_3.setOrigin(0, 0);
+		//this.bg_3.setScrollFactor(0);
 		
-		this.bg_4 = this.add.tileSprite(0, 0, game.config.width, game.config.height, "bg-4");
-		this.bg_4.setOrigin(0, 0);
-		this.bg_4.setScrollFactor(0);
-		
-		this.bg_5 = this.add.tileSprite(0, 0, game.config.width, game.config.height, "bg-5");
-		this.bg_5.setOrigin(0, 0);
-		this.bg_5.setScrollFactor(0);
 		
 		// load the map 
 		map = this.make.tilemap({key: 'map'});
@@ -128,20 +121,19 @@ var GameScene = new Phaser.Class({
 		
 		this.physics.add.overlap(player[0], blackHoleLayer);
 		this.physics.add.overlap(player[1], blackHoleLayer);
-
 		
 		for(var c=0; c<4; c++){//For every color:
 			// player walk animation
 				this.anims.create({
 					key: 'walk-'+c,	//We create 4 walk anims...
-					frames: this.anims.generateFrameNames('playerSprite-'+c, {prefix: 'p1_walk', start: 1, end: 11, zeroPad: 2}),
+					frames: this.anims.generateFrameNames('playerSprite-'+c, {prefix: 'walk_0', start: 0, end: 7, zeroPad: 0}),
 					frameRate: 15,
 					repeat: -1
 				});
 				// idle with only one frame, so repeat is not neaded
 				this.anims.create({
 					key: 'idle-'+c,	//And 4 idle anims...
-					frames: [{key: 'playerSprite-'+c, frame: 'p1_stand'}],
+					frames: [{key: 'playerSprite-'+c, frame: 'stand'}],
 					frameRate: 15,
 				});
 		}
@@ -154,16 +146,18 @@ var GameScene = new Phaser.Class({
     	
         this.cameras.main.setSize(768, 864);
 
-        camera0 = this.cameras.main;
-        camera1 = this.cameras.add(768, 0, 768, 864);
+        camera = this.cameras.main;
+        camera_B = this.cameras.add(768, 0, 768, 864);
     	
     	
-        camera0.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        camera1.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-		this.cameraDolly0 = new Phaser.Geom.Point(player[0].x, player[0].y);
-		camera0.startFollow(this.cameraDolly0);
-		this.cameraDolly1 = new Phaser.Geom.Point(player[1].x, player[1].y);
-		camera1.startFollow(this.cameraDolly1);
+        camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+        camera.setZoom(0.5);
+        camera_B.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+        camera_B.setZoom(0.5);
+		this.cameraDolly = new Phaser.Geom.Point(player[0].x, player[0].y);
+		camera.startFollow(this.cameraDolly);
+		this.cameraDolly_B = new Phaser.Geom.Point(player[1].x, player[1].y);
+		camera_B.startFollow(this.cameraDolly_B);
 		
     },
 	
@@ -190,91 +184,88 @@ var GameScene = new Phaser.Class({
 			}
 					
 	    this.physics.world.bounds.height = groundLayer.height - 96 + game.global.blackHolePosition;
-        camera0.setBounds(0, 0, map.widthInPixels, this.physics.world.bounds.height);
-        camera1.setBounds(0, 0, map.widthInPixels, this.physics.world.bounds.height);
+        camera.setBounds(0, 0, map.widthInPixels, this.physics.world.bounds.height);
+        camera_B.setBounds(0, 0, map.widthInPixels, this.physics.world.bounds.height);
         
-        this.cameraDolly0.x = player[0].x;
-        this.cameraDolly0.y = player[0].y; 
-        this.cameraDolly1.x = player[1].x;
-        this.cameraDolly1.y = player[1].y; 
+        this.cameraDolly.x = player[0].x;
+        this.cameraDolly.y = player[0].y; 
+        this.cameraDolly_B.x = player[1].x;
+        this.cameraDolly_B.y = player[1].y; 
         
         
     	let msg = new Object();
-    	msg.event = 'UPDATE_CONTROLS_LOCAL';
-		if (cursors0.left.isDown)
+    	msg.event = 'UPDATE_CONTROLS';
+		if (cursors.left.isDown)
 		{
-			msg.direction_P0 = "left";
+			msg.direction = "left";
 		}
-		else if (cursors0.right.isDown)
+		else if (cursors.right.isDown)
 		{
-			msg.direction_P0 = "right";
+			msg.direction = "right";
 		}else{
-			msg.direction_P0 = "idle";
+			msg.direction = "idle";
 		}
-		msg.jump_P0 = cursors0.up.isDown;
+		msg.jump = cursors.up.isDown;
 		//COLOR
-		msg.changeColor_P0 = cursors0.color.isDown;
+		msg.changeColor = cursors.color.isDown;
 		//FIRE
-		if (cursors0.shoot.isDown )
+		if (cursors.shoot.isDown )
 		{}
 		
-		if (cursors1.left.isDown)
+		if (cursors_B.left.isDown)
 		{
-			msg.direction_P1 = "left";
+			msg.direction_B = "left";
 		}
-		else if (cursors1.right.isDown)
+		else if (cursors_B.right.isDown)
 		{
-			msg.direction_P1 = "right";
+			msg.direction_B = "right";
 		}else{
-			msg.direction_P1 = "idle";
+			msg.direction_B = "idle";
 		}
-		msg.jump_P1 = cursors1.up.isDown;
+		msg.jump_B = cursors_B.up.isDown;
 		//COLOR
-		msg.changeColor_P1 = cursors1.color.isDown;
+		msg.changeColor_B = cursors_B.color.isDown;
 		//FIRE
-		if (cursors1.shoot.isDown )
+		if (cursors_B.shoot.isDown )
 		{}
 		//JUST ONE CONTROLS MSG IS SENT.
 		game.global.socket.send(JSON.stringify(msg));
 		
 		// scroll the texture of the tilesprites proportionally to the camera scroll
-		this.bg_1.tilePositionX = this.cameras.main.scrollX * .2;
-		this.bg_2.tilePositionX = this.cameras.main.scrollX * .4;
-		this.bg_3.tilePositionX = this.cameras.main.scrollX * .6;
-		this.bg_4.tilePositionX = this.cameras.main.scrollX * .8;
+		this.bg_1.tilePositionX = this.cameras.main.scrollX * .002;
+		this.bg_2.tilePositionX = this.cameras.main.scrollX * .004;
 		
 		this.bg_1.tilePositionY = this.cameras.main.scrollY * .2;
 		this.bg_2.tilePositionY = this.cameras.main.scrollY * .4;
-		this.bg_3.tilePositionY = this.cameras.main.scrollY * .6;
-		this.bg_4.tilePositionY = this.cameras.main.scrollY * .8;
-
 
 		if(nextFrameUpdate<Date.now()){
 			animatedTilesBySeven(211,15);
-
 			nextFrameUpdate=Date.now()+updateLapse;
 		}
 	}
 });
-function animatedTilesBySeven(animatedTileId,totalFrames){
-	if(frameCount==totalFrames-1){
-		blackHoleLayer.replaceByIndex(animatedTileId+frameCount, animatedTileId);
-		frameCount=0;
-	}else{
-		blackHoleLayer.replaceByIndex(animatedTileId+frameCount, animatedTileId+frameCount+1);
-		frameCount++;
-	}	
+function animatedTilesBySeven(animatedTile,totalFrames){
+		for(var i=0; i< totalFrames; i++){
+			blackHoleLayer.replaceByIndex(animatedTile+i, animatedTile+i+15);
+		}
+		for(var i=0; i< totalFrames; i++){
+			if(i==totalFrames-1){
+				blackHoleLayer.replaceByIndex(animatedTile+i+15, animatedTile);
+			}else{
+				blackHoleLayer.replaceByIndex(animatedTile+i+15, animatedTile+i+1);
+			}
+		}	
 }
 
 
-var fps=15, frameCount=0, nextFrameUpdate=Date.now(), updateLapse=1000/fps;
+var fps=15, nextFrameUpdate=Date.now(), updateLapse=1000/fps;
 
 function deathByBlackHole(sprite, tile) {
-    sprite.destroy();
-    return false;
+  /*  sprite.destroy();
+    return false;*/
 }
 
 var shootTime= 0;
 var bullets;
 var groundLayer, blackHoleLayer, coinLayer;
-var camera0, camera1;
+var camera, camera_B;

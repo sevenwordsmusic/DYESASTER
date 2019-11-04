@@ -23,11 +23,13 @@ public class Gamematch{
 	private ObjectMapper mapper = new ObjectMapper();
 	private Thread tickThread;
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	private int typeOfGame;
 	
 	public Gamematch(Player player){
 		this.CREATOR= player;
 		this.LEVEL= new Level();
 		this.blackHolePosition= 96;
+		this.typeOfGame=1;
 	}
 	
 	public Player getCreator() {
@@ -42,16 +44,16 @@ public class Gamematch{
 		return players;
 	}
 
+	public Player getPlayer(int index) {
+		return players.get(index);
+	}
+	
 	public void setPlayers(LinkedList<Player> players) {
 		this.players = players;
 	}
 	
 	public void addPlayer(Player player){
 		players.add(player);
-	}
-	
-	public Player getPlayer(int index){
-		return players.get(index);
 	}
 
 	public void stop() {
@@ -78,13 +80,22 @@ public class Gamematch{
 					msg.put("event", "UPDATE_GAMEMATCH");
 					msg.put("blackHolePosition", blackHolePosition);
 					msg.put("length", players.size());
-					for(int i= 0; i< players.size(); i++) {
-						msg.put("id", players.get(i).getPlayerId());
-						msg.put("index",  i);
+					if(typeOfGame==0)  {
+						msg.put("typeOfGame", typeOfGame);
 						try {
-							players.get(i).WSSession().sendMessage(new TextMessage(msg.toString()));
-						} catch (IOException e) {}
+							CREATOR.WSSession().sendMessage(new TextMessage(msg.toString()));
+						} catch (IOException e) {}	
+					}else {
+						for(int i= 0; i< players.size(); i++) {
+							msg.put("typeOfGame", typeOfGame);
+							msg.put("id", players.get(i).getPlayerId());
+							msg.put("index",  i);
+							try {
+								players.get(i).WSSession().sendMessage(new TextMessage(msg.toString()));
+							} catch (IOException e) {}
+						}
 					}
+
 				}
 		
 	}
@@ -106,6 +117,13 @@ public class Gamematch{
 					e.printStackTrace();
 				}
 			}, TICK_DELAY, TICK_DELAY, TimeUnit.MILLISECONDS);
+		}
+
+		public void setTypeOfGame(int i) {
+			this.typeOfGame=i;
 		}		
 
+		public int getTypeOfGame() {
+			return this.typeOfGame;
+		}
 }
