@@ -74,6 +74,11 @@ public class Gamematch{
 						player.put("posY", players.get(i).getPosY());
 						player.put("colorId", players.get(i).getColorId());
 						player.put("direction", players.get(i).getDirection());
+						System.out.println(players.get(i).getPosY()+" "+(9216+blackHolePosition));
+						if(players.get(i).getPosY()>=(9216+blackHolePosition)) {
+							players.get(i).setAlive(false);
+						}
+						player.put("isAlive", players.get(i).isAlive());
 						playerArrayNode.addPOJO(player);
 					}
 					msg.putPOJO("player", playerArrayNode);

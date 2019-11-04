@@ -24,12 +24,14 @@ function startUp(typeOfGame) {
 			x : 200,
 			y : 8400,
 			colorId : 0,
-			direction : "idle"
+			direction : "idle",
+			isAlive: true
 		},{
 			x : 400,
 			y : 8400,
 			colorId : 0,
-			direction : "idle"
+			direction : "idle",
+			isAlive: true
 		}]
 	}
 	
@@ -80,6 +82,7 @@ function startUp(typeOfGame) {
 					game.global.player[i].y=msg.player[i].posY;
 					game.global.player[i].colorId=msg.player[i].colorId;
 					game.global.player[i].direction=msg.player[i].direction;
+					game.global.player[i].isAlive=msg.player[i].isAlive;
 				}
 				if (game.global.DEBUG_MODE) {
 					if(game.global.typeOfGame==0){

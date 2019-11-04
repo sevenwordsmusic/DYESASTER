@@ -101,23 +101,6 @@ var GameScene = new Phaser.Class({
 		this.physics.add.collider(player[0], player[1]);
 		this.physics.add.collider(player[1], player[0]);
 		
-		blackHoleLayer.setTileIndexCallback(211, deathByBlackHole, this);
-		blackHoleLayer.setTileIndexCallback(212, deathByBlackHole, this);
-		blackHoleLayer.setTileIndexCallback(213, deathByBlackHole, this);
-		blackHoleLayer.setTileIndexCallback(214, deathByBlackHole, this);
-		blackHoleLayer.setTileIndexCallback(215, deathByBlackHole, this);
-		
-		blackHoleLayer.setTileIndexCallback(216, deathByBlackHole, this);
-		blackHoleLayer.setTileIndexCallback(217, deathByBlackHole, this);
-		blackHoleLayer.setTileIndexCallback(218, deathByBlackHole, this);
-		blackHoleLayer.setTileIndexCallback(219, deathByBlackHole, this);
-		blackHoleLayer.setTileIndexCallback(220, deathByBlackHole, this);
-		
-		blackHoleLayer.setTileIndexCallback(221, deathByBlackHole, this);
-		blackHoleLayer.setTileIndexCallback(222, deathByBlackHole, this);
-		blackHoleLayer.setTileIndexCallback(223, deathByBlackHole, this);
-		blackHoleLayer.setTileIndexCallback(224, deathByBlackHole, this);
-		blackHoleLayer.setTileIndexCallback(225, deathByBlackHole, this);
 		
 		this.physics.add.overlap(player[0], blackHoleLayer);
 		this.physics.add.overlap(player[1], blackHoleLayer);
@@ -164,23 +147,25 @@ var GameScene = new Phaser.Class({
     update: function (time, delta) {
 	    	blackHoleLayer.y= game.global.blackHolePosition;
 			for(var i=0; i<game.global.length; i++) {
-				player[i].setPosition(game.global.player[i].x,game.global.player[i].y);
-				//game.global.player[i].colorId=game.global.player[i].colorId;
-		    	if(player[i].body){			
-					switch(game.global.player[i].direction){
-						case 'left':
-							player[i].anims.play('walk-'+game.global.player[i].colorId, true); // walk left
-							player[i].flipX = true; // flip the sprite to the left
-						break
-						case 'right':
-							player[i].anims.play('walk-'+game.global.player[i].colorId, true);
-							player[i].flipX = false; // use the original sprite looking to the right
-						break
-						default :
-							player[i].anims.play('idle-'+game.global.player[i].colorId, true);
-						break
-					}
-		    	}
+				if(game.global.player[i].isAlive){
+					player[i].setPosition(game.global.player[i].x,game.global.player[i].y);
+					//game.global.player[i].colorId=game.global.player[i].colorId;
+						switch(game.global.player[i].direction){
+							case 'left':
+								player[i].anims.play('walk-'+game.global.player[i].colorId, true); // walk left
+								player[i].flipX = true; // flip the sprite to the left
+							break
+							case 'right':
+								player[i].anims.play('walk-'+game.global.player[i].colorId, true);
+								player[i].flipX = false; // use the original sprite looking to the right
+							break
+							default :
+								player[i].anims.play('idle-'+game.global.player[i].colorId, true);
+							break
+						}
+				}else if(player[i].body){
+					player[i].destroy();
+				}
 			}
 					
 	    this.physics.world.bounds.height = groundLayer.height - 96 + game.global.blackHolePosition;
@@ -259,11 +244,6 @@ function animatedTilesBySeven(animatedTile,totalFrames){
 
 
 var fps=15, nextFrameUpdate=Date.now(), updateLapse=1000/fps;
-
-function deathByBlackHole(sprite, tile) {
-  /*  sprite.destroy();
-    return false;*/
-}
 
 var shootTime= 0;
 var bullets;
