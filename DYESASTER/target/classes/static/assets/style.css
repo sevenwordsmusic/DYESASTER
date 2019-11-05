@@ -4,14 +4,18 @@
 	font-family: Arial !Important;
 }
 body {
-	background-image: url("menuBackground.png");
-	background-position: top;
+	background-color: #000000;
 	margin: 0px 0px 0px 0px !Important;
 	overflow: hidden !Important;
 }
 
 div {
 	margin: 0 auto 0 auto;
+}
+
+#mainMenu {
+	position: fixed;
+	width: 100%;
 }
 
 .spoiler {

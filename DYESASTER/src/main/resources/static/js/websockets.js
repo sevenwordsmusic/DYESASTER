@@ -6,34 +6,18 @@ var player=[""];
 function startUp(typeOfGame) {
 	
 	document.getElementById('mainMenu').style.display='none';
-	
-	game = new Phaser.Game(config);
 
-	// GLOBAL VARIABLES
-	game.global = {
-		typeOfGame : typeOfGame,
-		DEBUG_MODE : true,
-		socket : "",
-		event : "",
-		receivedMsg : "",
-		info : "",
-		blackHolePosition : 96,
-		index : 0,
-		length : 1,
-		player : [{
-			x : 200,
-			y : 8400,
-			colorId : 0,
-			direction : "idle",
-			isAlive: true
-		},{
-			x : 400,
-			y : 8400,
-			colorId : 0,
-			direction : "idle",
-			isAlive: true
-		}]
+	let msg = new Object();
+	if(game.global.typeOfGame==0){
+		msg.event = 'NEW_LOCAL_GAMEMATCH';
+	}else if(game.global.typeOfGame==2){
+		msg.event = 'NEW_GAMEMATCH';
+		msg.gameMatch_code=document.getElementById("gameMatch_code").value;
 	}
+	msg.typeOfGame = game.global.typeOfGame;
+	game.global.socket.send(JSON.stringify(msg));
+	
+}	
 	
 	// WEBSOCKET CONFIGURATOR
 	game.global.socket = new WebSocket("ws://"+ip+":8080/dyesaster");
@@ -92,9 +76,14 @@ function startUp(typeOfGame) {
 					}	
 				}
 			break
+			case 'GAME_OVER':
+				game.global.receivedMsg=msg.event;
+				if (game.global.DEBUG_MODE) {
+					console.log('[DEBUG] GAME_OVER in LOCAL mode.');
+				}
+			break
 			default :
 			break
 		}
 	}
 	
-}

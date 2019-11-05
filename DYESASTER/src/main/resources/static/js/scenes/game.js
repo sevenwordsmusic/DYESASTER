@@ -134,9 +134,9 @@ var GameScene = new Phaser.Class({
     	
     	
         camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        camera.setZoom(0.5);
+        //camera.setZoom(0.5);
         camera_B.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        camera_B.setZoom(0.5);
+        //camera_B.setZoom(0.5);
 		this.cameraDolly = new Phaser.Geom.Point(player[0].x, player[0].y);
 		camera.startFollow(this.cameraDolly);
 		this.cameraDolly_B = new Phaser.Geom.Point(player[1].x, player[1].y);

@@ -44,8 +44,8 @@ public class Player {
 		this.session= session;
 		this.isAlive= true;
 		this.jump= false;
-		this.posX= 200;
-		this.posY= 7000;
+		this.posX= 2880;
+		this.posY= 8618;
 		this.onGround= true;
 		this.direction= "";
 		this.colorId=0;
@@ -74,11 +74,12 @@ public class Player {
 	}
 
 	public void updateMovement() {
-
+		int aux;
 					switch (this.direction) {
 						case "left":
 							if(posX>WALK_SPEED) {
-								if(stateMap[Math.floorDiv(posX-WALK_SPEED, 96)][Math.floorDiv(posY, 96)]==0) {
+								aux=stateMap[Math.floorDiv(posX-WALK_SPEED, 96)][Math.floorDiv(posY, 96)];
+								if( (aux==0 || aux!=colorId+1 ) && aux!=5) {
 									posX-=WALK_SPEED;
 								}else {
 									this.direction="idle";
@@ -87,7 +88,8 @@ public class Player {
 							break;
 						case "right":
 							if(posX<stateMap.length*96-WALK_SPEED) {
-								if(stateMap[Math.floorDiv(posX+WALK_SPEED, 96)][Math.floorDiv(posY, 96)]==0) {
+								aux=stateMap[Math.floorDiv(posX+WALK_SPEED, 96)][Math.floorDiv(posY, 96)];
+								if( (aux==0 || aux!=colorId+1 ) && aux!=5) {
 									posX+=WALK_SPEED;
 								}else {
 									this.direction="idle";
@@ -99,7 +101,8 @@ public class Player {
 					}
 	
 		if(jump) {
-			if(onGround && stateMap[Math.floorDiv(posX, 96)][Math.floorDiv(posY-JUMP_SPEED, 96)]==0) {
+			aux=stateMap[Math.floorDiv(posX, 96)][Math.floorDiv(posY-JUMP_SPEED, 96)];
+			if(onGround && (aux==0 || aux!=colorId+1 ) && aux!=5){
 				posY-=JUMP_SPEED;
 				updateJumpPosition= System.currentTimeMillis() + JUMP_LAPSE;
 			}
@@ -132,23 +135,30 @@ public class Player {
 	
 	private void update() throws IOException {
 					stateMap=level.getStateMap();
-					if(System.currentTimeMillis() < updateJumpPosition && stateMap[Math.floorDiv(posX, 96)][Math.floorDiv(posY-JUMP_SPEED, 96)]==0) {
+					int auxA=stateMap[Math.floorDiv(posX, 96)][Math.floorDiv(posY-JUMP_SPEED, 96)],
+						auxB=stateMap[Math.floorDiv( posX , 96 )][Math.floorDiv((int)Math.floor((MAX_GRAVITY_SPEED*angularTime)+posY+88) , 96 )];
+					
+					if(System.currentTimeMillis() < updateJumpPosition && (auxA==0 || auxA!=colorId+1 ) && auxA!=5) {
 						posY-=Math.floor(JUMP_SPEED*((double)(updateJumpPosition-System.currentTimeMillis())/(double)JUMP_LAPSE));
 						onGround=false;
-					}else if(stateMap[Math.floorDiv( posX , 96 )][Math.floorDiv((int)Math.floor((MAX_GRAVITY_SPEED*angularTime)+posY+48) , 96 )]==0) {
+						
+					}else if( (auxB==0 || auxB!=colorId+1 ) && auxB!=5) {
 						if(System.currentTimeMillis() < updateJumpPosition) {
 							updateJumpPosition=System.currentTimeMillis();
 						}
 						posY+=Math.floor(MAX_GRAVITY_SPEED*angularTime);
 						onGround=false;
+						
 						if(angularTime<1) {
 							angularTime+=CONST_GRAVITY_ACC;
 						}else {
 							angularTime=1;
 						}
+						
 					}else {
 						onGround=true;
 						angularTime=0.1;
+						
 					}
 	}
 	
@@ -198,7 +208,7 @@ public class Player {
 
 	public void setIndex(int index) {
 		this.index = index;
-		this.posX= (this.index+1)*200;
+		this.posX= this.posX+((this.index+1)*384);
 	}
 
 	public void changeColor() {

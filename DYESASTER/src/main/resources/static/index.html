@@ -4,47 +4,47 @@
 		<meta charset="UTF-8">
 		<link rel="stylesheet" type="text/css" href="assets/style.css">
 		<script type="text/javascript" src="./js/phaser/phaser.js"></script>
-		<script type="text/javascript" src="./js/jquery.js"></script>
-		<script type="text/javascript" src="./js/websockets.js"></script>
 		<script type="text/javascript" src="./js/scenes/load.js"></script>
 		<script type="text/javascript" src="./js/scenes/game.js"></script>
-		<script type="text/javascript" src="./js/main.js"></script>	
+		<script type="text/javascript" src="./js/main.js"></script>
+		<script type="text/javascript" src="./js/jquery.js"></script>
+		<script type="text/javascript" src="./js/websockets.js"></script>
 		<title>DYESASTER</title>
 	</head>
 	<body>
-		<div id="mainMenu">
-			<div id="header"></div>
-			<div>
-				<div class="hoverable"><div id="localMatch"></div>
-					<div class="spoiler">
-						<div class="startSide">1vs1</div>
-						<div class="start" onclick="startUp(0)"></div>
-					</div>
-				</div>
-			</div>
-			<div>
-				<div class="hoverable"><div id="newGame"></div>
-					<div class="spoiler">
-						<div class="startSide">
-							<select>
-								<option selected value="1">1vs1</option>
-								<option value="2">2vs2</option>
-								<option value="3">3vs3</option>
-								<option value="4">4vs4</option>
-							</select>
+			<div id="mainMenu">
+				<div id="header"></div>
+				<div>
+					<div class="hoverable"><div id="localMatch"></div>
+						<div class="spoiler">
+							<div class="startSide">1vs1</div>
+							<div class="start" onclick="startUp(0)"></div>
 						</div>
-						<div class="start" onclick="startUp(1)"></div>
+					</div>
+				</div>
+				<div>
+					<div class="hoverable"><div id="newGame"></div>
+						<div class="spoiler">
+							<div class="startSide">
+								<select>
+									<option selected value="1">1vs1</option>
+									<option value="2">2vs2</option>
+									<option value="3">3vs3</option>
+									<option value="4">4vs4</option>
+								</select>
+							</div>
+							<div class="start" onclick="startUp(1)"></div>
+						</div>
+					</div>
+				</div>
+				<div>
+					<div class="hoverable"><div id="joinGame"></div>
+						<div class="spoiler">
+							<input id="gameMatch_code" class="specialSide" type="text" placeholder="GAMEMATCH CODE"></input>
+							<div class="start" onclick="startUp(2)"></div>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div>
-				<div class="hoverable"><div id="joinGame"></div>
-					<div class="spoiler">
-						<input id="gameMatch_code" class="specialSide" type="text" placeholder="GAMEMATCH CODE"></input>
-						<div class="start" onclick="startUp(2)"></div>
-					</div>
-				</div>
-			</div>
-		</div>
 	</body>
 </html>

@@ -28,7 +28,8 @@ var MainScene = new Phaser.Class({
 		this.load.image('bg-3', 'assets/bg-3.png');
 		this.load.image('bg-4', 'assets/bg-4.png');
 		this.load.image('bg-5', 'assets/bg-5.png');
-		
+
+		this.load.image('background', 'assets/menuBackground.png');
 	   	 		
 		// player animations
 			for(var c=0; c<4; c++){
@@ -38,15 +39,9 @@ var MainScene = new Phaser.Class({
 
     create: function ()
     {   
-    	let msg = new Object();
-    	if(game.global.typeOfGame==0){
-    		msg.event = 'NEW_LOCAL_GAMEMATCH';
-    	}else if(game.global.typeOfGame==2){
-    		msg.event = 'NEW_GAMEMATCH';
-    		msg.gameMatch_code=document.getElementById("gameMatch_code").value;
-    	}
-    	msg.typeOfGame = game.global.typeOfGame;
-    	game.global.socket.send(JSON.stringify(msg));
+		this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, "background");
+		this.background.setOrigin(0, 0);
+		this.background.setScrollFactor(0);
     },
     
     update: function ()
@@ -78,3 +73,31 @@ var config = {
 	    scene: [MainScene, LoadScene, GameScene],
 	    roundPixels: true
 };
+
+game = new Phaser.Game(config);
+
+// GLOBAL VARIABLES
+game.global = {
+	typeOfGame : 0,
+	DEBUG_MODE : true,
+	socket : "",
+	event : "",
+	receivedMsg : "",
+	info : "",
+	blackHolePosition : 96,
+	index : 0,
+	length : 1,
+	player : [{
+		x : 2888,
+		y : 8612,
+		colorId : 0,
+		direction : "idle",
+		isAlive: true
+	},{
+		x : 2888,
+		y : 3264,
+		colorId : 0,
+		direction : "idle",
+		isAlive: true
+	}]
+}
