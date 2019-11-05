@@ -17,8 +17,8 @@ div {
 .spoiler {
 	transition-delay: 0.2s;
 	transition-duration: 0.4s;
-	width: 512px;
-	height: 96px;
+	width: 256px;
+	height: 48px;
 	display: none;
 }
 
@@ -51,8 +51,8 @@ div {
 #localMatch {
 	background-image: url("buttons/localMatch.png");
 	background-repeat: no-repeat;
-	width: 512px;
-	height: 96px;
+	width: 256px;
+	height: 48px;
 	background-position: center;
 }
 
@@ -68,8 +68,8 @@ div {
 #newGame {
 	background-image: url("buttons/newGame.png");
 	background-repeat: no-repeat;
-	width: 512px;
-	height: 96px;
+	width: 256px;
+	height: 48px;
 	background-position: center;
 }
 
@@ -85,8 +85,8 @@ div {
 #joinGame {
 	background-image: url("buttons/joinGame.png");
 	background-repeat: no-repeat;
-	width: 512px;
-	height: 96px;
+	width: 256px;
+	height: 48px;
 	background-position: center;
 }
 
@@ -104,14 +104,14 @@ div {
 	background-image: url("buttons/start.png");
 	background-repeat: no-repeat;
 	width: 256px;
-	height: 96px;
+	height: 48px;
 	background-position: center;
 }
 
 .startSide {
 	float: left;
 	width: 200px;
-	height: 96px;
+	height: 48px;
 	text-align: right;
 	padding-left: 56px;
 }
@@ -120,7 +120,7 @@ div {
 .specialSide {
 	float: left;
 	width: 400px;
-	height: 96px;
+	height: 48px;
 	text-align: right;
 	margin-left: -200px;
 }
