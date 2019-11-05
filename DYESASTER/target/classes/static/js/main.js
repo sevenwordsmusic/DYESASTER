@@ -18,9 +18,7 @@ var MainScene = new Phaser.Class({
 		// tiles in spritesheet 
 		this.load.spritesheet('tiles', 'assets/tiles/00.png', {frameWidth: 96, frameHeight: 96});
 
-		// simple coin image
-		this.load.image('coin', 'assets/coinGold.png');
-		this.load.image('bullet', 'assets/coinGold.png');
+		this.load.image('bulletSprite', 'assets/bullet.png');
 		// load all assets tile sprites
 		this.load.image('bg-0', 'assets/bg-0.png');
 		this.load.image('bg-1', 'assets/bg-1.png');
@@ -99,5 +97,11 @@ game.global = {
 		colorId : 0,
 		direction : "idle",
 		isAlive: true
+	}],
+	bulletLength : 0,
+	bullet : [{
+		x : 0,
+		y : -9999,
+		direction : "right"
 	}]
 }

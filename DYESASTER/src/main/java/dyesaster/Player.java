@@ -1,6 +1,7 @@
 package dyesaster;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -20,10 +21,13 @@ public class Player {
 	private boolean onGround;
 	private int gameId= 999999;
 	private String direction;
+	private String lastDirection;
 	
 	private final long UPDATE_DELAY= 1000/60;
 	private final long UPDATE_LATENCY= 200;
+	private final long SHOOT_LATENCY= 500;
 	private long updatePlayerColor;
+	private long updateShoot;
 	private final int WALK_SPEED= 10;
 	private final long JUMP_LAPSE= 800;
 	private final int JUMP_SPEED= 14;
@@ -47,7 +51,7 @@ public class Player {
 		this.posX= 2880;
 		this.posY= 8618;
 		this.onGround= true;
-		this.direction= "";
+		this.direction= "idle";
 		this.colorId=0;
 		this.updatePlayerColor= System.currentTimeMillis();
 		this.angularTime=0.1;
@@ -77,6 +81,7 @@ public class Player {
 		int aux;
 					switch (this.direction) {
 						case "left":
+							lastDirection="left";
 							if(posX>WALK_SPEED) {
 								aux=stateMap[Math.floorDiv(posX-WALK_SPEED, 96)][Math.floorDiv(posY, 96)];
 								if( (aux==0 || aux!=colorId+1 ) && aux!=5) {
@@ -87,6 +92,7 @@ public class Player {
 							}	
 							break;
 						case "right":
+							lastDirection="right";
 							if(posX<stateMap.length*96-WALK_SPEED) {
 								aux=stateMap[Math.floorDiv(posX+WALK_SPEED, 96)][Math.floorDiv(posY, 96)];
 								if( (aux==0 || aux!=colorId+1 ) && aux!=5) {
@@ -220,6 +226,16 @@ public class Player {
 			}
 			updatePlayerColor=System.currentTimeMillis() + UPDATE_LATENCY;
 		}
+	}
+
+	public Bullet shoot(LinkedList<Player> players) {
+		if(System.currentTimeMillis() > updateShoot) {
+			Bullet newShoot= new Bullet(posX, posY, lastDirection,players);
+			newShoot.start();
+			updateShoot=System.currentTimeMillis() + SHOOT_LATENCY;
+			return newShoot;
+		}
+		return null;
 	}
 
 	public void setJump(boolean jump) {

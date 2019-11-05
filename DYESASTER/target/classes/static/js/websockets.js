@@ -68,6 +68,13 @@ function startUp(typeOfGame) {
 					game.global.player[i].direction=msg.player[i].direction;
 					game.global.player[i].isAlive=msg.player[i].isAlive;
 				}
+				game.global.bulletLength=msg.bulletLength;
+				for(var i=0; i<msg.bulletLength; i++) {
+					game.global.bullet[i]= new Object();
+					game.global.bullet[i].x=msg.bullet[i].posX;
+					game.global.bullet[i].y=msg.bullet[i].posY;
+					game.global.bullet[i].direction=msg.bullet[i].direction;
+				}
 				if (game.global.DEBUG_MODE) {
 					if(game.global.typeOfGame==0){
 						console.log('[DEBUG] UPDATE_GAMEMATCH in LOCAL mode.');

@@ -16,7 +16,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	private ObjectMapper mapper = new ObjectMapper();
 	private AtomicInteger playerId = new AtomicInteger(0);
 	private static LinkedList<Gamematch> games= new LinkedList<Gamematch>();
-
+	
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		Player player;
@@ -100,11 +100,24 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					if(node.get("changeColor").asBoolean()) {
 						player.changeColor();
 					}
+					if(node.get("shoot").asBoolean() ) {
+						Bullet newBullet = player.shoot(currentGame.getPlayers());
+						if(newBullet!=null) {
+							currentGame.addBullet(newBullet);
+						}
+					}
 					if(currentGame.getTypeOfGame()==0) {
-						currentGame.getPlayer(1).setDirection(node.get("direction_B").asText());
-						currentGame.getPlayer(1).setJump(node.get("jump_B").asBoolean());
+						Player player_B=currentGame.getPlayer(1);
+						player_B.setDirection(node.get("direction_B").asText());
+						player_B.setJump(node.get("jump_B").asBoolean());
 						if(node.get("changeColor_B").asBoolean()) {
-							currentGame.getPlayer(1).changeColor();
+							player_B.changeColor();
+						}
+						if(node.get("shoot_B").asBoolean() ) {
+							Bullet newBullet = player_B.shoot(currentGame.getPlayers());
+							if(newBullet!=null) {
+								currentGame.addBullet(newBullet);
+							}
 						}
 					}
 					break;

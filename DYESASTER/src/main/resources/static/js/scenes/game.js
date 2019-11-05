@@ -34,22 +34,17 @@ var GameScene = new Phaser.Class({
 		this.bg_0.setOrigin(0, 0);
 		this.bg_0.setScrollFactor(0);
 		
-		// create an tiled sprite with the size of our game screen
 		this.bg_1 = this.add.tileSprite(0, 0, game.config.width, game.config.height, "bg-1");
-		// Set its pivot to the top left corner
 		this.bg_1.setOrigin(0, 0);
-		// fix it so it won't move when the camera moves.
-		// Instead we are moving its texture on the update
 		this.bg_1.setScrollFactor(0);
 
-		// Add a second background layer. Repeat as in bg_1
 		this.bg_2 = this.add.tileSprite(0, 0, game.config.width, game.config.height, "bg-2");
 		this.bg_2.setOrigin(0, 0);
 		this.bg_2.setScrollFactor(0);
 		
-		//this.bg_3 = this.add.tileSprite(0, 0, game.config.width, game.config.height, "bg-3");
-		//this.bg_3.setOrigin(0, 0);
-		//this.bg_3.setScrollFactor(0);
+		this.bg_3 = this.add.tileSprite(0, 0, game.config.width, game.config.height, "bg-3");
+		this.bg_3.setOrigin(0, 0);
+		this.bg_3.setScrollFactor(0);
 		
 		
 		// load the map 
@@ -84,26 +79,16 @@ var GameScene = new Phaser.Class({
 		player[0].setBounce(0.2); // our player will bounce from items
 		player[0].setCollideWorldBounds(true); // don't go out of the map
 		// small fix to our player images, we resize the physics body object slightly
-		player[0].body.setSize(player[0].width, player[0].height-8);
+		player[0].body.setSize(player[0].width, player[0].height);
 		
 		player[1] = this.physics.add.sprite(600, 8688, 'playerSprite-0');
 		player[1].setBounce(0.2); // our player will bounce from items
 		player[1].setCollideWorldBounds(true); // don't go out of the map
 		// small fix to our player images, we resize the physics body object slightly
-		player[1].body.setSize(player[1].width, player[1].height-8);
+		player[1].body.setSize(player[1].width, player[1].height);
 
 		
-		// player will collide with the level tiles 
-		this.physics.add.collider(groundLayer, player[0]);
 		
-		this.physics.add.collider(groundLayer, player[1]);
-		
-		this.physics.add.collider(player[0], player[1]);
-		this.physics.add.collider(player[1], player[0]);
-		
-		
-		this.physics.add.overlap(player[0], blackHoleLayer);
-		this.physics.add.overlap(player[1], blackHoleLayer);
 		
 		for(var c=0; c<4; c++){//For every color:
 			// player walk animation
@@ -146,10 +131,16 @@ var GameScene = new Phaser.Class({
 	
     update: function (time, delta) {
 	    	blackHoleLayer.y= game.global.blackHolePosition;
+	    	
+			for(var i=0; i<bullet.length; i++) {
+				bullet[i].destroy();
+			}
+			bullet= new Array(game.global.bulletLength);
+	    	
+	    	
 			for(var i=0; i<game.global.length; i++) {
 				if(game.global.player[i].isAlive){
 					player[i].setPosition(game.global.player[i].x,game.global.player[i].y);
-					//game.global.player[i].colorId=game.global.player[i].colorId;
 						switch(game.global.player[i].direction){
 							case 'left':
 								player[i].anims.play('walk-'+game.global.player[i].colorId, true); // walk left
@@ -165,6 +156,20 @@ var GameScene = new Phaser.Class({
 						}
 				}else if(player[i].body){
 					player[i].destroy();
+				}
+			}
+			
+			for(var i=0; i<bullet.length; i++) {
+				bullet[i] = this.add.sprite(game.global.bullet[i].x, game.global.bullet[i].y, 'bulletSprite');
+				switch(game.global.bullet[i].direction){
+					case 'left':
+						bullet[i].flipX = true;
+					break
+					case 'right':
+						bullet[i].flipX = false;
+					break
+					default :
+					break
 				}
 			}
 					
@@ -194,8 +199,7 @@ var GameScene = new Phaser.Class({
 		//COLOR
 		msg.changeColor = cursors.color.isDown;
 		//FIRE
-		if (cursors.shoot.isDown )
-		{}
+		msg.shoot = cursors.shoot.isDown;
 		
 		if (cursors_B.left.isDown)
 		{
@@ -211,18 +215,20 @@ var GameScene = new Phaser.Class({
 		//COLOR
 		msg.changeColor_B = cursors_B.color.isDown;
 		//FIRE
-		if (cursors_B.shoot.isDown )
-		{}
+		msg.shoot_B = cursors_B.shoot.isDown;
+
 		//JUST ONE CONTROLS MSG IS SENT.
 		game.global.socket.send(JSON.stringify(msg));
 		
 		// scroll the texture of the tilesprites proportionally to the camera scroll
 		this.bg_1.tilePositionX = this.cameras.main.scrollX * .002;
-		this.bg_2.tilePositionX = this.cameras.main.scrollX * .004;
+		this.bg_2.tilePositionX = this.cameras.main.scrollX * .006;
+		this.bg_3.tilePositionX = this.cameras.main.scrollX * .008;
 		
 		this.bg_1.tilePositionY = this.cameras.main.scrollY * .2;
-		this.bg_2.tilePositionY = this.cameras.main.scrollY * .4;
-
+		this.bg_2.tilePositionY = this.cameras.main.scrollY * .6;
+		this.bg_3.tilePositionY = this.cameras.main.scrollY * .8;
+		
 		if(nextFrameUpdate<Date.now()){
 			animatedTilesBySeven(211,15);
 			nextFrameUpdate=Date.now()+updateLapse;
@@ -246,6 +252,6 @@ function animatedTilesBySeven(animatedTile,totalFrames){
 var fps=15, nextFrameUpdate=Date.now(), updateLapse=1000/fps;
 
 var shootTime= 0;
-var bullets;
+var bullet=new Array();
 var groundLayer, blackHoleLayer, coinLayer;
 var camera, camera_B;

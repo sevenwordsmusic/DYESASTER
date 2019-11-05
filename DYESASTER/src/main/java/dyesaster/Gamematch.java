@@ -1,6 +1,7 @@
 package dyesaster;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -15,10 +16,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class Gamematch{
 	private final Player CREATOR;
 	private final Level LEVEL;
-	private final double BLACKHOLE_SPEED= 1;
+	private final double BLACKHOLE_SPEED= 0.25;
 	private final long TICK_DELAY= 1000/60;
-	
+		
 	private LinkedList<Player> players= new LinkedList<Player>();
+	private ArrayList<Bullet> bullets= new ArrayList<Bullet>();
 	private double blackHolePosition;
 	private ObjectMapper mapper = new ObjectMapper();
 	private Thread tickThread;
@@ -76,7 +78,7 @@ public class Gamematch{
 						player.put("posY", players.get(i).getPosY());
 						player.put("colorId", players.get(i).getColorId());
 						player.put("direction", players.get(i).getDirection());
-						if(players.get(i).isAlive() && players.get(i).getPosY()>=(8976+(int)blackHolePosition)) {
+						if(players.get(i).isAlive() && players.get(i).getPosY()>=(8976+blackHolePosition)) {
 							players.get(i).setAlive(false);
 							playersAlive--;
 						}
@@ -84,12 +86,14 @@ public class Gamematch{
 						playerArrayNode.addPOJO(player);
 					}
 					msg.putPOJO("player", playerArrayNode);
+					msg.putPOJO("bullet", updateBullets());
+					msg.put("bulletLength", bullets.size());
 					if(playersAlive==1) {
 						msg.put("event", "GAME_OVER");
 					}else {
 						msg.put("event", "UPDATE_GAMEMATCH");
 					}
-					msg.put("blackHolePosition", blackHolePosition);
+					msg.put("blackHolePosition", Math.floor(blackHolePosition));
 					msg.put("length", players.size());
 					if(typeOfGame==0)  {
 						msg.put("typeOfGame", typeOfGame);
@@ -111,6 +115,24 @@ public class Gamematch{
 		
 	}
 
+
+	private ArrayNode updateBullets() {
+		ArrayNode bulletArrayNode= mapper.createArrayNode();
+					for(int i= 0; i< bullets.size(); i++) {
+						if(bullets.get(i).getPosX()<1 || bullets.get(i).getPosX()>6143) {
+							bullets.get(i).stop();
+							bullets.remove(i);
+						}else {
+							ObjectNode bullet = mapper.createObjectNode();
+							bullet.put("posX", bullets.get(i).getPosX());
+							bullet.put("posY", bullets.get(i).getPosY());
+							bullet.put("direction", bullets.get(i).getDirection());
+							bulletArrayNode.addPOJO(bullet);
+						}
+					}
+		return bulletArrayNode;
+	}
+	
 		public void start() {
 			tickThread = new Thread(() -> startGameLoop());
 			tickThread.start();
@@ -136,5 +158,17 @@ public class Gamematch{
 
 		public int getTypeOfGame() {
 			return this.typeOfGame;
+		}
+
+		public ArrayList<Bullet> getBullets() {
+			return bullets;
+		}
+
+		public void setBullets(ArrayList<Bullet> bullets) {
+			this.bullets = bullets;
+		}
+		
+		public void addBullet(Bullet bullet){
+			bullets.add(bullet);
 		}
 }
