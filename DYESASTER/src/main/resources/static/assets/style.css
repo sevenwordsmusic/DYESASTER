@@ -5,6 +5,9 @@
 }
 body {
 	background-color: #000000;
+	background-image: url("splash.jpg");
+	background-size: cover;
+	background-repeat: no-repeat
 	margin: 0px 0px 0px 0px !Important;
 	overflow: hidden !Important;
 }
@@ -16,6 +19,8 @@ div {
 #mainMenu {
 	position: fixed;
 	width: 100%;
+	opacity: 0.0;
+	transition-duration: 2s
 }
 
 .spoiler {

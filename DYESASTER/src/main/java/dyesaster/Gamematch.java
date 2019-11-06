@@ -78,6 +78,8 @@ public class Gamematch{
 						player.put("posY", players.get(i).getPosY());
 						player.put("colorId", players.get(i).getColorId());
 						player.put("direction", players.get(i).getDirection());
+						player.put("isJumping", players.get(i).isJumping());
+						player.put("isGrounded", players.get(i).isGrounded());
 						if(players.get(i).isAlive() && players.get(i).getPosY()>=(8976+blackHolePosition)) {
 							players.get(i).setAlive(false);
 							playersAlive--;
@@ -88,7 +90,7 @@ public class Gamematch{
 					msg.putPOJO("player", playerArrayNode);
 					msg.putPOJO("bullet", updateBullets());
 					msg.put("bulletLength", bullets.size());
-					if(playersAlive==1) {
+					if(playersAlive==0) {	//GAME_OVER
 						msg.put("event", "GAME_OVER");
 					}else {
 						msg.put("event", "UPDATE_GAMEMATCH");

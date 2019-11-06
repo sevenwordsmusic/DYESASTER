@@ -29,7 +29,9 @@ var GameScene = new Phaser.Class({
     },
     
     create: function ()
-    {	 
+    {	
+
+    	
 		this.bg_0 = this.add.tileSprite(0, 0, game.config.width, game.config.height, "bg-0");
 		this.bg_0.setOrigin(0, 0);
 		this.bg_0.setScrollFactor(0);
@@ -77,13 +79,13 @@ var GameScene = new Phaser.Class({
 		// create the player sprite    
 		player[0] = this.physics.add.sprite(200, 8688, 'playerSprite-0');
 		player[0].setBounce(0.2); // our player will bounce from items
-		player[0].setCollideWorldBounds(true); // don't go out of the map
+
 		// small fix to our player images, we resize the physics body object slightly
 		player[0].body.setSize(player[0].width, player[0].height);
 		
 		player[1] = this.physics.add.sprite(600, 8688, 'playerSprite-0');
 		player[1].setBounce(0.2); // our player will bounce from items
-		player[1].setCollideWorldBounds(true); // don't go out of the map
+
 		// small fix to our player images, we resize the physics body object slightly
 		player[1].body.setSize(player[1].width, player[1].height);
 
@@ -126,7 +128,7 @@ var GameScene = new Phaser.Class({
 		camera.startFollow(this.cameraDolly);
 		this.cameraDolly_B = new Phaser.Geom.Point(player[1].x, player[1].y);
 		camera_B.startFollow(this.cameraDolly_B);
-		
+	
     },
 	
     update: function (time, delta) {
@@ -155,6 +157,7 @@ var GameScene = new Phaser.Class({
 							break
 						}
 				}else if(player[i].body){
+					this.load.audio('death', 'assets/sfx/death.mp3');
 					player[i].destroy();
 				}
 			}
@@ -185,56 +188,105 @@ var GameScene = new Phaser.Class({
         
     	let msg = new Object();
     	msg.event = 'UPDATE_CONTROLS';
+		//PLAYER A
 		if (cursors.left.isDown)
 		{
+			if(steps+300 < Date.now()  && game.global.player[0].ground  && !cursors.up.isDown){
+				this.sound.play('steps');
+				steps=Date.now();
+			}
 			msg.direction = "left";
 		}
 		else if (cursors.right.isDown)
 		{
+			if(steps+300 < Date.now()  && game.global.player[0].ground  && !cursors.up.isDown){
+				this.sound.play('steps');
+				steps=Date.now();
+			}
 			msg.direction = "right";
 		}else{
+
 			msg.direction = "idle";
 		}
 		msg.jump = cursors.up.isDown;
+		if(cursors.up.isDown && jumping+250 < Date.now() && game.global.player[0].ground){
+
+			this.sound.play('jump');
+			jumping=Date.now();
+		}
 		//COLOR
 		msg.changeColor = cursors.color.isDown;
 		//FIRE
 		msg.shoot = cursors.shoot.isDown;
+		if(cursors.shoot.isDown && shooting+354 < Date.now() ){
+			this.sound.play('shoot');
+			shooting=Date.now();
+		}
 		
+		//PLAYER B
 		if (cursors_B.left.isDown)
 		{
+			if(steps+300 < Date.now()  && game.global.player[1].ground  && !cursors_B.up.isDown){
+				this.sound.play('steps');
+				steps=Date.now();
+			}
 			msg.direction_B = "left";
 		}
 		else if (cursors_B.right.isDown)
 		{
+			if(steps+300 < Date.now()  && game.global.player[1].ground  && !cursors_B.up.isDown ){
+				this.sound.play('steps');
+				steps=Date.now();
+			}
 			msg.direction_B = "right";
 		}else{
+
 			msg.direction_B = "idle";
 		}
 		msg.jump_B = cursors_B.up.isDown;
+		if(cursors_B.up.isDown && jumping_B+250 < Date.now() && game.global.player[1].ground){
+	
+			this.sound.play('jump');
+			jumping_B=Date.now();
+		}
 		//COLOR
 		msg.changeColor_B = cursors_B.color.isDown;
 		//FIRE
 		msg.shoot_B = cursors_B.shoot.isDown;
+		if(cursors_B.shoot.isDown && shooting_B+354 < Date.now() ){
+			this.sound.play('shoot');
+			shooting_B=Date.now();
+		}
 
+		
 		//JUST ONE CONTROLS MSG IS SENT.
 		game.global.socket.send(JSON.stringify(msg));
 		
 		// scroll the texture of the tilesprites proportionally to the camera scroll
-		this.bg_1.tilePositionX = this.cameras.main.scrollX * .002;
-		this.bg_2.tilePositionX = this.cameras.main.scrollX * .006;
-		this.bg_3.tilePositionX = this.cameras.main.scrollX * .008;
+		this.bg_1.tilePositionX = (camera.scrollX + camera_B.scrollX /2)* .002;
+		this.bg_2.tilePositionX = (camera.scrollX + camera_B.scrollX /2)* .006;
+		this.bg_3.tilePositionX = (camera.scrollX + camera_B.scrollX /2)* .008;
 		
-		this.bg_1.tilePositionY = this.cameras.main.scrollY * .2;
-		this.bg_2.tilePositionY = this.cameras.main.scrollY * .6;
-		this.bg_3.tilePositionY = this.cameras.main.scrollY * .8;
+		this.bg_1.tilePositionY = (camera.scrollY + camera_B.scrollY /2)* .2;
+		this.bg_2.tilePositionY = (camera.scrollY + camera_B.scrollY /2)* .6;
+		this.bg_3.tilePositionY = (camera.scrollY + camera_B.scrollY /2)* .8;
 		
 		if(nextFrameUpdate<Date.now()){
 			animatedTilesBySeven(211,15);
 			nextFrameUpdate=Date.now()+updateLapse;
 		}
+		
+		if(game.global.receivedMsg=='GAME_OVER'){
+			this.scene.start('ranking');
+			if (game.global.DEBUG_MODE) {
+				console.log('[DEBUG] Switching to ranking.');
+			}
+		}
+		
 	}
+
 });
+
 function animatedTilesBySeven(animatedTile,totalFrames){
 		for(var i=0; i< totalFrames; i++){
 			blackHoleLayer.replaceByIndex(animatedTile+i, animatedTile+i+15);
@@ -250,8 +302,9 @@ function animatedTilesBySeven(animatedTile,totalFrames){
 
 
 var fps=15, nextFrameUpdate=Date.now(), updateLapse=1000/fps;
-
+var jumping=Date.now(), shooting=Date.now(), jumping_B=Date.now(), shooting_B=Date.now(), steps=Date.now();
 var shootTime= 0;
+var steps=[];
 var bullet=new Array();
 var groundLayer, blackHoleLayer, coinLayer;
 var camera, camera_B;

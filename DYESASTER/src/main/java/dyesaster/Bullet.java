@@ -63,7 +63,7 @@ public class Bullet {
 				for(int i= 0; i< players.size(); i++) {
 					if(players.get(i).getPosX() > posX-24 && players.get(i).getPosX() < posX+24) {
 						if(players.get(i).getPosY() > posY-32 && players.get(i).getPosY() < posY+32) {
-							players.get(i).setPosX((int)players.get(i).getPosX()-40);
+							players.get(i).setPosX((int)players.get(i).getPosX()-192);
 							this.posX=6144;
 						}
 					}
@@ -74,7 +74,7 @@ public class Bullet {
 				for(int i= 0; i< players.size(); i++) {
 					if(players.get(i).getPosX() > posX-24 && players.get(i).getPosX() < posX+24) {
 						if(players.get(i).getPosY() > posY-32 && players.get(i).getPosY() < posY+32) {
-							players.get(i).setPosX((int)players.get(i).getPosX()+40);
+							players.get(i).setPosX((int)players.get(i).getPosX()+192);
 							this.posX=6144;
 						}
 					}
@@ -85,7 +85,7 @@ public class Bullet {
 				for(int i= 0; i< players.size(); i++) {
 					if(players.get(i).getPosX() > posX-24 && players.get(i).getPosX() < posX+24) {
 						if(players.get(i).getPosY() > posY-32 && players.get(i).getPosY() < posY+32) {
-							players.get(i).setPosX((int)players.get(i).getPosX()+40);
+							players.get(i).setPosX((int)players.get(i).getPosX()+192);
 							this.posX=6144;
 						}
 					}

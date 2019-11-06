@@ -22,6 +22,7 @@ public class Player {
 	private int gameId= 999999;
 	private String direction;
 	private String lastDirection;
+	//private boolean pushed;
 	
 	private final long UPDATE_DELAY= 1000/60;
 	private final long UPDATE_LATENCY= 200;
@@ -55,6 +56,7 @@ public class Player {
 		this.colorId=0;
 		this.updatePlayerColor= System.currentTimeMillis();
 		this.angularTime=0.1;
+		//this.pushed=false;
 	}
 
 	public int getPlayerId() {
@@ -82,7 +84,7 @@ public class Player {
 					switch (this.direction) {
 						case "left":
 							lastDirection="left";
-							if(posX>WALK_SPEED) {
+							if(posX>WALK_SPEED*2) {
 								aux=stateMap[Math.floorDiv(posX-WALK_SPEED, 96)][Math.floorDiv(posY, 96)];
 								if( (aux==0 || aux!=colorId+1 ) && aux!=5) {
 									posX-=WALK_SPEED;
@@ -93,7 +95,7 @@ public class Player {
 							break;
 						case "right":
 							lastDirection="right";
-							if(posX<stateMap.length*96-WALK_SPEED) {
+							if(posX<stateMap.length*96-WALK_SPEED*2) {
 								aux=stateMap[Math.floorDiv(posX+WALK_SPEED, 96)][Math.floorDiv(posY, 96)];
 								if( (aux==0 || aux!=colorId+1 ) && aux!=5) {
 									posX+=WALK_SPEED;
@@ -167,6 +169,16 @@ public class Player {
 						
 					}
 	}
+
+	public boolean isGrounded() {
+		return this.onGround;
+	}
+	
+
+	public boolean isJumping() {
+		return this.jump;
+	}
+	
 	
 	public int getGameId() {
 		return gameId;
