@@ -16,7 +16,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 	private ObjectMapper mapper = new ObjectMapper();
 	private AtomicInteger playerId = new AtomicInteger(0);
 	private static LinkedList<Gamematch> games= new LinkedList<Gamematch>();
-
+	
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		Player player;
@@ -61,24 +61,64 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 						}
 					}
 					break;
+				case "NEW_LOCAL_GAMEMATCH":
+					if(node.get("typeOfGame").asInt()==0) {
+							player.setIndex(0);
+							Player player_B = new Player(playerId.incrementAndGet(), session);
+							player_B.setIndex(1);
+							
+							Gamematch newGamematch= new Gamematch(player);
+							newGamematch.addPlayer(player);
+							newGamematch.addPlayer(player_B);
+							newGamematch.setTypeOfGame(0);
+							games.add(newGamematch);
+								
+							player.setGameId(games.indexOf(newGamematch));
+							player_B.setGameId(games.indexOf(newGamematch));
+							
+							msg.put("id", player.getPlayerId());
+							msg.put("event", "NEW_LEVEL_RETURN");
+							msg.put("tilemap", newGamematch.getLevel().randomize());
+							player.WSSession().sendMessage(new TextMessage(msg.toString()));
+					}
+					break;
 				case "LOAD_GAMEMATCH":
 					msg.put("id", player.getPlayerId());
 					msg.put("event", "LOAD_GAMEMATCH");
 					player.WSSession().sendMessage(new TextMessage(msg.toString()));
 					break;
 				case "START_GAMEMATCH":
-					if(1==player.getIndex()) {
-						games.get(player.getGameId()).start();
-					}
+					games.get(player.getGameId()).start();
 					msg.put("id", player.getPlayerId());
 					msg.put("event", "START_GAMEMATCH");
 					player.WSSession().sendMessage(new TextMessage(msg.toString()));
 					break;
 				case "UPDATE_CONTROLS":
+					Gamematch currentGame=games.get(player.getGameId());
 					player.setDirection(node.get("direction").asText());
 					player.setJump(node.get("jump").asBoolean());
 					if(node.get("changeColor").asBoolean()) {
 						player.changeColor();
+					}
+					if(node.get("shoot").asBoolean() ) {
+						Bullet newBullet = player.shoot(currentGame.getPlayers());
+						if(newBullet!=null) {
+							currentGame.addBullet(newBullet);
+						}
+					}
+					if(currentGame.getTypeOfGame()==0) {
+						Player player_B=currentGame.getPlayer(1);
+						player_B.setDirection(node.get("direction_B").asText());
+						player_B.setJump(node.get("jump_B").asBoolean());
+						if(node.get("changeColor_B").asBoolean()) {
+							player_B.changeColor();
+						}
+						if(node.get("shoot_B").asBoolean() ) {
+							Bullet newBullet = player_B.shoot(currentGame.getPlayers());
+							if(newBullet!=null) {
+								currentGame.addBullet(newBullet);
+							}
+						}
 					}
 					break;
 				default:

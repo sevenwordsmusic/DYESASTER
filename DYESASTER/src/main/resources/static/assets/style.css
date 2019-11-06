@@ -4,23 +4,30 @@
 	font-family: Arial !Important;
 }
 body {
-	background-color: #000000 !Important;
+	background-color: #000000;
+	background-image: url("splash.jpg");
+	background-size: cover;
+	background-repeat: no-repeat
 	margin: 0px 0px 0px 0px !Important;
 	overflow: hidden !Important;
 }
 
 div {
-	width: 100%;
-	text-align: center;
+	margin: 0 auto 0 auto;
 }
 
-.hoverable, .spoiler {
-	background-color: #999999;
+#mainMenu {
+	position: fixed;
+	width: 100%;
+	opacity: 0.0;
+	transition-duration: 2s
 }
 
 .spoiler {
 	transition-delay: 0.2s;
 	transition-duration: 0.4s;
+	width: 512px;
+	height: 96px;
 	display: none;
 }
 
@@ -28,11 +35,101 @@ div {
 	display: block;
 	transition-delay: 0.0s;
 	transition-duration: 0.2s;
-	background-color: #CCCCCC;
 }
 
 .spoiler:hover {
 	transition-delay: 0.0s;
 	transition-duration: 0.2s;
 	display: block;
+}
+
+#header {
+	width: 100%;
+	margin-bottom: 256px;
+}
+
+
+#localMatch:hover {
+	background-image: url("buttons/localMatchHover.png");
+}
+
+#localMatch:active {
+	background-image: url("buttons/localMatchActive.png");
+}
+
+#localMatch {
+	background-image: url("buttons/localMatch.png");
+	background-repeat: no-repeat;
+	width: 512px;
+	height: 96px;
+	background-position: center;
+}
+
+
+#newGame:hover {
+	background-image: url("buttons/newGameHover.png");
+}
+
+#newGame:active {
+	background-image: url("buttons/newGameActive.png");
+}
+
+#newGame {
+	background-image: url("buttons/newGame.png");
+	background-repeat: no-repeat;
+	width: 512px;
+	height: 96px;
+	background-position: center;
+}
+
+
+#joinGame:hover {
+	background-image: url("buttons/joinGameHover.png");
+}
+
+#joinGame:active {
+	background-image: url("buttons/joinGameActive.png");
+}
+
+#joinGame {
+	background-image: url("buttons/joinGame.png");
+	background-repeat: no-repeat;
+	width: 512px;
+	height: 96px;
+	background-position: center;
+}
+
+
+.start:hover {
+	background-image: url("buttons/startHover.png");
+}
+
+.start:active {
+	background-image: url("buttons/startActive.png");
+}
+
+.start {
+	float: right;
+	background-image: url("buttons/start.png");
+	background-repeat: no-repeat;
+	width: 256px;
+	height: 96px;
+	background-position: center;
+}
+
+.startSide {
+	float: left;
+	width: 200px;
+	height: 96px;
+	text-align: right;
+	padding-left: 56px;
+}
+
+
+.specialSide {
+	float: left;
+	width: 400px;
+	height: 96px;
+	text-align: right;
+	margin-left: -200px;
 }

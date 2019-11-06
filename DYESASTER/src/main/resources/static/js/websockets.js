@@ -6,31 +6,18 @@ var player=[""];
 function startUp(typeOfGame) {
 	
 	document.getElementById('mainMenu').style.display='none';
-	
-	game = new Phaser.Game(config);
-	// GLOBAL VARIABLES
-	game.global = {
-		typeOfGame : typeOfGame,
-		DEBUG_MODE : true,
-		socket : "",
-		event : "",
-		receivedMsg : "",
-		info : "",
-		blackHolePosition : 96,
-		index : 0,
-		length : 1,
-		player : [{
-			x : 200,
-			y : 8400,
-			colorId : 0,
-			direction : "idle"
-		},{
-			x : 400,
-			y : 8400,
-			colorId : 0,
-			direction : "idle"
-		}]
+
+	let msg = new Object();
+	if(game.global.typeOfGame==0){
+		msg.event = 'NEW_LOCAL_GAMEMATCH';
+	}else if(game.global.typeOfGame==2){
+		msg.event = 'NEW_GAMEMATCH';
+		msg.gameMatch_code=document.getElementById("gameMatch_code").value;
 	}
+	msg.typeOfGame = game.global.typeOfGame;
+	game.global.socket.send(JSON.stringify(msg));
+	
+}	
 	
 	// WEBSOCKET CONFIGURATOR
 	game.global.socket = new WebSocket("ws://"+ip+":8080/dyesaster");
@@ -79,9 +66,29 @@ function startUp(typeOfGame) {
 					game.global.player[i].y=msg.player[i].posY;
 					game.global.player[i].colorId=msg.player[i].colorId;
 					game.global.player[i].direction=msg.player[i].direction;
+					game.global.player[i].isAlive=msg.player[i].isAlive;
+					game.global.player[i].jump=msg.player[i].isJumping;
+					game.global.player[i].ground=msg.player[i].isGrounded;
+				}
+				game.global.bulletLength=msg.bulletLength;
+				for(var i=0; i<msg.bulletLength; i++) {
+					game.global.bullet[i]= new Object();
+					game.global.bullet[i].x=msg.bullet[i].posX;
+					game.global.bullet[i].y=msg.bullet[i].posY;
+					game.global.bullet[i].direction=msg.bullet[i].direction;
 				}
 				if (game.global.DEBUG_MODE) {
-					console.log('[DEBUG] UPDATE_GAMEMATCH for player #' + msg.id + '.');
+					if(game.global.typeOfGame==0){
+						console.log('[DEBUG] UPDATE_GAMEMATCH in LOCAL mode.');
+					}else{
+						console.log('[DEBUG] UPDATE_GAMEMATCH for player #' + msg.id + '.');
+					}	
+				}
+			break
+			case 'GAME_OVER':
+				game.global.receivedMsg=msg.event;
+				if (game.global.DEBUG_MODE) {
+					console.log('[DEBUG] GAME_OVER in LOCAL mode.');
 				}
 			break
 			default :
@@ -89,4 +96,3 @@ function startUp(typeOfGame) {
 		}
 	}
 	
-}

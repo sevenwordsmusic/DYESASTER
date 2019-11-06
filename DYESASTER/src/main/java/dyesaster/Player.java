@@ -1,6 +1,7 @@
 package dyesaster;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -20,10 +21,14 @@ public class Player {
 	private boolean onGround;
 	private int gameId= 999999;
 	private String direction;
+	private String lastDirection;
+	//private boolean pushed;
 	
 	private final long UPDATE_DELAY= 1000/60;
 	private final long UPDATE_LATENCY= 200;
+	private final long SHOOT_LATENCY= 500;
 	private long updatePlayerColor;
+	private long updateShoot;
 	private final int WALK_SPEED= 10;
 	private final long JUMP_LAPSE= 800;
 	private final int JUMP_SPEED= 14;
@@ -44,13 +49,14 @@ public class Player {
 		this.session= session;
 		this.isAlive= true;
 		this.jump= false;
-		this.posX= 200;
-		this.posY= 7000;
+		this.posX= 2880;
+		this.posY= 8618;
 		this.onGround= true;
-		this.direction= "";
+		this.direction= "idle";
 		this.colorId=0;
 		this.updatePlayerColor= System.currentTimeMillis();
 		this.angularTime=0.1;
+		//this.pushed=false;
 	}
 
 	public int getPlayerId() {
@@ -74,26 +80,37 @@ public class Player {
 	}
 
 	public void updateMovement() {
+		int aux;
 					switch (this.direction) {
 						case "left":
-								if(stateMap[Math.floorDiv(posX-WALK_SPEED, 96)][Math.floorDiv(posY, 96)]==0) {
+							lastDirection="left";
+							if(posX>WALK_SPEED*2) {
+								aux=stateMap[Math.floorDiv(posX-WALK_SPEED, 96)][Math.floorDiv(posY, 96)];
+								if( (aux==0 || aux!=colorId+1 ) && aux!=5) {
 									posX-=WALK_SPEED;
 								}else {
 									this.direction="idle";
 								}
+							}	
 							break;
 						case "right":
-							if(stateMap[Math.floorDiv(posX+WALK_SPEED, 96)][Math.floorDiv(posY, 96)]==0) {
-								posX+=WALK_SPEED;
-							}else {
-								this.direction="idle";
-							}	
+							lastDirection="right";
+							if(posX<stateMap.length*96-WALK_SPEED*2) {
+								aux=stateMap[Math.floorDiv(posX+WALK_SPEED, 96)][Math.floorDiv(posY, 96)];
+								if( (aux==0 || aux!=colorId+1 ) && aux!=5) {
+									posX+=WALK_SPEED;
+								}else {
+									this.direction="idle";
+								}	
+							}
 							break;
 						default:
 							break;
 					}
+	
 		if(jump) {
-			if(onGround && stateMap[Math.floorDiv(posX, 96)][Math.floorDiv(posY-JUMP_SPEED, 96)]==0) {
+			aux=stateMap[Math.floorDiv(posX, 96)][Math.floorDiv(posY-JUMP_SPEED, 96)];
+			if(onGround && (aux==0 || aux!=colorId+1 ) && aux!=5){
 				posY-=JUMP_SPEED;
 				updateJumpPosition= System.currentTimeMillis() + JUMP_LAPSE;
 			}
@@ -126,25 +143,42 @@ public class Player {
 	
 	private void update() throws IOException {
 					stateMap=level.getStateMap();
-					if(System.currentTimeMillis() < updateJumpPosition && stateMap[Math.floorDiv(posX, 96)][Math.floorDiv(posY-JUMP_SPEED, 96)]==0) {
+					int auxA=stateMap[Math.floorDiv(posX, 96)][Math.floorDiv(posY-JUMP_SPEED, 96)],
+						auxB=stateMap[Math.floorDiv( posX , 96 )][Math.floorDiv((int)Math.floor((MAX_GRAVITY_SPEED*angularTime)+posY+88) , 96 )];
+					
+					if(System.currentTimeMillis() < updateJumpPosition && (auxA==0 || auxA!=colorId+1 ) && auxA!=5) {
 						posY-=Math.floor(JUMP_SPEED*((double)(updateJumpPosition-System.currentTimeMillis())/(double)JUMP_LAPSE));
 						onGround=false;
-					}else if(stateMap[Math.floorDiv( posX , 96 )][Math.floorDiv( (int)Math.floor(posY+MAX_GRAVITY_SPEED*angularTime)+48 , 96 )]==0) {
+						
+					}else if( (auxB==0 || auxB!=colorId+1 ) && auxB!=5) {
 						if(System.currentTimeMillis() < updateJumpPosition) {
 							updateJumpPosition=System.currentTimeMillis();
 						}
 						posY+=Math.floor(MAX_GRAVITY_SPEED*angularTime);
 						onGround=false;
+						
 						if(angularTime<1) {
 							angularTime+=CONST_GRAVITY_ACC;
 						}else {
 							angularTime=1;
 						}
+						
 					}else {
 						onGround=true;
 						angularTime=0.1;
+						
 					}
 	}
+
+	public boolean isGrounded() {
+		return this.onGround;
+	}
+	
+
+	public boolean isJumping() {
+		return this.jump;
+	}
+	
 	
 	public int getGameId() {
 		return gameId;
@@ -192,7 +226,7 @@ public class Player {
 
 	public void setIndex(int index) {
 		this.index = index;
-		this.posX= (this.index+1)*200;
+		this.posX= this.posX+((this.index+1)*384);
 	}
 
 	public void changeColor() {
@@ -204,6 +238,16 @@ public class Player {
 			}
 			updatePlayerColor=System.currentTimeMillis() + UPDATE_LATENCY;
 		}
+	}
+
+	public Bullet shoot(LinkedList<Player> players) {
+		if(System.currentTimeMillis() > updateShoot) {
+			Bullet newShoot= new Bullet(posX, posY, lastDirection,players);
+			newShoot.start();
+			updateShoot=System.currentTimeMillis() + SHOOT_LATENCY;
+			return newShoot;
+		}
+		return null;
 	}
 
 	public void setJump(boolean jump) {
