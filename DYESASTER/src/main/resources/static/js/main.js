@@ -28,6 +28,10 @@ var MainScene = new Phaser.Class({
 		// tiles in spritesheet 
 		this.load.spritesheet('tiles', 'assets/tiles/00.png', {frameWidth: 96, frameHeight: 96});
 
+		this.load.image('3', 'assets/3.png');
+		this.load.image('2', 'assets/2.png');
+		this.load.image('1', 'assets/1.png');
+		
 		this.load.image('bulletSprite', 'assets/bullet.png');
 		// load all assets tile sprites
 		this.load.image('bg-0', 'assets/bg-0.png');
@@ -38,7 +42,7 @@ var MainScene = new Phaser.Class({
 		this.load.image('bg-5', 'assets/bg-5.png');
 
 		this.load.image('background', 'assets/menuBackground.png');
-	   	 		
+		this.load.image('controls', 'assets/controls.png');
 		// player animations
 			for(var c=0; c<4; c++){
 					this.load.atlas('playerSprite-'+c, 'assets/playerSprite-'+c+'.png', 'assets/player.json');
@@ -46,13 +50,10 @@ var MainScene = new Phaser.Class({
     },
 
     create: function ()
-    {   
-    	this.scale.startFullscreen();
+    {       	
+    	/*
     	deepTab= this.sound.add('deepTab');
     	this.sound.play('deepTab', {volume: 0.25});
-    	/*
-
-
     	 */
     	this.sound.add('button');
     	this.sound.add('jump');

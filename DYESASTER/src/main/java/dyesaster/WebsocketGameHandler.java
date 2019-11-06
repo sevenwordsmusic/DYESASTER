@@ -83,8 +83,18 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					}
 					break;
 				case "LOAD_GAMEMATCH":
+					Thread.sleep(1000);
+					msg.put("event", "LOAD_GAMEMATCH");
+					msg.put("info", "2");
+					player.WSSession().sendMessage(new TextMessage(msg.toString()));
+					Thread.sleep(1000);
+					msg.put("event", "LOAD_GAMEMATCH");
+					msg.put("info", "1");
+					player.WSSession().sendMessage(new TextMessage(msg.toString()));
+					Thread.sleep(800);
 					msg.put("id", player.getPlayerId());
 					msg.put("event", "LOAD_GAMEMATCH");
+					msg.put("info", "0");
 					player.WSSession().sendMessage(new TextMessage(msg.toString()));
 					break;
 				case "START_GAMEMATCH":

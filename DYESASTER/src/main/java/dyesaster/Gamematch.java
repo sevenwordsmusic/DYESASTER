@@ -135,9 +135,10 @@ public class Gamematch{
 		return bulletArrayNode;
 	}
 	
-		public void start() {
+		public void start() throws InterruptedException {
 			tickThread = new Thread(() -> startGameLoop());
 			tickThread.start();
+
 			for(int i= 0; i< players.size(); i++) {
 				players.get(i).start(LEVEL);
 			}

@@ -46,6 +46,7 @@ function startUp(typeOfGame) {
 			break
 			case 'LOAD_GAMEMATCH':
 				game.global.receivedMsg=msg.event;
+				game.global.info=msg.info;
 				if (game.global.DEBUG_MODE) {
 					console.log('[DEBUG] LOAD_GAMEMATCH the game has been loaded.');
 				}

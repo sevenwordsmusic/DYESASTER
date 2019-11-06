@@ -96,15 +96,22 @@ var GameScene = new Phaser.Class({
 			// player walk animation
 				this.anims.create({
 					key: 'walk-'+c,	//We create 4 walk anims...
-					frames: this.anims.generateFrameNames('playerSprite-'+c, {prefix: 'walk_0', start: 0, end: 7, zeroPad: 0}),
+					frames: this.anims.generateFrameNames('playerSprite-'+c, {prefix: 'walk-0', start: 0, end: 7, zeroPad: 0}),
 					frameRate: 15,
 					repeat: -1
 				});
+				
 				// idle with only one frame, so repeat is not neaded
 				this.anims.create({
+					key: 'breath-'+c,	//And 4 idle anims...
+					frames: this.anims.generateFrameNames('playerSprite-'+c, {prefix: 'breath-0', start: 0, end: 1, zeroPad: 0}),
+					frameRate: 5,
+					repeat: -1
+				});
+				this.anims.create({
 					key: 'idle-'+c,	//And 4 idle anims...
-					frames: [{key: 'playerSprite-'+c, frame: 'stand'}],
-					frameRate: 15,
+					frames: [{key: 'playerSprite-'+c, frame: 'walk-00'}],
+					frameRate: 15
 				});
 		}
 		
@@ -152,8 +159,18 @@ var GameScene = new Phaser.Class({
 								player[i].anims.play('walk-'+game.global.player[i].colorId, true);
 								player[i].flipX = false; // use the original sprite looking to the right
 							break
+							case 'idle':
+								if(lastDirection[i]=="left"){
+									player[i].anims.play('idle-'+game.global.player[i].colorId, true);
+									player[i].flipX = true; // flip the sprite to the left
+								}else if(lastDirection[i]=="right"){
+									player[i].anims.play('idle-'+game.global.player[i].colorId, true);
+									player[i].flipX = false; // use the original sprite looking to the right
+								}
+								
+							break
 							default :
-								player[i].anims.play('idle-'+game.global.player[i].colorId, true);
+								player[i].anims.play('breath-'+game.global.player[i].colorId, true);
 							break
 						}
 				}else if(player[i].body){
@@ -196,6 +213,7 @@ var GameScene = new Phaser.Class({
 				steps=Date.now();
 			}
 			msg.direction = "left";
+			lastDirection[0] = "left";
 		}
 		else if (cursors.right.isDown)
 		{
@@ -204,6 +222,7 @@ var GameScene = new Phaser.Class({
 				steps=Date.now();
 			}
 			msg.direction = "right";
+			lastDirection[0] = "right";
 		}else{
 
 			msg.direction = "idle";
@@ -231,6 +250,7 @@ var GameScene = new Phaser.Class({
 				steps=Date.now();
 			}
 			msg.direction_B = "left";
+			lastDirection[1] = "left";
 		}
 		else if (cursors_B.right.isDown)
 		{
@@ -239,6 +259,7 @@ var GameScene = new Phaser.Class({
 				steps=Date.now();
 			}
 			msg.direction_B = "right";
+			lastDirection[1] = "right";
 		}else{
 
 			msg.direction_B = "idle";
@@ -308,3 +329,5 @@ var steps=[];
 var bullet=new Array();
 var groundLayer, blackHoleLayer, coinLayer;
 var camera, camera_B;
+
+var lastDirection=["",""];

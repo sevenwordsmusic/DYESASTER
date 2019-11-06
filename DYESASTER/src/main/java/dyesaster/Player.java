@@ -52,7 +52,7 @@ public class Player {
 		this.posX= 2880;
 		this.posY= 8618;
 		this.onGround= true;
-		this.direction= "idle";
+		this.direction= "breath";
 		this.colorId=0;
 		this.updatePlayerColor= System.currentTimeMillis();
 		this.angularTime=0.1;
