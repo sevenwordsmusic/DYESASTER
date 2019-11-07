@@ -41,8 +41,7 @@
 >
 > ![alt text](/Imagenes/p1.JPG)
 >
-> ![alt text](/Imagenes/p2.JPG)
->
+> 
 > ### **4.2. Modos de juego**
 > Serán partidas a dos bandos, 1vs1, 2vs2, 3vs3 o 4vs4. Existirá un modo multijugador local y uno online, en el local se juega en pantalla dividida y sólo se permite el 1vs1, mientras que en el modo online cada jugador tendra una pantalla completa.
 >
