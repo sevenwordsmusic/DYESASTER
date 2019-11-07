@@ -39,7 +39,7 @@
 ## **4. Gameplay**
 > ### **4.1. Gameflow**
 >
-> ![alt text](/Imagenes/p1.JPG)
+> ![alt text](/Imagenes/p1.jpg)
 >
 > 
 > ### **4.2. Modos de juego**
