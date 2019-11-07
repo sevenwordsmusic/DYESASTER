@@ -3,8 +3,8 @@
 ## 1. Información general
 >
 > ### **1.1 Resumen y características generales**
->En Dyesaster tomamos el control de un trabajador de una gran estación espacial. Debido a un fallo en el sistema hemos generado un glitch-agujero negro que está expandiéndose y absorbiendo todo desde abajo, mientras al mismo tiempo expulsa objetos. Sólo hay sitio para un equipo en la cápsula de escape de emergencia situada arriba así que nuestro objetivo será ser el primero.
->> + **Competitividad**: el principal objetivo del juego es superar al resto de jugadores en alcanzar la cima, no sólo mediante la rapidez sino también obstaculizando el camino de los demás.
+>En Dyesaster tomamos el control de un trabajador de una gran estación espacial. Debido a un fallo en el sistema hemos generado un glitch-agujero negro que está expandiéndose y absorbiendo todo desde abajo, mientras al mismo tiempo expulsa objetos. Sólo hay sitio para un equipo en la cápsula de escape de emergencia situada arriba así que nuestro objetivo será sobrevivir a nuestros contrincantes.
+>> + **Competitividad**: el principal objetivo del juego es superar al resto de jugadores en aguante con vida, no sólo mediante la rapidez de huida sino también obstaculizando el camino de los demás.
 >> + **Estrategia:** los colores toman un papel esencial en la mecánica de juego.  Dependiendo del color del personaje seremos capaces de interactuar con distintas plataformas y objetos y será el deber del jugador saber cómo elegirlos..
 >> + **Rapidez:** pese a todas las posibilidades de acción que tiene cada jugador durante el juego para dificultar el camino al resto, al final lo más importante es ser el primero, lo cual sólo se podrá conseguir con reflejos y movimientos rápidos.
 >
@@ -34,7 +34,7 @@
 >
 >Poco a poco el agujero está absorbiendo toda la energía de la nave y sus elementos, expandiéndose en todas las direcciones, engullendo todos los colores y haciendo que aparezcan glitches. 
 >
-> En la cima de la estación espacial hay una única cápsula de emergencia que se pueda usar para escapar pues el resto se situaba en una zona que ya ha sido absorbida. Cada equipo intentará como pueda llegar a esa cápsula y luchar por su vida.
+> En la cima de la estación espacial se cree que hay una única cápsula de emergencia que se pueda usar para escapar pues el resto se situaba en una zona que ya ha sido absorbida. Cada equipo intentará como pueda llegar a ser el último y luchar por su vida.
 -----
 ## **4. Gameplay**
 > ### **4.1. Gameflow**
@@ -47,7 +47,7 @@
 > Serán partidas a dos bandos, 1vs1, 2vs2, 3vs3 o 4vs4. Existirá un modo multijugador local y uno online, en el local se juega en pantalla dividida y sólo se permite el 1vs1, mientras que en el modo online cada jugador tendra una pantalla completa.
 >
 > ### **4.3. Objetivos y condiciones de victoria**
-> El objetivo es llegar a la plataforma final antes que el contrario, utilizando las armas para entorpecerle e intentar tirarle. Una vez alcanzada la meta, la partida acaba.
+> El objetivo es sobrevivir al contrario, utilizando las armas para entorpecerle e intentar tirarle. En el momento en que uno de los dos jugadores muere, en caso de ser una partida con equipos debe morir todo el equipo, la partida acaba.
 >
 > ### **4.4. Mecánicas de juego**
 > **Características principales:**
@@ -59,7 +59,7 @@
 >> + Hay plataformas de colores que solo podrán usar los jugadores que compartan su color.
 >> + Hay plataformas que no tienen ningún color y que pueden usar todos los jugadores.
 > ### **4.5. HUDs**
-> Durante el juego el interfaz que tiene el jugador en pantalla se basa únicamente en unos indicadores con los colores disponibles en ese momento con los que poder cambiarse. Esto será así tanto en el local como en el online con la única diferencia que en local aparecerán los colores disponibles de los respectivos jugadores a lados opuestos de la pantalla.
+> Durante el juego la interfaz que tiene el jugador en pantalla se basa únicamente en unos indicadores con los colores disponibles en ese momento con los que poder cambiarse. Esto será así tanto en el local como en el online con la única diferencia que en local aparecerán los colores disponibles de los respectivos jugadores a lados opuestos de la pantalla.
 -----
 ## **5. Arte y temática**
 > ### **5.1. Estética**
