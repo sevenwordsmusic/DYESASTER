@@ -2,8 +2,8 @@
 -----
 ## 1. Información general
 >
-> ### **1.1 Resumen y caracteristicas generales**
->En Dyesaster tomamos el control de un trabajador de una gran estación espacial. Debido a un fallo en el sistema hemos generado un agujero negro que está expandiéndose y absorbiendo todo desde abajo, mientras al mismo tiempo expulsa objetos. Sólo hay sitio para un equipo en la cápsula de escape de emergencia situada arriba así que nuestro objetivo será ser el primero.
+> ### **1.1 Resumen y características generales**
+>En Dyesaster tomamos el control de un trabajador de una gran estación espacial. Debido a un fallo en el sistema hemos generado un glitch-agujero negro que está expandiéndose y absorbiendo todo desde abajo, mientras al mismo tiempo expulsa objetos. Sólo hay sitio para un equipo en la cápsula de escape de emergencia situada arriba así que nuestro objetivo será ser el primero.
 >> + **Competitividad**: el principal objetivo del juego es superar al resto de jugadores en alcanzar la cima, no sólo mediante la rapidez sino también obstaculizando el camino de los demás.
 >> + **Estrategia:** los colores toman un papel esencial en la mecánica de juego.  Dependiendo del color del personaje seremos capaces de interactuar con distintas plataformas y objetos y será el deber del jugador saber cómo elegirlos..
 >> + **Rapidez:** pese a todas las posibilidades de acción que tiene cada jugador durante el juego para dificultar el camino al resto, al final lo más importante es ser el primero, lo cual sólo se podrá conseguir con reflejos y movimientos rápidos.
@@ -30,9 +30,9 @@
 > Para la producción de la música del juego emplearemos FL Studio y Pro Tools.
 -----
 ## **3. Historia**
-> Dyesaster comienza en un futuro lejano con la aparición de un agujero negro en la estación espacial donde se encuentran todos los personajes. En esta estación conviven un gran número de científicos de planetas diferentes y el agujero se ha generado a causa de un fallo del sistema que surge mientras hacían experimentos. 
+> Dyesaster comienza en un futuro lejano con la aparición de un agujero negro a modo de glitch en la estación espacial donde se encuentran todos los personajes. En esta estación conviven un gran número de científicos de planetas diferentes y el agujero se ha generado a causa de un fallo del sistema que surge mientras hacían experimentos. 
 >
->Poco a poco el agujero está absorbiendo toda la energía de la nave y sus elementos, expandiéndose en todas las direcciones y no sólo eso sino que también expulsa objetos extraños. 
+>Poco a poco el agujero está absorbiendo toda la energía de la nave y sus elementos, expandiéndose en todas las direcciones, engullendo todos los colores y haciendo que aparezcan glitches. 
 >
 > En la cima de la estación espacial hay una única cápsula de emergencia que se pueda usar para escapar pues el resto se situaba en una zona que ya ha sido absorbida. Cada equipo intentará como pueda llegar a esa cápsula y luchar por su vida.
 -----
@@ -44,7 +44,7 @@
 > ![alt text](/Imagenes/p2.JPG)
 >
 > ### **4.2. Modos de juego**
-> Serán partidas a dos bandos, 1vs1, 2vs2, 3vs3 o 4vs4. Existirá un modo multijugador local y uno online, en el local todos los jugadores ven la misma pantalla y sólo se permite el 1vs1, mientras
+> Serán partidas a dos bandos, 1vs1, 2vs2, 3vs3 o 4vs4. Existirá un modo multijugador local y uno online, en el local se juega en pantalla dividida y sólo se permite el 1vs1, mientras que en el modo online cada jugador tendra una pantalla completa.
 >
 > ### **4.3. Objetivos y condiciones de victoria**
 > El objetivo es llegar a la plataforma final antes que el contrario, utilizando las armas para entorpecerle e intentar tirarle. Una vez alcanzada la meta, la partida acaba.
@@ -52,13 +52,14 @@
 > ### **4.4. Mecánicas de juego**
 > **Características principales:**
 >> + El jugador podrá moverse a la izquierda, derecha y saltar.
->> + En la parte de abajo de la pantalla habrá un agujero negro que irá aumentando de tamaño y absorbiendo las plataformas, lo que añade un “contrarreloj” para llegar a la meta.
+>> + En la parte de abajo de la pantalla habrá un agujero negro a modo de glitch que irá aumentando de tamaño y absorbiendo las plataformas, lo que añade un “contrarreloj” para llegar a la meta.
 >> + Si un jugador cae al agujero negro, quedará eliminado.
->> Los jugadores tendrán colores asignados. Pulsando x tecla el jugador puede cambiar de color a alguno de los colores libres del equipo en la pila de colores. Ejemplo: Tenemos equipo de 4 jugadores, con los colores: A, B, C, D. Por el momento no tienen colores disponibles a los que cambiar. Si A muere, B podría obtener el color de A dejando el suyo propio libre para los demás jugadores en caso de que quieran cambiarlo.
->> + Existen pistolas para tirar a los contrincantes de las plataformas. Estas tendrán x número de balas que al acabarse se recargarán solas después de x tiempo. 
->> + Habrá plataformas de colores que estarán desactivadas de principio. Podrán ser activadas por el jugador del color correspondiente para que los demás las puedan usar. Estas estarán activas durante x tiempo pudiendo volver a activarlas.
+>> Los jugadores tendrán colores asignados. Pulsando las teclas G o K, el jugador puede cambiar de color a alguno de los colores libres del equipo en la pila de colores. Ejemplo: Tenemos equipo de 4 jugadores, con los colores: A, B, C, D. Si un jugador tiene el color A podría obtener el resto de colores de la pila: B, C o D, si quisiera.
+>> + Existen pistolas para empujar a los contrincantes con el objetivo de tirarles de las plataformas.
+>> + Hay plataformas de colores que solo podrán usar los jugadores que compartan su color.
+>> + Hay plataformas que no tienen ningún color y que pueden usar todos los jugadores.
 > ### **4.5. HUDs**
-> Durante el juego el interfaz que tiene el jugador en pantalla se basa únicamente en una barra con los colores disponibles en ese momento con los que poder cambiarse. Esto será así tanto en el local como en el online con la única diferencia que en local aparecerán los colores disponibles de los respectivos jugadores a lados opuestos de la pantalla.
+> Durante el juego el interfaz que tiene el jugador en pantalla se basa únicamente en unos indicadores con los colores disponibles en ese momento con los que poder cambiarse. Esto será así tanto en el local como en el online con la única diferencia que en local aparecerán los colores disponibles de los respectivos jugadores a lados opuestos de la pantalla.
 -----
 ## **5. Arte y temática**
 > ### **5.1. Estética**
@@ -95,6 +96,12 @@
 >> + **Correo universidad:** b.gonzalezm.2017@alumnos.urjc.es
 >> + **Cuenta github:** belen.gm15@gmail.com
 >
+-----
+### Funcionalidades a añadir en la siguientes fases
+> + Acumulación de disparos recibidos, con efecto proporcional en la distancia desplazada por cada disparo.
+> + Incluir un escalado del canvas para que se adapte a las distintas medidas requeridas para las plataformas.
+> + Inclusión de animaciones existentes de decoración y creación de nuevas.
+> + Modo multijugador en red disponible.
 -----
 ### Enlaces externos
 > **Trello:** <https://trello.com/b/zI3NdsXB/dyesaster>  
