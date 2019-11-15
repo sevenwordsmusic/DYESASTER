@@ -24,7 +24,6 @@ var MainScene = new Phaser.Class({
 		// map made with Tiled in JSON format
 		this.load.tilemapTiledJSON('map', 'assets/map.json');  
 
-
 		// tiles in spritesheet 
 		this.load.spritesheet('tiles', 'assets/tiles/tt6.png', {frameWidth: 96, frameHeight: 96});
 
@@ -43,15 +42,18 @@ var MainScene = new Phaser.Class({
 		this.load.image('iVerde','assets/iVerde.png');
 		this.load.image('iAmarillo','assets/iAmarillo.png');
 		this.load.spritesheet('HUDSelect','assets/HUDAnim.png',{frameWidth:70 ,frameHeight:60});
-		this.load.image('LMimg','assets/buttons/localMatch.png');
-		this.load.image('CMimg','assets/buttons/newGame.png');
-		this.load.image('JGimg','assets/buttons/joinGame.png');
-		this.load.image('Cimg','assets/buttons/controls.png');
-		this.load.image('LMimgA','assets/buttons/localMatchHover.png');
-		this.load.image('CMimgA','assets/buttons/newGameHover.png');
-		this.load.image('JGimgA','assets/buttons/joinGameHover.png');
-		this.load.image('CimgA','assets/buttons/controlsHover.png');
+		
+		this.load.image('menuButton-0','assets/buttons/localMatch.png');
+		this.load.image('menuButton-1','assets/buttons/newGame.png');
+		this.load.image('menuButton-2','assets/buttons/joinGame.png');
+		this.load.image('menuButton-3','assets/buttons/controls.png');
+		this.load.image('menuButton_hover-0','assets/buttons/localMatchHover.png');
+		this.load.image('menuButton_hover-1','assets/buttons/newGameHover.png');
+		this.load.image('menuButton_hover-2','assets/buttons/joinGameHover.png');
+		this.load.image('menuButton_hover-3','assets/buttons/controlsHover.png');
+		
 		this.load.image('psts', 'assets/pressSpaceToSelect.png');
+		
 		//this.load.spritesheet('HUDSelect','assets/HUDAnim.png',{ frameWidth: 70, frameHeight: 60 });
 		this.load.image('bgGameOver','assets/bgGameOver.png');
 		this.load.image('background', 'assets/menuBackground.png');
@@ -66,20 +68,20 @@ var MainScene = new Phaser.Class({
     create: function ()
     {   
     	
-    	this.scale.startFullscreen();
-    	deepTab= this.sound.add('deepTab');
-    	this.sound.play('deepTab', {volume: 0.25});
+    	//deepTab= this.sound.add('deepTab');
+    	//this.sound.play('deepTab', {volume: 0.25});
     	this.sound.add('button');
     	this.sound.add('jump');
     	this.sound.add('bump');
     	this.sound.add('punch');
     	this.sound.add('shoot');
     	this.sound.add('steps');
+    	
 		this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, "background");
 		this.background.setOrigin(0, 0);
 		this.background.setScrollFactor(0);
-		document.getElementById('mainMenu').style.opacity='1.0';
 		
+    	/*ASÍ ESTABA:
 		btn1 = this.add.image(game.config.width/2, game.config.height/2, "LMimg");
 		btn2 = this.add.image(game.config.width/2, game.config.height/2+150, "CMimg");
 		btn3 = this.add.image(game.config.width/2, game.config.height/2+250, "JGimg");
@@ -89,11 +91,22 @@ var MainScene = new Phaser.Class({
 		btn3A = this.add.image(game.config.width/2, game.config.height/2+250, "JGimgA");
 		btn4A = this.add.image(game.config.width/2, game.config.height/2+350, "CimgA");
 		this.psts = this.add.image(game.config.width/2, (game.config.height/2)-100, "psts");
-		btnSurfer = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'down':Phaser.Input.Keyboard.KeyCodes.DOWN, 'space':Phaser.Input.Keyboard.KeyCodes.SPACE, 'intro':Phaser.Input.Keyboard.KeyCodes.INTRO});
+		btnSurfer = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'down':Phaser.Input.Keyboard.KeyCodes.DOWN, 'space':Phaser.Input.Keyboard.KeyCodes.SPACE, 'enter':Phaser.Input.Keyboard.KeyCodes.ENTER});
+		ASÍ LO DEJO:*/		
+		for(var i=0; i< 4; i++){
+			button[i] = this.add.image(game.config.width/2, game.config.height/2 + (128*i), "menuButton-" + i);
+		}
+		button[0].setVisible(false);
+		for(var i=0; i< 4; i++){
+			button_hover[i] = this.add.image(game.config.width/2, game.config.height/2 + (128*i), "menuButton_hover-" + i);
+			button_hover[i].setVisible(false);
+		}
+		button_hover[0].setVisible(true);
+		btnSurfer = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'down':Phaser.Input.Keyboard.KeyCodes.DOWN, 'space':Phaser.Input.Keyboard.KeyCodes.SPACE, 'enter':Phaser.Input.Keyboard.KeyCodes.ENTER});
     },
     
-    update: function ()
-    {
+    update: function (time, delta) {
+    	/*ASÍ ESTABA:
     	waiting++;
     	if(btnSurfer.up.isDown && waiting>=10){
     		btnIndex--;
@@ -118,7 +131,7 @@ var MainScene = new Phaser.Class({
     		console.log(btn[btnIndex]);
     		waiting = 0;
     		
-    	}
+    	}    
     	switch(btnIndex){
     		case 0:
     			btn1.setVisible(false);
@@ -164,36 +177,78 @@ var MainScene = new Phaser.Class({
         		break
     	
     	}
+    	ASÍ LO DEJO:*/
+    	waiting++;
+    	if(btnSurfer.up.isDown && waiting>10){
+    		button_hover[btnIndex].setVisible(false);
+    		button[btnIndex].setVisible(true);
+    		btnIndex--;
+    		if(btnIndex<0){
+    			btnIndex=button.length-1;
+    		}
+    		button[btnIndex].setVisible(false);
+    		button_hover[btnIndex].setVisible(true);
+    		waiting = 0;
+    	}
+    	if(btnSurfer.down.isDown && waiting>10){
+    		button_hover[btnIndex].setVisible(false);
+    		button[btnIndex].setVisible(true);
+    		btnIndex++;
+    		if(btnIndex>button.length-1){
+    			btnIndex=0;
+    		}
+    		button[btnIndex].setVisible(false);
+    		button_hover[btnIndex].setVisible(true);
+    		waiting = 0;	
+    	}
+    	
+    	/*ASÍ ESTABA:
     	if((btnSurfer.space.isDown || btnSurfer.intro.isDown) && waiting>=10){
     		if(btnIndex==0){console.log('Action from Btn1'); waiting = 0; startUp(0);}
     		if(btnIndex==1){console.log('Action from Btn2'); waiting = 0; startUp(0);}
     		if(btnIndex==2){console.log('Action from Btn3'); waiting = 0; startUp(0);}
     		if(btnIndex==3){console.log('Action from Btn4'); waiting = 0; startUp(0);}
     	}
-    	
-    	
     	if(game.global.receivedMsg=='NEW_LEVEL_RETURN'){
         	this.sound.play('button');
 			this.cache.tilemap.entries.entries.map.data.layers[0].data = game.global.info.split(',');
 			if(btnIndex==0){console.log('Action from Btn1'); this.scene.start('loadScene'); }
-			if(btnIndex==1){console.log('Action from Btn2'); this.scene.start('inProgScene');}
+			if(btnIndex==1){console.log('Action from Btn2'); this.scene.start('loadScene');}
 			if(btnIndex==2){console.log('Action from Btn3'); this.scene.start('inProgScene');}
 			if(btnIndex==3){console.log('Action from Btn4'); this.scene.start('controlsScene');}
 			//this.scene.start('loadScene');
 			if (game.global.DEBUG_MODE) {
 				console.log('[DEBUG] Switching to LoadScene.');
 			}
+    	}    	
+    	ASÍ LO DEJO*/
+    	if((btnSurfer.space.isDown || btnSurfer.enter.isDown) && waiting>10){
+    		this.sound.play('button');
+    		waiting = 0;
+    		if(btnIndex==3){
+    			this.scene.start('controlScene');
+    			if (game.global.DEBUG_MODE) {
+    				console.log('[DEBUG] Switching to controlsScene.');
+    			}
+    		}else{console.log(btnIndex);
+        		startUp(btnIndex);
+    		}
     	}
+    	if(game.global.receivedMsg=='NEW_LEVEL_RETURN'){
+			this.cache.tilemap.entries.entries.map.data.layers[0].data = game.global.info.split(',');
+			this.scene.start('loadScene');
+			if (game.global.DEBUG_MODE) {
+				console.log('[DEBUG] Switching to LoadScene.');
+			}
+    	}  
     }
 
 });
-var text;
-var score = 0;
+
 var waiting = 10;
-var btnSurfer;
-var btnIndex = 0
-var numBtn = 4;
-var btn = ['btn1', 'btn2', 'btn3', 'btn4'];
+var btnIndex = 0;
+var button = [];
+var button_hover = [];
 
 var config = {
 	    type: Phaser.AUTO,
@@ -206,7 +261,7 @@ var config = {
 	    physics: {
 	        default: 'arcade'
 	    },
-	    scene: [MainScene, LoadScene, GameScene, RankingScene, InProgress, Controls],
+	    scene: [MainScene, LoadScene, GameScene, RankingScene, InProgress, ControlsScene],
 	    roundPixels: true
 };
 

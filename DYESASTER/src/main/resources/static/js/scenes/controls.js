@@ -1,10 +1,10 @@
-var Controls = new Phaser.Class({
+var ControlsScene = new Phaser.Class({
 
     Extends: Phaser.Scene,
 
     initialize:
 
-    function Controls ()
+    function ControlsScene ()
     {
         Phaser.Scene.call(this, { key: 'controlsScene', active: false });
     },

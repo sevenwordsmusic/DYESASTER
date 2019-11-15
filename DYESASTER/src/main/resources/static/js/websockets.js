@@ -4,18 +4,23 @@ var map;
 var player=[""];
 
 function startUp(typeOfGame) {
-	
-	document.getElementById('mainMenu').style.display='none';
-
+	game.global.typeOfGame=typeOfGame;
 	let msg = new Object();
+	
 	if(game.global.typeOfGame==0){
 		msg.event = 'NEW_LOCAL_GAMEMATCH';
-	}else if(game.global.typeOfGame==2){
+	}else if(game.global.typeOfGame==1){
 		msg.event = 'NEW_GAMEMATCH';
-		msg.gameMatch_code=document.getElementById("gameMatch_code").value;
+	}else if(game.global.typeOfGame==2){
+		msg.event = 'JOIN_GAMEMATCH';
+		msg.gameMatch_code=0;
 	}
 	msg.typeOfGame = game.global.typeOfGame;
 	game.global.socket.send(JSON.stringify(msg));
+	
+	if (game.global.DEBUG_MODE) {
+		console.log('[DEBUG] ' + msg.event + '  waiting for response...');
+	}
 	
 }	
 	
