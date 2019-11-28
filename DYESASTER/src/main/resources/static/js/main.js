@@ -43,6 +43,7 @@ var MainScene = new Phaser.Class({
 		this.load.image('iAmarillo','assets/iAmarillo.png');
 		this.load.spritesheet('HUDSelect','assets/HUDAnim.png',{frameWidth:70 ,frameHeight:60});
 		
+		this.load.image('mainButton','assets/buttons/localMatch.png');	//ESTE
 		this.load.image('menuButton-0','assets/buttons/localMatch.png');
 		this.load.image('menuButton-1','assets/buttons/newGame.png');
 		this.load.image('menuButton-2','assets/buttons/joinGame.png');
@@ -81,174 +82,30 @@ var MainScene = new Phaser.Class({
 		this.background.setOrigin(0, 0);
 		this.background.setScrollFactor(0);
 		
-    	/*ASÍ ESTABA:
-		btn1 = this.add.image(game.config.width/2, game.config.height/2, "LMimg");
-		btn2 = this.add.image(game.config.width/2, game.config.height/2+150, "CMimg");
-		btn3 = this.add.image(game.config.width/2, game.config.height/2+250, "JGimg");
-		btn4 = this.add.image(game.config.width/2, game.config.height/2+350, "Cimg");
-		btn1A = this.add.image(game.config.width/2, game.config.height/2, "LMimgA");
-		btn2A = this.add.image(game.config.width/2, game.config.height/2+150, "CMimgA");
-		btn3A = this.add.image(game.config.width/2, game.config.height/2+250, "JGimgA");
-		btn4A = this.add.image(game.config.width/2, game.config.height/2+350, "CimgA");
-		this.psts = this.add.image(game.config.width/2, (game.config.height/2)-100, "psts");
-		btnSurfer = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'down':Phaser.Input.Keyboard.KeyCodes.DOWN, 'space':Phaser.Input.Keyboard.KeyCodes.SPACE, 'enter':Phaser.Input.Keyboard.KeyCodes.ENTER});
-		ASÍ LO DEJO:*/		
-		for(var i=0; i< 4; i++){
-			button[i] = this.add.image(game.config.width/2, game.config.height/2 + (128*i), "menuButton-" + i);
-		}
-		button[0].setVisible(false);
-		for(var i=0; i< 4; i++){
-			button_hover[i] = this.add.image(game.config.width/2, game.config.height/2 + (128*i), "menuButton_hover-" + i);
-			button_hover[i].setVisible(false);
-		}
-		button_hover[0].setVisible(true);
-		btnSurfer = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'down':Phaser.Input.Keyboard.KeyCodes.DOWN, 'space':Phaser.Input.Keyboard.KeyCodes.SPACE, 'enter':Phaser.Input.Keyboard.KeyCodes.ENTER});
+		mainButton = this.add.image(game.config.width/2, game.config.height/2 + 128, "mainButton");
+		btnSurfer = this.input.keyboard.addKeys({ 'space':Phaser.Input.Keyboard.KeyCodes.SPACE, 'enter':Phaser.Input.Keyboard.KeyCodes.ENTER});
+		
+		var nickname= document.getElementById("nickname");
     },
     
     update: function (time, delta) {
-    	/*ASÍ ESTABA:
-    	waiting++;
-    	if(btnSurfer.up.isDown && waiting>=10){
-    		btnIndex--;
-    		if(btnIndex<0 ){
-    			btnIndex=numBtn-1;
-    		}
-    		if(btnIndex>=numBtn){
-    			btnIndex=0;
-    		}
-    		console.log(btn[btnIndex]);
-    		waiting = 0;
-    		
-    	}
-    	if(btnSurfer.down.isDown && waiting>=10){
-    		btnIndex++;
-    		if(btnIndex>=numBtn){
-    			btnIndex=0;
-    		}
-    		if(btnIndex<0 ){
-    			btnIndex=numBtn-1;
-    		}
-    		console.log(btn[btnIndex]);
-    		waiting = 0;
-    		
-    	}    
-    	switch(btnIndex){
-    		case 0:
-    			btn1.setVisible(false);
-    			btn2.setVisible(true);
-    			btn3.setVisible(true);
-    			btn4.setVisible(true);
-    			btn1A.setVisible(true); 
-    			btn2A.setVisible(false);
-    			btn3A.setVisible(false);
-    			btn4A.setVisible(false);
-    			break
-    		case 1:
-    			btn1.setVisible(true);
-    			btn2.setVisible(false);
-    			btn3.setVisible(true);
-    			btn4.setVisible(true);
-    			btn1A.setVisible(false); 
-    			btn2A.setVisible(true);
-    			btn3A.setVisible(false);
-    			btn4A.setVisible(false);
-        		break
-    		case 2:
-    			btn1.setVisible(true);
-    			btn2.setVisible(true);
-    			btn3.setVisible(false);
-    			btn4.setVisible(true);
-    			btn1A.setVisible(false); 
-    			btn2A.setVisible(false);
-    			btn3A.setVisible(true);
-    			btn4A.setVisible(false);
-        		break
-    		case 3:
-    			btn1.setVisible(true);
-    			btn2.setVisible(true);
-    			btn3.setVisible(true);
-    			btn4.setVisible(false);
-    			btn1A.setVisible(false); 
-    			btn2A.setVisible(false);
-    			btn3A.setVisible(false);
-    			btn4A.setVisible(true);
-        		break
-        	default:
-        		break
-    	
-    	}
-    	ASÍ LO DEJO:*/
-    	waiting++;
-    	if(btnSurfer.up.isDown && waiting>10){
-    		button_hover[btnIndex].setVisible(false);
-    		button[btnIndex].setVisible(true);
-    		btnIndex--;
-    		if(btnIndex<0){
-    			btnIndex=button.length-1;
-    		}
-    		button[btnIndex].setVisible(false);
-    		button_hover[btnIndex].setVisible(true);
-    		waiting = 0;
-    	}
-    	if(btnSurfer.down.isDown && waiting>10){
-    		button_hover[btnIndex].setVisible(false);
-    		button[btnIndex].setVisible(true);
-    		btnIndex++;
-    		if(btnIndex>button.length-1){
-    			btnIndex=0;
-    		}
-    		button[btnIndex].setVisible(false);
-    		button_hover[btnIndex].setVisible(true);
-    		waiting = 0;	
-    	}
-    	
-    	/*ASÍ ESTABA:
-    	if((btnSurfer.space.isDown || btnSurfer.intro.isDown) && waiting>=10){
-    		if(btnIndex==0){console.log('Action from Btn1'); waiting = 0; startUp(0);}
-    		if(btnIndex==1){console.log('Action from Btn2'); waiting = 0; startUp(0);}
-    		if(btnIndex==2){console.log('Action from Btn3'); waiting = 0; startUp(0);}
-    		if(btnIndex==3){console.log('Action from Btn4'); waiting = 0; startUp(0);}
-    	}
-    	if(game.global.receivedMsg=='NEW_LEVEL_RETURN'){
-        	this.sound.play('button');
-			this.cache.tilemap.entries.entries.map.data.layers[0].data = game.global.info.split(',');
-			if(btnIndex==0){console.log('Action from Btn1'); this.scene.start('loadScene'); }
-			if(btnIndex==1){console.log('Action from Btn2'); this.scene.start('loadScene');}
-			if(btnIndex==2){console.log('Action from Btn3'); this.scene.start('inProgScene');}
-			if(btnIndex==3){console.log('Action from Btn4'); this.scene.start('controlsScene');}
-			//this.scene.start('loadScene');
-			if (game.global.DEBUG_MODE) {
-				console.log('[DEBUG] Switching to LoadScene.');
-			}
-    	}    	
-    	ASÍ LO DEJO*/
-    	if((btnSurfer.space.isDown || btnSurfer.enter.isDown) && waiting>10){
+    	if(btnSurfer.space.isDown || btnSurfer.enter.isDown){
     		this.sound.play('button');
-    		waiting = 0;
-    		if(btnIndex==3){
-    			this.scene.start('controlScene');
-    			if (game.global.DEBUG_MODE) {
-    				console.log('[DEBUG] Switching to controlsScene.');
+    		if(nickname.value.length>0){
+    			if(createUser(nickname.value)){
+	    			nickname.style.display= "none";
+	    			this.scene.start('menuScene');
+	    			if (game.global.DEBUG_MODE) {
+	    				console.log('[DEBUG] Switching to menuScene.');
+	    			}
+    			}else{
+    				//EL USUARIO YA EXISTE O NO SE HA PODIDO CONECTAR CON EL SERVIDOR
     			}
-    		}else{console.log(btnIndex);
-        		startUp(btnIndex);
     		}
     	}
-    	if(game.global.receivedMsg=='NEW_LEVEL_RETURN'){
-			this.cache.tilemap.entries.entries.map.data.layers[0].data = game.global.info.split(',');
-			this.scene.start('loadScene');
-			if (game.global.DEBUG_MODE) {
-				console.log('[DEBUG] Switching to LoadScene.');
-			}
-    	}  
     }
 
 });
-
-var waiting = 10;
-var btnIndex = 0;
-var button = [];
-var button_hover = [];
 
 var config = {
 	    type: Phaser.AUTO,
@@ -261,7 +118,7 @@ var config = {
 	    physics: {
 	        default: 'arcade'
 	    },
-	    scene: [MainScene, LoadScene, GameScene, RankingScene, InProgress, ControlsScene],
+	    scene: [MainScene, MenuScene, JoinScene, LoadScene, GameScene, RankingScene, InProgress, ControlsScene],
 	    roundPixels: true
 };
 
