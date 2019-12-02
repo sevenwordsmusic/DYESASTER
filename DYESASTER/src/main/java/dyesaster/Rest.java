@@ -183,6 +183,7 @@ public class Rest {
 			try(ObjectInputStream flujo = new ObjectInputStream( in )) {
 				while(flujo.readObject() != null) {
 					targetList.add((User)flujo.readObject());
+					targetList.getLast().setUserLastUpdate(System.currentTimeMillis());
 					nicknameList.add(targetList.getLast().getUserNickname());
 					userMap.put(targetList.getLast().getUserId(), targetList.getLast());
 					if(targetList.getLast().getUserId() > User.getLastUserId()) {

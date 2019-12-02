@@ -1,4 +1,4 @@
-function createUser(nickname) {	//CREA UN NUEVO USUARIO
+function createUser(nickname) {
     $.ajax({
         method: 'POST',
         url: 'http://'+ip+':8080/api/createUser/' + nickname,
@@ -18,7 +18,7 @@ function createUser(nickname) {	//CREA UN NUEVO USUARIO
   return success;
 }
 
-function checkServer() {	//COMPRUEBA QUE EL SERVIDOR ESTÁ ACTIVO Y MANTIENE CONECTADO AL USUARIO
+function checkServer() {
 	var key= userId;
     $.ajax({
         method: 'PUT',
@@ -41,7 +41,7 @@ function checkServer() {	//COMPRUEBA QUE EL SERVIDOR ESTÁ ACTIVO Y MANTIENE CON
   return success;
 }
 
-function getRooms() {	//COMPRUEBA QUE EL SERVIDOR ESTÁ ACTIVO Y MANTIENE CONECTADO AL USUARIO
+function getRooms() {
     $.ajax({
         method: 'GET',
         url: 'http://'+ip+':8080/api/getRooms/',
@@ -60,10 +60,10 @@ function getRooms() {	//COMPRUEBA QUE EL SERVIDOR ESTÁ ACTIVO Y MANTIENE CONECT
 function apiRestRoutine(){
 	var serverState=checkServer();
 	if(Date.now() > lastUpdateRest){
-		if(serverState){	//EL SERVIDOR ESTÁ ACTIVO:
+		if(serverState){
 			getRooms();
 			lastUpdateRest= Date.now() + rate;
-		}else{	//EL SERVIDOR ESTÁ INACTIVO:
+		}else{
 			lastUpdateRest= Date.now() + inactiveRate;
 		}	
 	}
