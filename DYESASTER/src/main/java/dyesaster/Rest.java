@@ -1,6 +1,15 @@
 package dyesaster;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintStream;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,10 +33,37 @@ import org.springframework.web.bind.annotation.RestController;
 public class Rest {
 	static Map<Long, User> userMap = new ConcurrentHashMap<>();
 	static LinkedList<String> nicknameList = new LinkedList<>();
-	private Thread tickThread;
-	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-	private final long TICK_DELAY= 100;
-	private final long GRACE_TIME= 150;
+	private static Thread restRest;
+	private static Thread fileThread;
+	private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	private static ScheduledExecutorService schedulerFiles = Executors.newScheduledThreadPool(1);
+	private static final long TICK_DELAY= 200;
+	private static final long GRACE_TIME= 2000;
+	private static final long CLEAR_TIME= 20000;	
+	
+	public static void startFileLog() {
+		loadDATlog();
+		crearFicheros();
+		fileThread = new Thread(() -> fileThread());
+		fileThread.start();
+		restRest = new Thread(() -> restRest());
+		restRest.start();
+	}
+	
+	private static void fileThread(){
+		schedulerFiles = Executors.newScheduledThreadPool(1);	
+		schedulerFiles.scheduleAtFixedRate(() -> {
+			saveTextLog();
+			saveDATlog();
+		}, TICK_DELAY, TICK_DELAY, TimeUnit.MILLISECONDS);
+	}
+	
+	private static void restRest() {
+		scheduler = Executors.newScheduledThreadPool(1);	
+		scheduler.scheduleAtFixedRate(() -> {
+				restUpdate();
+		}, TICK_DELAY, TICK_DELAY, TimeUnit.MILLISECONDS);
+	}
 	
 	@PostMapping("/createUser/{nickname}")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -38,7 +74,7 @@ public class Rest {
 			nicknameList.add(nickname);
 			User currentUser= new User(nickname);
 			userMap.put(currentUser.getUserId(), currentUser);
-			this.start(currentUser.getUserId());
+			System.out.println(nickname + " logged to server.");
 			return currentUser.getUserId();
 		}
 	}
@@ -51,44 +87,133 @@ public class Rest {
 			userMap.get(key).setUserLastUpdate(System.currentTimeMillis());
 			currentUser= userMap.get(key);
 		}else {
-			currentUser= new User();
-			userMap.put(currentUser.getUserId(), currentUser);
+			return -1;
 		}
 		return currentUser.getUserId();
 	}
 	
 
 	@GetMapping("/getRooms")
-	public ResponseEntity<Map<Long, User>> getRooms() {
+	public ResponseEntity<User[]> getRooms() {
 		if (userMap != null) {
-			return new ResponseEntity<>(userMap, HttpStatus.OK);
+		    Collection<User> values = userMap.values();
+		    User[] targetArray = values.toArray(new User[values.size()]);
+			return new ResponseEntity<>(targetArray, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 	
-	private void tick(long key) throws IOException {
-		if(userMap.get(key) != null) {
-			if(userMap.get(key).getUserLastUpdate()+GRACE_TIME < System.currentTimeMillis()) {
-				userMap.get(key).setUserActive(false);
+	public static void crearFicheros() {
+		try {
+			File userLogTXT = new File("userLog.txt");
+			userLogTXT.createNewFile();
+			File userLogDAT = new File("userLog.dat");
+			userLogDAT.createNewFile();
+		} catch(IOException ioe) {
+			System.out.println("No se pudieron crear los archivos de log.");
+		}
+	}
+	
+	private static void restUpdate() {
+		synchronized(userMap){
+			synchronized(nicknameList){
+				if(nicknameList.size() > 0) {
+					Collection<User> values = userMap.values();
+					User[] targetArray = values.toArray(new User[values.size()]);
+					for(int i = 0; i < targetArray.length; i++) {
+						if(targetArray[i].getUserLastUpdate() + CLEAR_TIME < System.currentTimeMillis()) {
+							userMap.remove(targetArray[i].getUserId());
+							nicknameList.remove(targetArray[i].getUserNickname());
+							System.out.println(targetArray[i].getUserNickname() + " kicked by server.");
+						}else if(targetArray[i].getUserLastUpdate() + GRACE_TIME < System.currentTimeMillis()) {
+							userMap.get(targetArray[i].getUserId()).setUserActive(false);
+						} 
+					}
+				}
 			}
 		}
 	}
 	
-	public void start(long key) {
-		tickThread = new Thread(() -> startRest(key));
-		tickThread.start();
-	}
-
-	private void startRest(long key) {
-		scheduler = Executors.newScheduledThreadPool(1);	
-		scheduler.scheduleAtFixedRate(() -> {
-			try {
-				tick(key);
-			} catch (IOException e) {
-				e.printStackTrace();
+	public static void saveTextLog() {
+		synchronized(userMap){
+			synchronized(nicknameList){
+				if(nicknameList.size() > 0) {
+					    Collection<User> values = userMap.values();
+					    User[] targetArray = values.toArray(new User[values.size()]);
+						try(PrintStream flujo = new PrintStream(new FileOutputStream("userLog.txt"))) {
+							flujo.print("#DYESASTER: apirest users logfile:\r\n\r\n| NICKNAME \t| LAST REQUEST \t\t| USER ID \t| HASH CODE \t|\r\n");
+							for(int i = 0; i < targetArray.length; i++) {
+								flujo.print("| " + format(targetArray[i].getUserNickname(), 16) + " \t| " + getTimeStamp(targetArray[i].getUserLastUpdate()) + " \t| " + format(((Integer)(int)targetArray[i].getUserId()).toString(), 16) + " \t| " + userMap.get(targetArray[i].getUserId()).hashCode() + " \t|\r\n");
+							}
+						} catch(FileNotFoundException e) {
+							System.out.println("Fichero 'userLog.txt' no encontrado.");
+						}
+				}
 			}
-		}, TICK_DELAY, TICK_DELAY, TimeUnit.MILLISECONDS);
+		}
 	}
 
+	public static void saveDATlog() {
+		synchronized(userMap){
+			synchronized(nicknameList){
+				if(nicknameList.size() > 0) {
+				    Collection<User> values = userMap.values();
+				    User[] targetArray = values.toArray(new User[values.size()]);
+					try {
+						FileOutputStream file = new FileOutputStream("userLog.dat");
+						try(ObjectOutputStream flujo = new ObjectOutputStream(file)) {
+							for(int i = 0; i < targetArray.length; i++) {
+								flujo.writeObject(targetArray[i]);
+							}
+						}
+					} catch(IOException exc) {
+						System.out.println("Error desconocido guardando 'userLog.dat': " + exc);
+					}
+				}
+			}
+		}
+	}
+
+	
+	public static void loadDATlog() {
+	    LinkedList<User> targetList= new LinkedList<>();
+		try {
+			FileInputStream in = new FileInputStream("userLog.dat");
+			try(ObjectInputStream flujo = new ObjectInputStream( in )) {
+				while(flujo.readObject() != null) {
+					targetList.add((User)flujo.readObject());
+					nicknameList.add(targetList.getLast().getUserNickname());
+					userMap.put(targetList.getLast().getUserId(), targetList.getLast());
+					if(targetList.getLast().getUserId() > User.getLastUserId()) {
+						User.initialize(targetList.getLast().getUserId());
+					}
+				}
+				flujo.close();
+			}
+		} catch(FileNotFoundException e) {
+			System.out.println("Fichero 'userLog.dat' no encontrado.");
+		} catch(IOException exc) {
+			System.out.println("Fichero 'userLog.dat' cargado correctamente.");
+		} catch(ClassNotFoundException e) {
+			System.out.println("Clase no encontrada/error de conversión.");
+		}
+	}
+	
+	public static String format(String s, int chars) {
+		return String.format("%1$-" + chars + "s", s).substring(0, chars);
+	}
+	
+	public static String getTimeStamp(long timeStamp) {
+	    SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+	    String strDate = sdfDate.format(timeStamp);
+	    return strDate;
+	}
+	
+	public void stop() {
+		if (scheduler != null) {
+			scheduler.shutdown();
+		}
+	}
+	
 }

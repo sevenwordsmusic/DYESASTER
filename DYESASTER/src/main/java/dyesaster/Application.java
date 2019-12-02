@@ -1,5 +1,7 @@
 package dyesaster;
 
+
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +14,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 public class Application implements WebSocketConfigurer {
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
+		Rest.startFileLog();
 	}
 
 	@Override

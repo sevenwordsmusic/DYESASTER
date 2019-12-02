@@ -1,13 +1,23 @@
 package dyesaster;
 
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class User {
-	private static AtomicInteger lastUserId = new AtomicInteger(0);
+@SuppressWarnings("serial")
+public class User implements Serializable {
+	private static AtomicInteger lastUserId = new AtomicInteger(-1);
 	private long userId;
 	private String userNickname;
 	private boolean userActive;
 	private long userLastUpdate;
+	
+	public static void initialize(long resetUserId) {
+		lastUserId.lazySet((int)resetUserId);
+	}
+	
+	public static long getLastUserId() {
+		return lastUserId.get();
+	}
 	
 	User(){
 		this.userId= lastUserId.incrementAndGet();

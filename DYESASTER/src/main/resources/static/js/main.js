@@ -86,14 +86,15 @@ var MainScene = new Phaser.Class({
 		btnSurfer = this.input.keyboard.addKeys({ 'space':Phaser.Input.Keyboard.KeyCodes.SPACE, 'enter':Phaser.Input.Keyboard.KeyCodes.ENTER});
 		
 		var nickname= document.getElementById("nickname");
+		nickname.style.display= "block";
     },
     
     update: function (time, delta) {
     	if(btnSurfer.space.isDown || btnSurfer.enter.isDown){
-    		this.sound.play('button');
     		if(nickname.value.length>0){
     			if(createUser(nickname.value)){
 	    			nickname.style.display= "none";
+	        		this.sound.play('button');
 	    			this.scene.start('menuScene');
 	    			if (game.global.DEBUG_MODE) {
 	    				console.log('[DEBUG] Switching to menuScene.');
@@ -118,7 +119,7 @@ var config = {
 	    physics: {
 	        default: 'arcade'
 	    },
-	    scene: [MainScene, MenuScene, JoinScene, LoadScene, GameScene, RankingScene, InProgress, ControlsScene],
+	    scene: [MainScene, MenuScene, JoinScene, LoadScene, GameScene, RankingScene, InProgress, ControlsScene, DownScene],
 	    roundPixels: true
 };
 

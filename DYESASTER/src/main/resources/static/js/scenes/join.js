@@ -20,18 +20,25 @@ var JoinScene = new Phaser.Class({
 		this.background.setOrigin(0, 0);
 		this.background.setScrollFactor(0);
 		
-		texto= this.add.text(game.config.width/2, game.config.height/2, 'TEXTO', {fontFamily: 'Verdana'});
+		var userList= document.getElementById("userList");
+		userList.style.display= "block";
 	},
     
     update: function (time, delta) {
-    	apiRestRoutine();
-    	texto.text= playersAndRooms;
-    	if(ifafagaggfa==0){
-    		console.log(playersAndRooms[1].userActive);
+    	if(!apiRestRoutine()){
+    		userList.style.display= "none";
+			this.scene.start('downScene');
+			if (game.global.DEBUG_MODE) {
+				console.log('[DEBUG] Switching to downScene.');
+			}
     	}
-    	ifafagaggfa++;
+		var userTable= "<table>";
+    	for(var i=0; i<playersAndRooms.length; i++){
+    		userTable+="<tr><td>" + playersAndRooms[i].userNickname + "</td><td>" + playersAndRooms[i].userActive + "</td></tr>";
+    	}
+    	userTable+="</table>";
+    	userList.innerHTML= userTable;
     }
 
 });
 
-var ifafagaggfa = 0;

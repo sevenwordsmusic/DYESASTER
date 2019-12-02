@@ -13,6 +13,7 @@ function createUser(nickname) {	//CREA UN NUEVO USUARIO
         }
     }).fail(function(xhr, status, error) {
         var errorMessage = xhr.status + ': ' + xhr.statusText;
+		success= false;
   })
   return success;
 }
@@ -27,8 +28,12 @@ function checkServer() {	//COMPRUEBA QUE EL SERVIDOR ESTÁ ACTIVO Y MANTIENE CON
             "Content-Type": "application/json"
         }
     }).done(function(returnedKey) {
-        userId= returnedKey;
-    	success= true;
+        if(returnedKey!=-1){
+        	userId= returnedKey;
+        	success= true;
+        }else{
+    		success= false;
+        }
     }).fail(function(xhr, status, error) {
         var errorMessage = xhr.status + ': ' + xhr.statusText;
 		success= false;
@@ -53,18 +58,20 @@ function getRooms() {	//COMPRUEBA QUE EL SERVIDOR ESTÁ ACTIVO Y MANTIENE CONECT
 
 
 function apiRestRoutine(){
+	var serverState=checkServer();
 	if(Date.now() > lastUpdateRest){
-		if(checkServer()){	//EL SERVIDOR ESTÁ ACTIVO:
+		if(serverState){	//EL SERVIDOR ESTÁ ACTIVO:
 			getRooms();
 			lastUpdateRest= Date.now() + rate;
 		}else{	//EL SERVIDOR ESTÁ INACTIVO:
 			lastUpdateRest= Date.now() + inactiveRate;
 		}	
 	}
+	return serverState;
 }
 
-var rate= 50;
-var inactiveRate= 200;
+var rate= 100;
+var inactiveRate= 1000;
 var lastUpdateRest= Date.now() + rate;
 var userId= -1;
 var success= false;

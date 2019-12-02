@@ -141,15 +141,18 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		Player player;
 		synchronized(this) {
-			player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
+			if(!session.getAttributes().isEmpty()){
+				Player player;
+				player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
+				if(rooms.size()>0) {
+					if(rooms.get(player.getGameId()).getCreator().getPlayerId()==player.getPlayerId()) {
+						rooms.get(player.getGameId()).stop();
+					}
+					player.stop();
+				}
+			}
 		}
-		if(rooms.get(player.getGameId()).getCreator().getPlayerId()==player.getPlayerId()) {
-			rooms.get(player.getGameId()).stop();
-		}
-		player.stop();
-
 	}
 	
 }
