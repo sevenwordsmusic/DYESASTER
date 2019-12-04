@@ -40,7 +40,7 @@ public class Rest {
 	private static Thread fileThread;
 	private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	private static ScheduledExecutorService schedulerFiles = Executors.newScheduledThreadPool(1);
-	private static final long TICK_DELAY= 200;
+	private static final long TICK_DELAY= 250;
 	private static final long GRACE_TIME= 2000;
 	private static final long CLEAR_TIME= 20000;
 	
@@ -178,6 +178,7 @@ public class Rest {
 						try(ObjectOutputStream flujo = new ObjectOutputStream(file)) {
 							for(int i = 0; i < targetArray.length; i++) {
 								flujo.writeObject(targetArray[i]);
+								targetArray[i].getUserNickname();
 							}
 						}
 					} catch(IOException exc) {
@@ -191,17 +192,23 @@ public class Rest {
 	
 	public static void loadDATlog() {
 	    LinkedList<User> targetList= new LinkedList<>();
+	    User temp;
 		try {
 			FileInputStream in = new FileInputStream("userLog.dat");
 			try(ObjectInputStream flujo = new ObjectInputStream( in )) {
-				while(flujo.readObject() != null) {
-					targetList.add((User)flujo.readObject());
-					targetList.getLast().setUserLastUpdate(System.currentTimeMillis());
-					nicknameList.add(targetList.getLast().getUserNickname());
-					userMap.put(targetList.getLast().getUserId(), targetList.getLast());
-					if(targetList.getLast().getUserId() > User.getLastUserId()) {
-						User.initialize(targetList.getLast().getUserId());
-					}
+				while(true) {
+						temp=(User)flujo.readObject();
+						if(temp!=null) {
+							targetList.add(temp);
+							targetList.getLast().setUserLastUpdate(System.currentTimeMillis());
+							nicknameList.add(targetList.getLast().getUserNickname());
+							userMap.put(targetList.getLast().getUserId(), targetList.getLast());
+							if(targetList.getLast().getUserId() > User.getLastUserId()) {
+								User.initialize(targetList.getLast().getUserId());
+							}
+						}else {
+							break;
+						}
 				}
 				flujo.close();
 			}

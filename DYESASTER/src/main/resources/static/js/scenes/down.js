@@ -31,6 +31,7 @@ var DownScene = new Phaser.Class({
     			console.log('[DEBUG] Switching to joinScene.');
 			}
     	}
+
     	//FIN CAMBIOS
 
     }
