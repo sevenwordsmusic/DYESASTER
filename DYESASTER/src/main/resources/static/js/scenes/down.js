@@ -23,12 +23,15 @@ var DownScene = new Phaser.Class({
 	},
     
     update: function (time, delta) {
-    	if(apiRestRoutine()){
-			this.scene.start('joinScene');
-			if (game.global.DEBUG_MODE) {
-				console.log('[DEBUG] Switching to joinScene.');
+    	//CAMBIOS
+    	apiRestRoutine();
+    	if(serverState){
+    		this.scene.start('joinScene');
+    		if (game.global.DEBUG_MODE) {
+    			console.log('[DEBUG] Switching to joinScene.');
 			}
     	}
+    	//FIN CAMBIOS
 
     }
 

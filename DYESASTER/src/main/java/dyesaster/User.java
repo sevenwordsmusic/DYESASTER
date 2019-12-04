@@ -5,9 +5,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @SuppressWarnings("serial")
 public class User implements Serializable {
-	private static AtomicInteger lastUserId = new AtomicInteger(-1);
+	private static AtomicInteger lastUserId = new AtomicInteger(0);
 	private long userId;
 	private String userNickname;
+	private String userPassword;
 	private boolean userActive;
 	private long userLastUpdate;
 	
@@ -26,8 +27,9 @@ public class User implements Serializable {
 		this.userNickname= "Player_" + this.userId;
 	}
 
-	User(String userNickname){
+	User(String userNickname, String userPassword){
 		this.userNickname= userNickname;
+		this.userPassword= userPassword;
 		this.userId= lastUserId.incrementAndGet();
 		this.userActive= true;
 		this.userLastUpdate= System.currentTimeMillis();
@@ -58,6 +60,14 @@ public class User implements Serializable {
 
 	public void setUserNickname(String userNickname) {
 		this.userNickname = userNickname;
+	}
+
+	public String getUserPassword() {
+		return userPassword;
+	}
+
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
 	}
 
 }

@@ -23,9 +23,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+
 
 
 @RestController
@@ -39,7 +42,7 @@ public class Rest {
 	private static ScheduledExecutorService schedulerFiles = Executors.newScheduledThreadPool(1);
 	private static final long TICK_DELAY= 200;
 	private static final long GRACE_TIME= 2000;
-	private static final long CLEAR_TIME= 20000;	
+	private static final long CLEAR_TIME= 20000;
 	
 	public static void startFileLog() {
 		loadDATlog();
@@ -67,29 +70,39 @@ public class Rest {
 	
 	@PostMapping("/createUser/{nickname}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public long createUser(@PathVariable String nickname) {
-		if(nicknameList.contains(nickname)) {
-			return -1;
-		}else {
-			nicknameList.add(nickname);
-			User currentUser= new User(nickname);
-			userMap.put(currentUser.getUserId(), currentUser);
-			System.out.println(nickname + " logged to server.");
-			return currentUser.getUserId();
+	public Item createUser(@PathVariable String nickname, @RequestBody String password) {
+		password=(password.substring(1, password.length()-1));
+		synchronized(userMap){
+			synchronized(nicknameList){
+				if(nicknameList.contains(nickname)) {
+					if(userMap.get(getKey(nickname)).getUserPassword().equals(password)) {
+						System.out.println(nickname + " logged in to server.");
+						return new Item(getKey(nickname), true);
+					}else {
+						System.out.println("Wrong login attempt.");
+						return new Item(-1,false);
+					}
+				}else {
+					nicknameList.add(nickname);
+					User currentUser= new User(nickname, password);
+					userMap.put(currentUser.getUserId(), currentUser);
+					System.out.println(nickname + " signed in to server.");
+					return new Item(getKey(nickname), true);
+				}
+			}
 		}
 	}
 
 	@PutMapping("/checkServer/{key}")
-	public long checkServer(@PathVariable long key) {
-		User currentUser;
-		if(userMap.containsKey(key)) {
+	public Item checkServer(@PathVariable long key, @RequestBody String password) {
+		password=(password.substring(1, password.length()-1));
+		if(userMap.containsKey(key) && userMap.get(key).getUserPassword().equals(password)){
 			userMap.get(key).setUserActive(true);
 			userMap.get(key).setUserLastUpdate(System.currentTimeMillis());
-			currentUser= userMap.get(key);
+			return new Item(key, true);
 		}else {
-			return -1;
+			return new Item(-1,false);
 		}
-		return currentUser.getUserId();
 	}
 	
 
@@ -125,7 +138,7 @@ public class Rest {
 						if(targetArray[i].getUserLastUpdate() + CLEAR_TIME < System.currentTimeMillis()) {
 							userMap.remove(targetArray[i].getUserId());
 							nicknameList.remove(targetArray[i].getUserNickname());
-							System.out.println(targetArray[i].getUserNickname() + " kicked by server.");
+							System.out.println(targetArray[i].getUserNickname() + " kicked out by server.");
 						}else if(targetArray[i].getUserLastUpdate() + GRACE_TIME < System.currentTimeMillis()) {
 							userMap.get(targetArray[i].getUserId()).setUserActive(false);
 						} 
@@ -215,6 +228,15 @@ public class Rest {
 		if (scheduler != null) {
 			scheduler.shutdown();
 		}
+	}
+	
+	public long getKey(String value) {
+	    for (java.util.Map.Entry<Long, User> entry : userMap.entrySet()) {
+	        if (entry.getValue().getUserNickname().equals(value)) {
+	            return entry.getKey();
+	        }
+	    }
+	    return -1;
 	}
 	
 }

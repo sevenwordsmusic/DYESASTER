@@ -25,13 +25,17 @@ var JoinScene = new Phaser.Class({
 	},
     
     update: function (time, delta) {
-    	if(!apiRestRoutine()){
-    		userList.style.display= "none";
+    	//CAMBIOS
+    	apiRestRoutine();
+    	if(!serverState){
+	    	userList.style.display= "none";
 			this.scene.start('downScene');
 			if (game.global.DEBUG_MODE) {
 				console.log('[DEBUG] Switching to downScene.');
 			}
     	}
+    	//FIN CAMBIOS
+    	
 		var userTable= "<table>";
     	for(var i=0; i<playersAndRooms.length; i++){
     		userTable+="<tr><td>" + playersAndRooms[i].userNickname + "</td><td>" + playersAndRooms[i].userActive + "</td></tr>";

@@ -16,13 +16,23 @@ div {
 	margin: 0 auto 0 auto;
 }
 
+/*CAMBIOS*/
 #nickname {
 	position: fixed;
-	top: 50%;
+	top: 30%;
 	left: 30%;
 	width: 40%;
 	display: none;
 }
+
+#password {
+	position: fixed;
+	top: 40%;
+	left: 30%;
+	width: 40%;
+	display: none;
+}
+/*FIN CAMBIOS*/
 
 #userList {
 	position: fixed;

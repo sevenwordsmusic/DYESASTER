@@ -1,44 +1,37 @@
-function createUser(nickname) {
+//CAMBIOS
+function createUser(item, callback) {
     $.ajax({
-        method: 'POST',
-        url: 'http://'+ip+':8080/api/createUser/' + nickname,
+        method: "POST",
+        url: 'http://'+ip+':8080/api/createUser/' + nickname.value,
+        data: JSON.stringify(password.value),
         processData: false,
         headers: {
             "Content-Type": "application/json"
         }
-    }).done(function(returnedKey) {
-        if(returnedKey!=-1){
-        	userId= returnedKey;
-        	success= true;
-        }
+    }).done(function (item) {
+        console.log("Usuario inició sesión/cuenta de usuario creada con éxito.");
+        callback(item);
     }).fail(function(xhr, status, error) {
-        var errorMessage = xhr.status + ': ' + xhr.statusText;
-		success= false;
-  })
-  return success;
+        var errorMessage = 'Fallo ' + xhr.status + ' ' + xhr.statusText + '.';
+    	console.log(errorMessage);
+    	callback(item);
+    })
 }
 
-function checkServer() {
-	var key= userId;
+function checkServer(item, callback) {
     $.ajax({
-        method: 'PUT',
-        url: 'http://'+ip+':8080/api/checkServer/' + key,
+        method: "PUT",
+        url: 'http://'+ip+':8080/api/checkServer/' + item.id,
+        data: JSON.stringify(password.value),
         processData: false,
         headers: {
             "Content-Type": "application/json"
         }
-    }).done(function(returnedKey) {
-        if(returnedKey!=-1){
-        	userId= returnedKey;
-        	success= true;
-        }else{
-    		success= false;
-        }
+    }).done(function (item) {
+        callback(item);
     }).fail(function(xhr, status, error) {
-        var errorMessage = xhr.status + ': ' + xhr.statusText;
-		success= false;
-  })
-  return success;
+    	callback(item);
+    })
 }
 
 function getRooms() {
@@ -52,27 +45,41 @@ function getRooms() {
     }).done(function(rooms) {
     	playersAndRooms= rooms;
     }).fail(function(xhr, status, error) {
-        var errorMessage = xhr.status + ': ' + xhr.statusText;
+        var errorMessage = 'Fallo ' + xhr.status + ' ' + xhr.statusText + '.';
+    	console.log(errorMessage);
   })
 }
 
 
-function apiRestRoutine(){
-	var serverState=checkServer();
-	if(Date.now() > lastUpdateRest){
-		if(serverState){
-			getRooms();
-			lastUpdateRest= Date.now() + rate;
-		}else{
-			lastUpdateRest= Date.now() + inactiveRate;
-		}	
+
+function sessionStart(itemWithId){
+	if(itemWithId.success){
+		success= true;
+		userId= itemWithId.id;
 	}
-	return serverState;
 }
 
-var rate= 100;
-var inactiveRate= 1000;
-var lastUpdateRest= Date.now() + rate;
-var userId= -1;
+function apiRestRoutine(){
+	waitingLog++;
+	if(waitingLog>14){
+		waitingLog=0;
+        var item = {
+                id: userId,
+                success: false
+        }
+        checkServer(item, function (itemWithId) {
+        	serverState=itemWithId.success;
+    		if(serverState){
+    			getRooms();
+    		}
+        });
+	}
+}
+
 var success= false;
+var waitingLog = 14;
+var userId= -1;
+var userNickname;
 var playersAndRooms;
+var serverState=true;
+//FIN CAMBIOS

@@ -85,28 +85,41 @@ var MainScene = new Phaser.Class({
 		mainButton = this.add.image(game.config.width/2, game.config.height/2 + 128, "mainButton");
 		btnSurfer = this.input.keyboard.addKeys({ 'space':Phaser.Input.Keyboard.KeyCodes.SPACE, 'enter':Phaser.Input.Keyboard.KeyCodes.ENTER});
 		
-		var nickname= document.getElementById("nickname");
+		//cambios
+		var nickname=document.getElementById("nickname");
+		var password=document.getElementById("password");
 		nickname.style.display= "block";
+		password.style.display= "block";
     },
     
     update: function (time, delta) {
-    	if(btnSurfer.space.isDown || btnSurfer.enter.isDown){
-    		if(nickname.value.length>0){
-    			if(createUser(nickname.value)){
-	    			nickname.style.display= "none";
-	        		this.sound.play('button');
-	    			this.scene.start('menuScene');
-	    			if (game.global.DEBUG_MODE) {
-	    				console.log('[DEBUG] Switching to menuScene.');
-	    			}
-    			}else{
-    				//EL USUARIO YA EXISTE O NO SE HA PODIDO CONECTAR CON EL SERVIDOR
-    			}
+    	waitingLog++;
+    	if((btnSurfer.space.isDown || btnSurfer.enter.isDown ) && waitingLog>14){
+    		waitingLog=0;
+    		if(nickname.value.length>0 && password.value.length>0){
+    	        var item = {
+    	                id: -1,
+    	                success: false
+    	        }
+    	        createUser(item, function (itemWithId) {
+    	        	sessionStart(itemWithId);
+    	        });
     		}
     	}
+		if(success){
+    		nickname.style.display= "none";
+    		password.style.display= "none";
+    		this.sound.play('button');
+    		this.scene.start('menuScene');
+    		if (game.global.DEBUG_MODE) {
+    			console.log('[DEBUG] Switching to menuScene.');
+    		}
+		}
     }
 
 });
+//fin de cambios
+
 
 var config = {
 	    type: Phaser.AUTO,
