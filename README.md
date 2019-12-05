@@ -107,7 +107,12 @@ Los datos que guardamos son por tanto los nombres, las contraseñas y las últim
 >En el apartado gráfico hemos actualizado todos los fondos a full HD. También hemos añadido la fuente utilizada para los botones en los inputs de lo usuarios y el resto del texto de las interfaces.
 >
 >Otra mejora ha sido que al volver al menú  desde las distintas opciones disponibles, no sucede lo que ocurría la fase anterior.Antes se reiniciaba el juego cada vez que se intentaba volver al menú, ahora el cambio de escenas funciona correctamente pulsando el botón Espacio, lo cual aparece indicado en cada escena.
-
+-----
+> ## **Intrucciones para la ejecución**
+> + Entrar al fichero "FicheroConfig" y poner la ip deseada.
+> + Ejecutar Dysaster para abrir el servidor 
+> + Entrar a firefox y entrar al juego con ip:8080
+>
 -----
 ## Integrantes del equipo
 > **Pablo López Pérez-Esparza:**
