@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class Rest {
@@ -41,8 +42,8 @@ public class Rest {
 	private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	private static ScheduledExecutorService schedulerFiles = Executors.newScheduledThreadPool(1);
 	private static final long TICK_DELAY= 250;
-	private static final long GRACE_TIME= 2000;
-	private static final long CLEAR_TIME= 20000;
+	private static final long GRACE_TIME= 3000;
+	private static final long CLEAR_TIME= 2000;
 	
 	public static void startFileLog() {
 		loadDATlog();
@@ -72,9 +73,12 @@ public class Rest {
 	@ResponseStatus(HttpStatus.CREATED)
 	public Item createUser(@PathVariable String nickname, @RequestBody String password) {
 		password=(password.substring(1, password.length()-1));
+		if(nicknameList.contains(nickname)) {
+			return new Item(-1,false);
+		}
 		synchronized(userMap){
 			synchronized(nicknameList){
-				if(nicknameList.contains(nickname)) {
+				if(userMap.containsKey(getKey(nickname))) {
 					if(userMap.get(getKey(nickname)).getUserPassword().equals(password)) {
 						System.out.println(nickname + " logged in to server.");
 						return new Item(getKey(nickname), true);
@@ -101,8 +105,15 @@ public class Rest {
 			userMap.get(key).setUserLastUpdate(System.currentTimeMillis());
 			return new Item(key, true);
 		}else {
+			
 			return new Item(-1,false);
 		}
+	}
+	
+	
+	@GetMapping("/serverStatus")
+	public boolean serverStatus() {
+		return true;
 	}
 	
 
@@ -134,14 +145,17 @@ public class Rest {
 				if(nicknameList.size() > 0) {
 					Collection<User> values = userMap.values();
 					User[] targetArray = values.toArray(new User[values.size()]);
-					for(int i = 0; i < targetArray.length; i++) {
-						if(targetArray[i].getUserLastUpdate() + CLEAR_TIME < System.currentTimeMillis()) {
-							userMap.remove(targetArray[i].getUserId());
-							nicknameList.remove(targetArray[i].getUserNickname());
-							System.out.println(targetArray[i].getUserNickname() + " kicked out by server.");
-						}else if(targetArray[i].getUserLastUpdate() + GRACE_TIME < System.currentTimeMillis()) {
-							userMap.get(targetArray[i].getUserId()).setUserActive(false);
-						} 
+						for(int i = 0; i < targetArray.length; i++) {
+							if(nicknameList.contains(targetArray[i].getUserNickname())) {
+								if(targetArray[i].getUserLastUpdate() + CLEAR_TIME < System.currentTimeMillis()) {
+									//userMap.remove(targetArray[i].getUserId());
+									nicknameList.remove(targetArray[i].getUserNickname());
+									System.out.println(targetArray[i].getUserNickname() + " kicked out by server.");
+									userMap.get(targetArray[i].getUserId()).setUserActive(false);
+								}else if(targetArray[i].getUserLastUpdate() + GRACE_TIME < System.currentTimeMillis()) {
+									userMap.get(targetArray[i].getUserId()).setUserActive(false);
+							} 
+						}
 					}
 				}
 			}
@@ -201,7 +215,7 @@ public class Rest {
 						if(temp!=null) {
 							targetList.add(temp);
 							targetList.getLast().setUserLastUpdate(System.currentTimeMillis());
-							nicknameList.add(targetList.getLast().getUserNickname());
+							//nicknameList.add(targetList.getLast().getUserNickname());
 							userMap.put(targetList.getLast().getUserId(), targetList.getLast());
 							if(targetList.getLast().getUserId() > User.getLastUserId()) {
 								User.initialize(targetList.getLast().getUserId());

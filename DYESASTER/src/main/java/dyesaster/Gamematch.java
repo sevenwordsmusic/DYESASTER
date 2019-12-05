@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class Gamematch{
 	private final Player CREATOR;
 	private final Level LEVEL;
-	private final double BLACKHOLE_SPEED= 0.25;
+	private final double BLACKHOLE_SPEED= 1;
 	private final long TICK_DELAY= 1000/60;
 		
 	private LinkedList<Player> players= new LinkedList<Player>();
