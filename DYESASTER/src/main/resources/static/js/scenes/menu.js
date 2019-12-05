@@ -79,7 +79,7 @@ var MenuScene = new Phaser.Class({
     		this.sound.play('button');
     		waiting = 0;
     		if(btnIndex==3){
-    			this.scene.start('controlScene');
+    			this.scene.start('controlsScene');
     			if (game.global.DEBUG_MODE) {
     				console.log('[DEBUG] Switching to controlsScene.');
     			}

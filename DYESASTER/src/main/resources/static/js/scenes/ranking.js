@@ -14,8 +14,6 @@ var RankingScene = new Phaser.Class({
     	this.load.image('endScreenBackground', 'assets/endScreenBackground.png');
     	this.load.image('pst', 'assets/pressSpaceTo.png');
     	this.load.image('rtm', 'assets/returnToMenu.png');
-    	//this.load.image('p1', 'assets/player1.png');
-    	//this.load.image('p2', 'assets/player2.png');
     },
     
     create: function ()
