@@ -54,3 +54,9 @@ td {
 	border: 1px solid black;
 	border-collapse: collapse;
 }
+
+#serverState{
+	position: fixed;
+	top: 0px;
+	left: 0px;	
+}
