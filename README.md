@@ -79,8 +79,25 @@
 > Los sonidos para botones, menús e interacciones serán de reminiscencia Vaporwave, es decir, generados con sintetizadores, basados en aparatos retro o bien en efectos sonoros de computadores PC o Mac de los 80. Para los efectos sonoros de disparos, saltos y similar el tono será entre realista y cartoon. La banda sonora musical será de género vaporwave.
 
 > ## **PRÁCTICA 3**
+>
+> ## **Introducción**
+>
+>A la hora de implementar ApiRest hemos decidido hacerlo para gestionar registros con contraseña de usuarios y hacer visible el estado del servidor para todos los jugadores.Para ello hemos creado una escena, Join Game, que muestra todos los usuarios registrados y su estado, online u offline. En caso de que caiga el servidor en el cliente se cambia de escena a otra que informa a los jugadores del estado del servidor, desde la cual se puede volver al menú principal.
+>Para que los usuarios puedan seguir siendo conscientes del estado del servidor y no tengan que meterse continuamente a JoinGame, desde el menú aparece una indicación arriba a la izquierda que se actualiza cada cierto tiempo.
+Los datos que guardamos son por tanto los nombres, las contraseñas y las últimas conexiones de los usuarios. Pero sólo se muestran por pantalla los nombres y los estados. 
+>Teniendo esto en cuenta, para poder registrar a los jugadores se les pide al introducir un usuario y una contraseña en la primera pantalla del juego. En caso de que el usuario ya exista e introduzcan mal la contraseña aparece un mensaje durante unos segundos que les avise y pide que lo intenten de nuevo. 
+>
+> ## **Implementación Api Rest**
+>
+>Diagrama de clases
+
 > ![alt text](/Imagenes/diagramaUML.png)
 > 
+> ## **Mejoras respecto a la anterior fase**
+>
+>En el apartado gráfico hemos actualizado todos los fondos a full HD. También hemos añadido la fuente utilizada para los botones en los inputs de lo usuarios y el resto del texto de las interfaces.
+Otra mejora ha sido que al volver al menú  desde las distintas opciones disponibles, no sucede lo que ocurría la fase anterior.Antes se reiniciaba el juego cada vez que se intentaba volver al menú, ahora el cambio de escenas funciona correctamente pulsando el botón Espacio, lo cual aparece indicado en cada escena.
+
 -----
 ## Integrantes del equipo
 > **Pablo López Pérez-Esparza:**
