@@ -1,5 +1,6 @@
 //CAMBIOS
 function createUser(item, callback) {
+	game.global.incPas=false;
     $.ajax({
         method: "POST",
         url: 'http://'+ip+':8080/api/createUser/' + nickname.value,
@@ -12,7 +13,7 @@ function createUser(item, callback) {
         if(item.success){
         	console.log("Usuario inició sesión/cuenta de usuario creada con éxito.");
         }else{
-            alert("Contraseña incorrecta inutil de los cojones, agarrame esta ");
+        	game.global.incPas=true;
         }
         callback(item);
     }).fail(function(xhr, status, error) {
@@ -114,4 +115,5 @@ var userId= -1;
 var userNickname;
 var playersAndRooms;
 var serverState=true;
+
 //FIN CAMBIOS

@@ -52,6 +52,7 @@ var MainScene = new Phaser.Class({
 		this.load.image('menuButton_hover-1','assets/buttons/newGameHover.png');
 		this.load.image('menuButton_hover-2','assets/buttons/joinGameHover.png');
 		this.load.image('menuButton_hover-3','assets/buttons/controlsHover.png');
+		this.load.image('incPasButton','assets/wrongPS.png');
 		
 		this.load.image('psts', 'assets/pressSpaceToSelect.png');
 		
@@ -70,6 +71,7 @@ var MainScene = new Phaser.Class({
     create: function ()
     {   
     	
+    	
     	//deepTab= this.sound.add('deepTab');
     	//this.sound.play('deepTab', {volume: 0.25});
     	this.sound.add('button');
@@ -83,7 +85,7 @@ var MainScene = new Phaser.Class({
 		this.background.setOrigin(0, 0);
 		this.background.setScrollFactor(0);
 		
-		mainButton = this.add.image(game.config.width/2, game.config.height/2 + 128, "mainButton");
+		incorrect = this.add.image(game.config.width/2, game.config.height/2 + 300, "incPasButton");
 		btnSurfer = this.input.keyboard.addKeys({ 'space':Phaser.Input.Keyboard.KeyCodes.SPACE, 'enter':Phaser.Input.Keyboard.KeyCodes.ENTER});
 		
 		//cambios
@@ -91,6 +93,9 @@ var MainScene = new Phaser.Class({
 		var password=document.getElementById("password");
 		nickname.style.display= "block";
 		password.style.display= "block";
+		
+		//incorrect= this.add.image(0,0, "incPasButton");
+		
     },
     
     update: function (time, delta) {
@@ -115,9 +120,21 @@ var MainScene = new Phaser.Class({
     		if (game.global.DEBUG_MODE) {
     			console.log('[DEBUG] Switching to menuScene.');
     		}
-		}
-    }
+		} 
 
+		game.global.tempaux++;
+		if(game.global.incPas){
+			incorrect.setVisible(true);
+			if(!restart){game.global.tempaux = 0; restart = true;}
+			if(game.global.tempaux > game.global.temp){
+				restart = false;
+				incorrect.setVisible(false);
+				game.global.incPas=false;
+			}
+		}else{
+			incorrect.setVisible(false);
+		}	
+    }
 });
 //fin de cambios
 
@@ -151,6 +168,9 @@ game.global = {
 	index : 0,
 	length : 1,
 	serStatus : false,
+	incPas: false,
+	temp: 170,
+	tempaux: 0,
 	player : [{
 		x : 2888,
 		y : 8612,
@@ -175,3 +195,6 @@ game.global = {
 		direction : "right"
 	}]
 }
+
+var incorrect;
+var restart = false;

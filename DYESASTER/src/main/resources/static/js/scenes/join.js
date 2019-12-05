@@ -64,7 +64,6 @@ var JoinScene = new Phaser.Class({
 		
 		
     	for(var i=0; i<playersAndRooms.length; i++){
-    		console.log(playersAndRooms[i].userActive);
     		
     		if(playersAndRooms[i].userActive){
     			display="<span>Online</span>";
