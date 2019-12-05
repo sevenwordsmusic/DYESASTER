@@ -92,11 +92,11 @@ Los datos que guardamos son por tanto los nombres, las contraseñas y las últim
 > ## **Implementación Api Rest**
 >
 > Capturas de la implementación
-> ![alt text](/Imagenes/down.png)
-> ![alt text](/Imagenes/InicioSesion.png)
-> ![alt text](/Imagenes/Join.png)
-> ![alt text](/Imagenes/oflineMenu.png)
-> ![alt text](/Imagenes/onlineMenu.png)
+> ![alt text](/Imagenes/down.PNG)
+> ![alt text](/Imagenes/InicioSesion.PNG)
+> ![alt text](/Imagenes/Join.PNG)
+> ![alt text](/Imagenes/oflineMenu.PNG)
+> ![alt text](/Imagenes/onlineMenu.PNG)
 
  >Diagrama de clases
 
