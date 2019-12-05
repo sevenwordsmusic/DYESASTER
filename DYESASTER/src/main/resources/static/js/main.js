@@ -93,7 +93,6 @@ var MainScene = new Phaser.Class({
     },
     
     update: function (time, delta) {
-    	apiRestRoutine();
     	waitingLog++;
     	if((btnSurfer.space.isDown || btnSurfer.enter.isDown ) && waitingLog>14){
     		waitingLog=0;

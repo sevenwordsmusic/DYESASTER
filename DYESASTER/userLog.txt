@@ -1,5 +1,4 @@
 #DYESASTER: apirest users logfile:
 
 | NICKNAME 	| LAST REQUEST 		| USER ID 	| HASH CODE 	|
-| teto             	| 2019-12-05 07:54:51.236 	| 4                	| 1160279808 	|
-| Seven            	| 2019-12-05 07:51:24.645 	| 5                	| 1273987541 	|
+| teto             	| 2019-12-04 03:05:07.793 	| 4                	| 493854452 	|

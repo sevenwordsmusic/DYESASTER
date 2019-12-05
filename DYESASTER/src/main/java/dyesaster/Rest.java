@@ -40,9 +40,9 @@ public class Rest {
 	private static Thread fileThread;
 	private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	private static ScheduledExecutorService schedulerFiles = Executors.newScheduledThreadPool(1);
-	private static final long TICK_DELAY= 500;
-	private static final long GRACE_TIME= 6000;
-	private static final long CLEAR_TIME= 604800000;
+	private static final long TICK_DELAY= 250;
+	private static final long GRACE_TIME= 2000;
+	private static final long CLEAR_TIME= 20000;
 	
 	public static void startFileLog() {
 		loadDATlog();
@@ -129,7 +129,8 @@ public class Rest {
 	}
 	
 	private static void restUpdate() {
-
+		synchronized(userMap){
+			synchronized(nicknameList){
 				if(nicknameList.size() > 0) {
 					Collection<User> values = userMap.values();
 					User[] targetArray = values.toArray(new User[values.size()]);
@@ -143,11 +144,13 @@ public class Rest {
 						} 
 					}
 				}
-
+			}
+		}
 	}
 	
 	public static void saveTextLog() {
-
+		synchronized(userMap){
+			synchronized(nicknameList){
 				if(nicknameList.size() > 0) {
 					    Collection<User> values = userMap.values();
 					    User[] targetArray = values.toArray(new User[values.size()]);
@@ -160,11 +163,13 @@ public class Rest {
 							System.out.println("Fichero 'userLog.txt' no encontrado.");
 						}
 				}
-
+			}
+		}
 	}
 
 	public static void saveDATlog() {
-
+		synchronized(userMap){
+			synchronized(nicknameList){
 				if(nicknameList.size() > 0) {
 				    Collection<User> values = userMap.values();
 				    User[] targetArray = values.toArray(new User[values.size()]);
@@ -180,7 +185,8 @@ public class Rest {
 						System.out.println("Error desconocido guardando 'userLog.dat': " + exc);
 					}
 				}
-
+			}
+		}
 	}
 
 	
