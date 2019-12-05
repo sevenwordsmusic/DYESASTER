@@ -60,6 +60,7 @@ function sessionStart(itemWithId){
 }
 
 function apiRestRoutine(){
+	var serverStateDiv= document.getElementById("serverState");
 	waitingLog++;
 	if(waitingLog>14){
 		waitingLog=0;
@@ -70,12 +71,14 @@ function apiRestRoutine(){
         checkServer(item, function (itemWithId) {
         	serverState=itemWithId.success;
     		if(serverState){
+    			serverStateDiv.innerHTML='Server: on-line';
     			getRooms();
+    		}else{
+    			serverStateDiv.innerHTML='Server: off-line';
     		}
         });
 	}
 }
-
 
 var success= false;
 var waitingLog = 14;
