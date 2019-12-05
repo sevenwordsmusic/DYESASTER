@@ -11,7 +11,7 @@ var RankingScene = new Phaser.Class({
 
     preload: function ()
     {
-    	this.load.image('endScreenBackground', 'assets/bgGameOver.png');
+    	
     	this.load.image('pst', 'assets/pressSpaceTo.png');
     	this.load.image('rtm', 'assets/returnToMenu.png');
     	//this.load.image('p1', 'assets/player1.png');
@@ -20,7 +20,7 @@ var RankingScene = new Phaser.Class({
     
     create: function ()
     {
-    	btnSurfer = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'left': Phaser.Input.Keyboard.KeyCodes.LEFT, 'right': Phaser.Input.Keyboard.KeyCodes.RIGHT, 'down':Phaser.Input.Keyboard.KeyCodes.DOWN, 'space':Phaser.Input.Keyboard.KeyCodes.SPACE});
+    	btnSurfer1 = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'left': Phaser.Input.Keyboard.KeyCodes.LEFT, 'right': Phaser.Input.Keyboard.KeyCodes.RIGHT, 'down':Phaser.Input.Keyboard.KeyCodes.DOWN, 'space':Phaser.Input.Keyboard.KeyCodes.SPACE});
 
     	this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, "endScreenBackground");
 		this.background.setOrigin(0, 0);
@@ -37,10 +37,13 @@ var RankingScene = new Phaser.Class({
     
     update: function ()
     {
-    	if(btnSurfer.space.isDown){
-    		window.location.reload(true);
-			if (game.global.DEBUG_MODE) {
-				console.log('[DEBUG] Switching to load.');
+    	if(btnSurfer1.space.isDown && a+2000<Date.now()){
+    		this.scene.start('menuScene');
+    		btnIndex = 0;
+    		console.log("Funciona");
+    		a = Date.now();
+    		if (game.global.DEBUG_MODE) {
+				console.log('[DEBUG] Switching to Main.'); 
 			}
     	}
     }

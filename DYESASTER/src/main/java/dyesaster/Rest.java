@@ -41,7 +41,7 @@ public class Rest {
 	private static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	private static ScheduledExecutorService schedulerFiles = Executors.newScheduledThreadPool(1);
 	private static final long TICK_DELAY= 500;
-	private static final long GRACE_TIME= 6000;
+	private static final long GRACE_TIME= 2000;
 	private static final long CLEAR_TIME= 604800000;
 	
 	public static void startFileLog() {

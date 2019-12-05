@@ -1,5 +1,3 @@
-//var ip = "192.168.0.176"
-var ip = "127.0.0.1";
 var map;
 var player=[""];
 

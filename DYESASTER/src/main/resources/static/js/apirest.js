@@ -1,5 +1,6 @@
 //CAMBIOS
 function createUser(item, callback) {
+	game.global.incPas=false;
     $.ajax({
         method: "POST",
         url: 'http://'+ip+':8080/api/createUser/' + nickname.value,
@@ -9,9 +10,15 @@ function createUser(item, callback) {
             "Content-Type": "application/json"
         }
     }).done(function (item) {
+    	 if(item.success){
+         	console.log("Usuario inició sesión/cuenta de usuario creada con éxito.");
+         }else{
+         	game.global.incPas=true;
+         }
         console.log("Usuario inició sesión/cuenta de usuario creada con éxito.");
         callback(item);
     }).fail(function(xhr, status, error) {
+    	
         var errorMessage = 'Fallo ' + xhr.status + ' ' + xhr.statusText + '.';
     	console.log(errorMessage);
     	callback(item);
@@ -71,10 +78,12 @@ function apiRestRoutine(){
         checkServer(item, function (itemWithId) {
         	serverState=itemWithId.success;
     		if(serverState){
-    			serverStateDiv.innerHTML='Server: on-line';
+    			serverOff.setVisible(false);
+    			serverOn.setVisible(true);
     			getRooms();
     		}else{
-    			serverStateDiv.innerHTML='Server: off-line';
+    			serverOff.setVisible(true);
+    			serverOn.setVisible(false);
     		}
         });
 	}

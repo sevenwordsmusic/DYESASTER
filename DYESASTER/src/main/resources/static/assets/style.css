@@ -1,8 +1,15 @@
-* {
-	padding: 0px 0px 0px 0px !Important;
-	font-size: 4vw !Important;
-	font-family: Arial !Important;
+@font-face {
+    font-family: 'BrushScriptStd';
+    src: url('BrushScriptStd.otf');
+    font-weight: normal;
+    font-style: normal;
 }
+
+* {
+	/*padding: 0px 0px 0px 0px !Important;*/
+	font-family: BrushScriptStd !Important;
+}
+
 body {
 	background-color: #000000;
 	background-image: url("splash.jpg");
@@ -19,7 +26,9 @@ div {
 /*CAMBIOS*/
 #nickname {
 	position: fixed;
-	top: 30%;
+	font-size: 4vw !Important;
+	padding: 0px 0px 0px 20px !Important;
+	top: 40%;
 	left: 30%;
 	width: 40%;
 	display: none;
@@ -27,36 +36,47 @@ div {
 
 #password {
 	position: fixed;
-	top: 40%;
+	font-size: 4vw !Important;
+	padding: 0px 0px 0px 20px !Important;
+	top: 50%;
 	left: 30%;
 	width: 40%;
 	display: none;
 }
 /*FIN CAMBIOS*/
 
+#serverState{
+	position: absolute;
+	font-size: 30px !Important;
+	font-family: Arial !Important;
+	color: white;
+}
+
 #userList {
-	position: fixed;
-	top: 20%;
-	left: 10%;
-	width: 80%;
-	height: 50%;
+	position: absolute;
+	font-size: 4vw !Important;
+	padding: 0px 0px 0px 0px !Important;
+	top: 35%;
+	left: 25%;
+	width: 50%;
+	height: 40%;
+	display: grid;
 	display: none;
+	grid-template-columns: 100px;
 	overflow: scroll;
+	overflow-x: hidden;
 }
 
 table, td {
 	width: 100%;
+	left: 25%;
 }
 
 td {
 	width: 50%;
 	font-size: 4vw !Important;
-	border: 1px solid black;
-	border-collapse: collapse;
-}
-
-#serverState{
-	position: fixed;
-	top: 0px;
-	left: 0px;	
+	border: solid;
+	padding: 0px 0px 0px 20px !Important;
+	background-color: #8E1580;
+	color: rgba(255,255,255, 0.5);
 }
