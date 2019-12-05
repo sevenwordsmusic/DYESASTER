@@ -77,6 +77,10 @@
 >
 > ## **5.3. Sonido**
 > Los sonidos para botones, menús e interacciones serán de reminiscencia Vaporwave, es decir, generados con sintetizadores, basados en aparatos retro o bien en efectos sonoros de computadores PC o Mac de los 80. Para los efectos sonoros de disparos, saltos y similar el tono será entre realista y cartoon. La banda sonora musical será de género vaporwave.
+
+> ## **PRÁCTICA 3**
+> ![alt text](/Imagenes/diagramaUML.png)
+> 
 -----
 ## Integrantes del equipo
 > **Pablo López Pérez-Esparza:**
