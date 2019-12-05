@@ -141,3 +141,4 @@ Los datos que guardamos son por tanto los nombres, las contraseñas y las últim
 ### Enlaces externos
 > **Trello:** <https://trello.com/b/zI3NdsXB/dyesaster>  
 > **Presentación:** <https://prezi.com/krbozzr-ajd-/?utm_campaign=share&utm_medium=copy>
+> **Presentación:** <https://docs.google.com/presentation/d/11VlxQw2wlvqx3wSC7MqWIzZSzeztwh_eZIFBwoafEhs/edit?usp=sharing>
