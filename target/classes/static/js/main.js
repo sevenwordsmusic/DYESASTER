@@ -52,13 +52,17 @@ var MainScene = new Phaser.Class({
 		this.load.image('menuButton_hover-1','assets/buttons/newGameHover.png');
 		this.load.image('menuButton_hover-2','assets/buttons/joinGameHover.png');
 		this.load.image('menuButton_hover-3','assets/buttons/controlsHover.png');
+		this.load.image('incPasButton','assets/wrongPS.png');
 		
 		this.load.image('psts', 'assets/pressSpaceToSelect.png');
 		
 		//this.load.spritesheet('HUDSelect','assets/HUDAnim.png',{ frameWidth: 70, frameHeight: 60 });
-		this.load.image('bgGameOver','assets/endScreenBackground.png');
-		this.load.image('background', 'assets/menuBackground1.png');
+		this.load.image('endScreenBackground','assets/endScreenBackground.png');
+		this.load.image('background', 'assets/menuBackground.png');
+		this.load.image('backgroundVolver', 'assets/menuBackgroundVolver.png');
 		this.load.image('ServerOff', 'assets/ServerOff.png');
+		this.load.image('serverOffline', 'assets/serverOffline.png');
+		this.load.image('serverOnline', 'assets/serverOnline.png');
 	   	 		
 		// player animations
 			for(var c=0; c<4; c++){
@@ -69,6 +73,10 @@ var MainScene = new Phaser.Class({
 
     create: function ()
     {   
+    	serverOn= this.add.image(0, 0, "serverOnline");
+    	serverOff= this.add.image(0, 0, "serverOffline");
+    	serverOn.setVisible(false);
+    	serverOff.setVisible(false);
     	
     	//deepTab= this.sound.add('deepTab');
     	//this.sound.play('deepTab', {volume: 0.25});
@@ -83,7 +91,7 @@ var MainScene = new Phaser.Class({
 		this.background.setOrigin(0, 0);
 		this.background.setScrollFactor(0);
 		
-		mainButton = this.add.image(game.config.width/2, game.config.height/2 + 128, "mainButton");
+		incorrect = this.add.image(game.config.width/2, game.config.height/2 + 300, "incPasButton");
 		btnSurfer = this.input.keyboard.addKeys({ 'space':Phaser.Input.Keyboard.KeyCodes.SPACE, 'enter':Phaser.Input.Keyboard.KeyCodes.ENTER});
 		
 		//cambios
@@ -94,6 +102,7 @@ var MainScene = new Phaser.Class({
     },
     
     update: function (time, delta) {
+    	apiRestRoutine();
     	waitingLog++;
     	if((btnSurfer.space.isDown || btnSurfer.enter.isDown ) && waitingLog>14){
     		waitingLog=0;
@@ -116,6 +125,19 @@ var MainScene = new Phaser.Class({
     			console.log('[DEBUG] Switching to menuScene.');
     		}
 		}
+		
+		game.global.tempaux++;
+		if(game.global.incPas){
+			incorrect.setVisible(true);
+			if(!restart){game.global.tempaux = 0; restart = true;}
+			if(game.global.tempaux > game.global.temp){
+				restart = false;
+				incorrect.setVisible(false);
+				game.global.incPas=false;
+			}
+		}else{
+			incorrect.setVisible(false);
+		}	
     }
 
 });
@@ -150,7 +172,9 @@ game.global = {
 	blackHolePosition : 96,
 	index : 0,
 	length : 1,
-	serStatus : false,
+	incPas: false,
+	temp: 170,
+	tempaux: 0,
 	player : [{
 		x : 2888,
 		y : 8612,
@@ -175,3 +199,5 @@ game.global = {
 		direction : "right"
 	}]
 }
+var incorrect;
+var restart = false;

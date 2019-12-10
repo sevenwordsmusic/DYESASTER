@@ -45,7 +45,7 @@ div {
 }
 /*FIN CAMBIOS*/
 
-#stateServer{
+#serverState{
 	position: absolute;
 	font-size: 30px !Important;
 	font-family: Arial !Important;
@@ -64,6 +64,7 @@ div {
 	display: none;
 	grid-template-columns: 100px;
 	overflow: scroll;
+	overflow-x: hidden;
 }
 
 table, td {

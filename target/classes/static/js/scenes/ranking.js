@@ -11,7 +11,7 @@ var RankingScene = new Phaser.Class({
 
     preload: function ()
     {
-    	this.load.image('endScreenBackground', 'assets/endScreenBackground.png');
+    	
     	this.load.image('pst', 'assets/pressSpaceTo.png');
     	this.load.image('rtm', 'assets/returnToMenu.png');
     	//this.load.image('p1', 'assets/player1.png');
@@ -26,7 +26,12 @@ var RankingScene = new Phaser.Class({
 		this.background.setOrigin(0, 0);
 		this.pst = this.add.image(game.config.width/2, (game.config.height/2)+150, "pst");
 		this.rtm = this.add.image(game.config.width/2, (game.config.height/2)+200, "rtm");
-		
+		/*if(game.global.player[0].isAlive){
+			p1.setVisible(true);
+		}
+		if(game.global.player[1].isAlive){
+			p2.setVisible(true);
+		}*/
 		
     },
     
