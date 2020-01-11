@@ -10,14 +10,16 @@ function createUser(item, callback) {
             "Content-Type": "application/json"
         }
     }).done(function (item) {
-        if(item.success){
-        	console.log("Usuario inició sesión/cuenta de usuario creada con éxito.");
-        }else{
-        	game.global.incPas=true;
-        }
+    	 if(item.success){
+         	console.log("Usuario inició sesión/cuenta de usuario creada con éxito.");
+         }else{
+         	game.global.incPas=true;
+         }
+        console.log("Usuario inició sesión/cuenta de usuario creada con éxito.");
         callback(item);
     }).fail(function(xhr, status, error) {
-    	var errorMessage = 'Fallo ' + xhr.status + ' ' + xhr.statusText + '.';
+    	
+        var errorMessage = 'Fallo ' + xhr.status + ' ' + xhr.statusText + '.';
     	console.log(errorMessage);
     	callback(item);
     })
@@ -37,28 +39,6 @@ function checkServer(item, callback) {
     }).fail(function(xhr, status, error) {
     	callback(item);
     })
-}
-
-function serverStatus() {
-	waitingS++;
-	if(waitingS>14){
-		waitingS=0;
-		$.ajax({
-	        method: "GET",
-	        url: 'http://'+ip+':8080/api/serverStatus/' ,
-	        processData: false,
-	        headers: {
-	            "Content-Type": "application/json"
-	        }
-	    }).done(function () {
-	        game.global.serStatus=true;
-	    }).fail(function() {
-	    	 var errorMessage = 'Servidor Offline.';
-	    	 console.log(errorMessage);
-	    	 game.global.serStatus=false;
-	    })
-	}
-    
 }
 
 function getRooms() {
@@ -87,6 +67,7 @@ function sessionStart(itemWithId){
 }
 
 function apiRestRoutine(){
+	var serverStateDiv= document.getElementById("serverState");
 	waitingLog++;
 	if(waitingLog>14){
 		waitingLog=0;
@@ -94,26 +75,24 @@ function apiRestRoutine(){
                 id: userId,
                 success: false
         }
-       
         checkServer(item, function (itemWithId) {
         	serverState=itemWithId.success;
     		if(serverState){
+    			serverOff.setVisible(false);
+    			serverOn.setVisible(true);
     			getRooms();
+    		}else{
+    			serverOff.setVisible(true);
+    			serverOn.setVisible(false);
     		}
         });
-       serverStatus();
-       return game.global.serStatus;
 	}
-	
 }
-
 
 var success= false;
 var waitingLog = 14;
-var waitingS=14;
 var userId= -1;
 var userNickname;
 var playersAndRooms;
 var serverState=true;
-
 //FIN CAMBIOS

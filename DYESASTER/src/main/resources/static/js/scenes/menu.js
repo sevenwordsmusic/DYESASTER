@@ -20,6 +20,9 @@ var MenuScene = new Phaser.Class({
 		this.background.setOrigin(0, 0);
 		this.background.setScrollFactor(0);
 		
+    	serverOn= this.add.image(0, 0, "serverOnline");
+    	serverOff= this.add.image(0, 0, "serverOffline");
+    	serverOff.setVisible(false);
     	/*ASÍ ESTABA:
 		btn1 = this.add.image(game.config.width/2, game.config.height/2, "LMimg");
 		btn2 = this.add.image(game.config.width/2, game.config.height/2+150, "CMimg");
@@ -42,14 +45,10 @@ var MenuScene = new Phaser.Class({
 		}
 		button_hover[0].setVisible(true);
 		btnSurfer = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'down':Phaser.Input.Keyboard.KeyCodes.DOWN, 'space':Phaser.Input.Keyboard.KeyCodes.SPACE, 'enter':Phaser.Input.Keyboard.KeyCodes.ENTER});
-   
-		var stateServer= document.getElementById("stateServer");
-		stateServer.style.display= "block";
     },
     
     update: function (time, delta) {
     	apiRestRoutine();
-    
     	waiting++;
     	if(btnSurfer.up.isDown && waiting>10){
     		button_hover[btnIndex].setVisible(false);
@@ -98,18 +97,7 @@ var MenuScene = new Phaser.Class({
 			if (game.global.DEBUG_MODE) {
 				console.log('[DEBUG] Switching to LoadScene.');
 			}
-    	} 
-    	
-    	serverStatus();
-		if(game.global.serStatus){
-			server="<span>Online</span>";
-		}else{
-			server="<span>Offline</span>";
-		}
-		
-		serverDiv="<span>Server: </span>"+ server;
-    	stateServer.innerHTML= serverDiv;
-		
+    	}  
     }
 
 });

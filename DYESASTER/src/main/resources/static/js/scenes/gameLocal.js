@@ -29,7 +29,7 @@ var GameScene = new Phaser.Class({
     
     create: function ()
     {	 
-		this.bg_0 = this.add.tileSprite(0, 0, game.config.width, game.config.height, "bg-0");
+		/*this.bg_0 = this.add.tileSprite(0, 0, game.config.width, game.config.height, "bg-0");
 		this.bg_0.setOrigin(0, 0);
 		this.bg_0.setScrollFactor(0);
 		
@@ -56,7 +56,7 @@ var GameScene = new Phaser.Class({
 		
 		this.bg_5 = this.add.tileSprite(0, 0, game.config.width, game.config.height, "bg-5");
 		this.bg_5.setOrigin(0, 0);
-		this.bg_5.setScrollFactor(0);
+		this.bg_5.setScrollFactor(0);//*/
 		
 		// load the map 
 		map = this.make.tilemap({key: 'map'});

@@ -30,35 +30,17 @@ var GameScene = new Phaser.Class({
     },
     
     create: function ()
-    {	
-
-    	/*
-		this.bg_0 = this.add.tileSprite(0, 0, game.config.width, game.config.height, "bg-0");
-		this.bg_0.setOrigin(0, 0);
-		this.bg_0.setScrollFactor(0);
-		
-		this.bg_1 = this.add.tileSprite(0, 0, game.config.width, game.config.height, "bg-1");
-		this.bg_1.setOrigin(0, 0);
-		this.bg_1.setScrollFactor(0);
-
-		this.bg_2 = this.add.tileSprite(0, 0, game.config.width, game.config.height, "bg-2");
-		this.bg_2.setOrigin(0, 0);
-		this.bg_2.setScrollFactor(0);
-		
-		this.bg_3 = this.add.tileSprite(0, 0, game.config.width, game.config.height, "bg-3");
-		this.bg_3.setOrigin(0, 0);
-		this.bg_3.setScrollFactor(0);
-		//*/
+    {
     	for(var i = 0; i<3; i++){
 	    		
-				let bg_0 =this.add.image(0,0+(i*game.config.height*4),"bg-0");
+				let bg_0 = this.add.image(0,0+(i*game.config.height*4),"bg-0");
 				if(i===1){bg_0.flipY=true};
 		    	bg_0.displayHeight = game.config.height*4;
 		    	bg_0.scaleX=bg_0.scaleY;
 		    	bg_0.y=(game.config.height*4*i)+(game.config.height/2)*4;
 		    	bg_0.x=(game.config.width/2)*4;
 		    	
-		    	let bg_1 =this.add.image(0,0+(i*game.config.height*4),"bg-1");
+		    	let bg_1 = this.add.image(0,0+(i*game.config.height*4),"bg-1");
 		    	if(i===1){bg_1.flipY=true};
 		    	bg_1.displayHeight = game.config.height*4;
 		    	bg_1.scaleX=bg_1.scaleY;
@@ -94,13 +76,6 @@ var GameScene = new Phaser.Class({
 		blackHoleLayer = map.createDynamicLayer('BlackHole', allTiles, 0, 0);
 		//blackHoleLayer.setCollisionByExclusion([-1]);
 		blackHoleLayer.setPosition(0, 96);
-
-    	//this.animatedTiles.init(map);
-		
-		// coin image used as tileset
-		//var coinTiles = map.addTilesetImage('coin');
-		// add coins as tiles
-		//coinLayer = map.createDynamicLayer('Coins', coinTiles, 0, 0);
 
 		// set the boundaries of our game world
 		this.physics.world.bounds.width = groundLayer.width;
@@ -157,20 +132,27 @@ var GameScene = new Phaser.Class({
     	game.global.socket.send(JSON.stringify(msg));
 		
     	
-    	this.cameras.main.setSize(768, 864);
+    	this.cameras.main.setSize(game.config.width/2, game.config.height);
 
         camera = this.cameras.main;
-        camera_B = this.cameras.add(768, 0, 768, 864);
+        camera_B = this.cameras.add(game.config.width/2, 0, game.config.width/2, game.config.height);
         
-        HUD = this.cameras.add(0,0,1536,864);
+        HUD = this.cameras.add(0,0,game.config.width,game.config.height);
         
         this.pb = this.add.image(10000,1000,"iRosa");
         
         this.barra = this.add.image(10000,1000,"bg-4");
         this.barra.scaleX=0.25;
+        this.barra.scaleY=2;
         
-        c1=895;c2=965;c3=1035;c4=1105;Ax=72;Bx=68;
+        c1=870;c2=955;c3=1045;c4=1130;Ax=72;Bx=68;
         
+        
+        stV1=0; stV2=0; startScoreV1=false; startScoreV2=false;
+        stV1=this.add.text(10000-(game.config.width/2)+70,600,game.global.score[0],{fontSize:'48px'}).setDepth(1);
+        stV1.setOrigin(0.5,0.5);
+        stV2=this.add.text(10000+(game.config.width/2)-70,600,game.global.score[1],{fontSize:'48px'}).setDepth(1);
+        stV2.setOrigin(0.5,0.5);
         
         this.hudPngA = this.add.image(10000-(game.config.width/2)+70,1000,"hud");
         this.hudPngA.displayHeight = game.config.height/3;
@@ -185,10 +167,6 @@ var GameScene = new Phaser.Class({
         HUDSRA = this.add.image(10000-(game.config.width/2)+Ax,c2,"HUDSelect").setVisible(false);
         HUDSAMA = this.add.image(10000-(game.config.width/2)+Ax,c3,"HUDSelect").setVisible(false);
         HUDSVA = this.add.image(10000-(game.config.width/2)+Ax,c4,"HUDSelect").setVisible(false);
-        /*HUDSAZA.anims.play('selectAnim', true);
-        HUDSRA.anims.play('selectAnim', true);
-        HUDSAMA.anims.play('selectAnim', true);
-        HUDSVA.anims.play('selectAnim', true);//*/
         
         this.hudPngB = this.add.image(10000+(game.config.width/2)-70,1000,"hud");
         this.hudPngB.displayHeight = game.config.height/3;
@@ -203,15 +181,10 @@ var GameScene = new Phaser.Class({
         HUDSRB = this.add.image(10000+(game.config.width/2)-Bx,c2,"HUDSelect").setVisible(false);
         HUDSAMB = this.add.image(10000+(game.config.width/2)-Bx,c3,"HUDSelect").setVisible(false);
         HUDSVB = this.add.image(10000+(game.config.width/2)-Bx,c4,"HUDSelect").setVisible(false);
-        /*HUDSAZB.anims.play('selectAnim', true);
-        HUDSRB.anims.play('selectAnim', true);
-        HUDSAMB.anims.play('selectAnim', true);
-        HUDSVB.anims.play('selectAnim', true);//*/
+
         
         HUD.startFollow(this.pb)
         HUD.ignore(this.pb)
-        //HUD.setZoom(0.2);
-        
         
     	camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         camera.setZoom(0.6);
@@ -221,33 +194,23 @@ var GameScene = new Phaser.Class({
         
         camera.startFollow(player[0]);
 		camera_B.startFollow(player[1]);
-    	
-    	/*this.cameras.main.setSize(768, 864);
-
-        camera = this.cameras.main;
-        camera_B = this.cameras.add(768, 0, 768, 864);
-    	
-    	
-        camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        //camera.setZoom(0.5);
-        camera_B.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        //camera_B.setZoom(0.5);
-		this.cameraDolly = new Phaser.Geom.Point(player[0].x, player[0].y);
-		camera.startFollow(this.cameraDolly);
-		this.cameraDolly_B = new Phaser.Geom.Point(player[1].x, player[1].y);
-		camera_B.startFollow(this.cameraDolly_B);
-		//*/
 	
     },
 	
     update: function (time, delta) {
 	    	blackHoleLayer.y= game.global.blackHolePosition;
 	    	
+	    	if(startScoreV1){game.global.score[0]=Math.max(scoreInit-player[0].y,game.global.score[0]);}else{game.global.score[0]=0;}
+	    	if(startScoreV2){game.global.score[1]=Math.max(scoreInit-player[1].y,game.global.score[1]);}else{game.global.score[1]=0;}
+	    	
+	    	stV1.setText(game.global.score[0]);
+	    	stV2.setText(game.global.score[1]);
+	    	
 			for(var i=0; i<bullet.length; i++) {
 				bullet[i].destroy();
 			}
+			
 			bullet= new Array(game.global.bulletLength);
-	    	
 	    	
 			for(var i=0; i<game.global.length; i++) {
 				if(game.global.player[i].isAlive){
@@ -294,13 +257,6 @@ var GameScene = new Phaser.Class({
         camera.setBounds(0, 0, map.widthInPixels, this.physics.world.bounds.height);
         camera_B.setBounds(0, 0, map.widthInPixels, this.physics.world.bounds.height);
         
-        /*this.cameraDolly.x = player[0].x;
-        this.cameraDolly.y = player[0].y; 
-        this.cameraDolly_B.x = player[1].x;
-        this.cameraDolly_B.y = player[1].y;
-        //*/ 
-        
-        
     	let msg = new Object();
     	msg.event = 'UPDATE_CONTROLS';
 		//PLAYER A
@@ -324,6 +280,7 @@ var GameScene = new Phaser.Class({
 			msg.direction = "idle";
 		}
 		msg.jump = cursors.up.isDown;
+		if(cursors.up.isDown && !startScoreV1){startScoreV1=true;}
 		if(cursors.up.isDown && jumping+250 < Date.now() && game.global.player[0].ground){
 
 			this.sound.play('jump');
@@ -359,6 +316,7 @@ var GameScene = new Phaser.Class({
 			msg.direction_B = "idle";
 		}
 		msg.jump_B = cursors_B.up.isDown;
+		if(cursors_B.up.isDown && !startScoreV2){startScoreV2=true;}
 		if(cursors_B.up.isDown && jumping_B+250 < Date.now() && game.global.player[1].ground){
 	
 			this.sound.play('jump');
@@ -377,16 +335,6 @@ var GameScene = new Phaser.Class({
 		//JUST ONE CONTROLS MSG IS SENT.
 		game.global.socket.send(JSON.stringify(msg));
 		
-		/*
-		// scroll the texture of the tilesprites proportionally to the camera scroll
-		this.bg_1.tilePositionX = (camera.scrollX + camera_B.scrollX /2)* .002;
-		this.bg_2.tilePositionX = (camera.scrollX + camera_B.scrollX /2)* .006;
-		this.bg_3.tilePositionX = (camera.scrollX + camera_B.scrollX /2)* .008;
-		
-		this.bg_1.tilePositionY = (camera.scrollY + camera_B.scrollY /2)* .2;
-		this.bg_2.tilePositionY = (camera.scrollY + camera_B.scrollY /2)* .6;
-		this.bg_3.tilePositionY = (camera.scrollY + camera_B.scrollY /2)* .8;
-		//*/
 		if(nextFrameUpdate<Date.now()){
 			animatedTilesBySeven(211,15);
 			nextFrameUpdate=Date.now()+updateLapse;
@@ -477,6 +425,10 @@ var azulA, verdeA, rosaA, amarilloA;
 var azulB, verdeB, rosaB, amarilloB;
 var HUDSAZA, HUDSVA, HUDSRA, HUDSAMA;
 var HUDSAZB, HUDSVB, HUDSRB, HUDSAMB;
+var scoreText, scoreV1, scoreV2;
+var scoreInit = 8647;
+var stV1, stV2;
+var startScoreV1, startScoreV2;
 
 var fps=15, nextFrameUpdate=Date.now(), updateLapse=1000/fps;
 var jumping=Date.now(), shooting=Date.now(), jumping_B=Date.now(), shooting_B=Date.now(), steps=Date.now();

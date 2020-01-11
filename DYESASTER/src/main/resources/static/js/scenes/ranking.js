@@ -11,7 +11,7 @@ var RankingScene = new Phaser.Class({
 
     preload: function ()
     {
-    	this.load.image('endScreenBackground', 'assets/endScreenBackground.png');
+    	
     	this.load.image('pst', 'assets/pressSpaceTo.png');
     	this.load.image('rtm', 'assets/returnToMenu.png');
     },
@@ -22,10 +22,11 @@ var RankingScene = new Phaser.Class({
 
     	this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, "endScreenBackground");
 		this.background.setOrigin(0, 0);
-		this.pst = this.add.image(game.config.width/2, (game.config.height/2)+150, "pst");
-		this.rtm = this.add.image(game.config.width/2, (game.config.height/2)+200, "rtm");
-		
-		
+		this.pst = this.add.image(game.config.width/2, (game.config.height/2)+650, "pst");
+		this.rtm = this.add.image(game.config.width/2, (game.config.height/2)+700, "rtm");
+		stV1=this.add.text(game.config.width/2, (game.config.height/2)+150,game.global.score[0],{fontSize:'48px'}).setDepth(5);
+		stV2=this.add.text(game.config.width/2, (game.config.height/2)+250,game.global.score[1],{fontSize:'48px'}).setDepth(5);
+
     },
     
     update: function ()
@@ -39,6 +40,11 @@ var RankingScene = new Phaser.Class({
 				console.log('[DEBUG] Switching to Main.'); 
 			}
     	}
+    	stV1.setOrigin(0.5, 0.5);
+    	stV2.setOrigin(0.5, 0.5);
     }
 
 });
+
+
+var stV1, stV2;

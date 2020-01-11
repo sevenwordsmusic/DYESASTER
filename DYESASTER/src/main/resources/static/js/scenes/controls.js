@@ -24,13 +24,23 @@ var ControlsScene = new Phaser.Class({
 		this.background.setOrigin(0, 0);
 		this.pst = this.add.image(game.config.width/2, (game.config.height/2)+200, "pst");
 		this.rtm = this.add.image(game.config.width/2, (game.config.height/2)+250, "rtm");
+		//this.background.setOrigin(0, 0);
 		
-		var stateServer= document.getElementById("stateServer");
-		stateServer.style.display= "none";
+    	serverOn= this.add.image(0, 0, "serverOnline");
+    	serverOff= this.add.image(0, 0, "serverOffline");
+    	serverOff.setVisible(false);
     },
     
     update: function ()
     {
+    	apiRestRoutine();
+    	if(!serverState){
+	    	userList.style.display= "none";
+			this.scene.start('downScene');
+			if (game.global.DEBUG_MODE) {
+				console.log('[DEBUG] Switching to downScene.');
+			}
+    	}
     	if(btnSurfer1.space.isDown && a+2000<Date.now()){
     		this.scene.start('menuScene');
     		btnIndex = 0;
