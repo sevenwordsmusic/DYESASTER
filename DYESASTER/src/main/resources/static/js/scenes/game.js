@@ -145,15 +145,16 @@ var GameScene = new Phaser.Class({
         this.barra.scaleX=0.25;
         this.barra.scaleY=2;
         
-        c1=870;c2=955;c3=1045;c4=1130;Ax=72;Bx=68;
         
-        
+        //Puntuacion
         stV1=0; stV2=0; startScoreV1=false; startScoreV2=false;
-        stV1=this.add.text(10000-(game.config.width/2)+70,600,game.global.score[0],{fontSize:'48px'}).setDepth(1);
+        stV1=this.add.text(10000-(game.config.width/2)+350,500,"Max Altitude: "+game.global.score[0],{fontSize:'48px'}).setDepth(1);
         stV1.setOrigin(0.5,0.5);
-        stV2=this.add.text(10000+(game.config.width/2)-70,600,game.global.score[1],{fontSize:'48px'}).setDepth(1);
+        stV2=this.add.text(10000+(game.config.width/2)-350,500,"Max Altitude: "+game.global.score[1],{fontSize:'48px'}).setDepth(1);
         stV2.setOrigin(0.5,0.5);
         
+        //Hud
+        c1=870;c2=955;c3=1045;c4=1130;Ax=72;Bx=68;
         this.hudPngA = this.add.image(10000-(game.config.width/2)+70,1000,"hud");
         this.hudPngA.displayHeight = game.config.height/3;
         this.hudPngA.scaleX=this.hudPngA.scaleY;
@@ -200,11 +201,11 @@ var GameScene = new Phaser.Class({
     update: function (time, delta) {
 	    	blackHoleLayer.y= game.global.blackHolePosition;
 	    	
+	    	//Update puntuacion
 	    	if(startScoreV1){game.global.score[0]=Math.max(scoreInit-player[0].y,game.global.score[0]);}else{game.global.score[0]=0;}
 	    	if(startScoreV2){game.global.score[1]=Math.max(scoreInit-player[1].y,game.global.score[1]);}else{game.global.score[1]=0;}
-	    	
-	    	stV1.setText(game.global.score[0]);
-	    	stV2.setText(game.global.score[1]);
+	    	stV1.setText("Max Altitude: "+game.global.score[0]);
+	    	stV2.setText("Max Altitude: "+game.global.score[1]);
 	    	
 			for(var i=0; i<bullet.length; i++) {
 				bullet[i].destroy();
