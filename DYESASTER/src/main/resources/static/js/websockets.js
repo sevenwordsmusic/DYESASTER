@@ -61,6 +61,7 @@ function startUp(typeOfGame) {
 			break
 			case 'UPDATE_GAMEMATCH':
 				game.global.receivedMsg=msg.event;
+				game.global.typeOfGame==msg.typeOfGame;
 				game.global.blackHolePosition=msg.blackHolePosition;
 				game.global.index=msg.index;
 				game.global.length=msg.length;

@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class Gamematch{
 	private final Player CREATOR;
 	private final Level LEVEL;
-	private final double BLACKHOLE_SPEED= 0.25;
+	private final double BLACKHOLE_SPEED= 0.75;
 	private final long TICK_DELAY= 1000/60;
 		
 	private LinkedList<Player> players= new LinkedList<Player>();
@@ -27,6 +27,7 @@ public class Gamematch{
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	private int typeOfGame;
 	private int playersAlive;
+	private int maxPlayers;
 	
 	public Gamematch(Player player){
 		this.CREATOR= player;
@@ -34,6 +35,7 @@ public class Gamematch{
 		this.blackHolePosition= 96;
 		this.typeOfGame=1;
 		this.playersAlive=2;
+		this.setMaxPlayers(2);
 	}
 	
 	public Player getCreator() {
@@ -82,6 +84,7 @@ public class Gamematch{
 						player.put("isGrounded", players.get(i).isGrounded());
 						if(players.get(i).isAlive() && players.get(i).getPosY()>=(8976+blackHolePosition)) {
 							players.get(i).setAlive(false);
+							players.get(i).stop();
 							playersAlive--;
 						}
 						player.put("isAlive", players.get(i).isAlive());
@@ -90,11 +93,15 @@ public class Gamematch{
 					msg.putPOJO("player", playerArrayNode);
 					msg.putPOJO("bullet", updateBullets());
 					msg.put("bulletLength", bullets.size());
-					if(playersAlive==1) {	//GAME_OVER
+					if(playersAlive<2) {	//GAME_OVER
 						msg.put("event", "GAME_OVER");
-					}/*if(playersAlive==0) {	//GAME_OVER
-						msg.put("event", "GAME_OVER");
-					}*/
+						for(int i= 0; i< players.size(); i++) {
+							if(players.get(i).isAlive()) {
+								players.get(i).stop();
+							}
+						}
+						stop();
+					}
 					else {
 						msg.put("event", "UPDATE_GAMEMATCH");
 					}
@@ -175,5 +182,13 @@ public class Gamematch{
 		
 		public void addBullet(Bullet bullet){
 			bullets.add(bullet);
+		}
+
+		public int getMaxPlayers() {
+			return maxPlayers;
+		}
+
+		public void setMaxPlayers(int maxPlayers) {
+			this.maxPlayers = maxPlayers;
 		}
 }

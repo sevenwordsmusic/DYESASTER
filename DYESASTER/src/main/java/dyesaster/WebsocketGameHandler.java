@@ -44,13 +44,15 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			switch (node.get("event").asText()) {
 				case "JOIN_GAMEMATCH":
 					if(node.get("typeOfGame").asInt()==2) {
-						if(node.get("gameMatch_code").asInt() < rooms.size()){
-							player.setGameId(node.get("gameMatch_code").asInt());
-							player.setIndex(rooms.get(player.getGameId()).getPlayers().size());
-							rooms.get(node.get("gameMatch_code").asInt()).addPlayer(player);
-							msg.put("id", player.getPlayerId());
+						//int gameMatch_code= node.get("gameMatch_code").asInt();
+						int gameMatch_code= rooms.size()-1;
+						if( gameMatch_code < rooms.size()){
+							player.setGameId(gameMatch_code);
+							player.setIndex(rooms.get(gameMatch_code).getPlayers().size());
+							rooms.get(gameMatch_code).addPlayer(player);
+							msg.put("id", gameMatch_code);
 							msg.put("event", "NEW_LEVEL_RETURN");
-							msg.put("tilemap", rooms.get(node.get("gameMatch_code").asInt()).getLevel().getTileMapString());
+							msg.put("tilemap", rooms.get(gameMatch_code).getLevel().getTileMapString());
 							player.WSSession().sendMessage(new TextMessage(msg.toString()));
 						}
 					}
@@ -96,10 +98,12 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					player.WSSession().sendMessage(new TextMessage(msg.toString()));
 					break;
 				case "START_GAMEMATCH":
-					rooms.get(player.getGameId()).start();
 					msg.put("id", player.getPlayerId());
 					msg.put("event", "START_GAMEMATCH");
 					player.WSSession().sendMessage(new TextMessage(msg.toString()));
+					if(rooms.get(player.getGameId()).getMaxPlayers()==rooms.get(player.getGameId()).getPlayers().size()) {
+						rooms.get(player.getGameId()).start();
+					}
 					break;
 				case "UPDATE_CONTROLS":
 					Gamematch currentGame=rooms.get(player.getGameId());

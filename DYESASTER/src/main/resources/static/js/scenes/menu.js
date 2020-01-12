@@ -83,10 +83,13 @@ var MenuScene = new Phaser.Class({
     				console.log('[DEBUG] Switching to controlsScene.');
     			}
     		}else if(btnIndex==2){
+    			startUp(btnIndex);
+    			/*
     			this.scene.start('joinScene');
     			if (game.global.DEBUG_MODE) {
     				console.log('[DEBUG] Switching to joinScene.');
     			}
+    			*/
     		} else{console.log(btnIndex);
         		startUp(btnIndex);
     		}

@@ -138,6 +138,15 @@ public class Player {
 	public void stop() {
 		if (scheduler != null) {
 			scheduler.shutdown();
+			this.isAlive= true;
+			this.jump= false;
+			this.posX= 2880;
+			this.posY= 8618;
+			this.onGround= true;
+			this.direction= "idle";
+			this.colorId=0;
+			this.updatePlayerColor= System.currentTimeMillis();
+			this.angularTime=0.1;
 		}
 	}
 	

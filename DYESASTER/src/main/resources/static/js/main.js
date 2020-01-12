@@ -174,17 +174,66 @@ game.global = {
 	incPas: false,
 	temp: 170,
 	tempaux: 0,
+	score: [0,0,0,0,0,0,0,0],
 	player : [{
-		x : 2888,
-		y : 8612,
+		x : 0,
+		y : 0,
 		colorId : 0,
 		direction : "idle",
 		isAlive: true,
 		jump: false,
 		ground: false
 	},{
-		x : 2888,
-		y : 3264,
+		x : 0,
+		y : 0,
+		colorId : 0,
+		direction : "idle",
+		isAlive: true,
+		jump: false,
+		ground: false
+	},{
+		x : 0,
+		y : 0,
+		colorId : 0,
+		direction : "idle",
+		isAlive: true,
+		jump: false,
+		ground: false
+	},{
+		x : 0,
+		y : 0,
+		colorId : 0,
+		direction : "idle",
+		isAlive: true,
+		jump: false,
+		ground: false
+	},{
+		x : 0,
+		y : 0,
+		colorId : 0,
+		direction : "idle",
+		isAlive: true,
+		jump: false,
+		ground: false
+	},{
+		x : 0,
+		y : 0,
+		colorId : 0,
+		direction : "idle",
+		isAlive: true,
+		jump: false,
+		ground: false
+	},{
+		x : 0,
+		y : 0,
+		colorId : 0,
+		direction : "idle",
+		isAlive: true,
+		jump: false,
+		ground: false
+	},{
+		x : 0,
+		y : 0,
 		colorId : 0,
 		direction : "idle",
 		isAlive: true,
@@ -198,5 +247,6 @@ game.global = {
 		direction : "right"
 	}]
 }
+var gameRestart= game.global;
 var incorrect;
 var restart = false;
