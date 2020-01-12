@@ -22,6 +22,7 @@ public class Gamematch{
 	private LinkedList<Player> players= new LinkedList<Player>();
 	private ArrayList<Bullet> bullets= new ArrayList<Bullet>();
 	private double blackHolePosition;
+	private int puntuaciones[] = new int[8];
 	private ObjectMapper mapper = new ObjectMapper();
 	private Thread tickThread;
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -71,11 +72,13 @@ public class Gamematch{
 		ArrayNode playerArrayNode= mapper.createArrayNode();
 				synchronized(players) {
 					blackHolePosition-=BLACKHOLE_SPEED;
+					updateScores();
 					for(int i= 0; i< players.size(); i++) {
 						ObjectNode player = mapper.createObjectNode();
 						players.get(i).updateMovement();
 						player.put("posX", players.get(i).getPosX());
 						player.put("posY", players.get(i).getPosY());
+						player.put("score", puntuaciones[i]);
 						player.put("colorId", players.get(i).getColorId());
 						player.put("direction", players.get(i).getDirection());
 						player.put("isJumping", players.get(i).isJumping());
@@ -136,6 +139,12 @@ public class Gamematch{
 						}
 					}
 		return bulletArrayNode;
+	}
+	private int[] updateScores(){
+		for(int i = 0; i<players.size();i++) {
+			puntuaciones[i]=(int) Math.max(8647-players.get(i).getPosY(), puntuaciones[i]);
+		}
+		return puntuaciones;
 	}
 	
 		public void start() {

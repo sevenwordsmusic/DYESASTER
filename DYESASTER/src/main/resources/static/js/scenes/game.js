@@ -148,9 +148,9 @@ var GameScene = new Phaser.Class({
         
         //Puntuacion
         stV1=0; stV2=0; startScoreV1=false; startScoreV2=false;
-        stV1=this.add.text(10000-(game.config.width/2)+350,500,"Max Altitude: "+game.global.score[0],{fontSize:'48px'}).setDepth(1);
+        stV1=this.add.text(10000-(game.config.width/2)+350,500,"Max Altitude: "+game.global.player[0].score,{fontSize:'48px'}).setDepth(1);
         stV1.setOrigin(0.5,0.5);
-        stV2=this.add.text(10000+(game.config.width/2)-350,500,"Max Altitude: "+game.global.score[1],{fontSize:'48px'}).setDepth(1);
+        stV2=this.add.text(10000+(game.config.width/2)-350,500,"Max Altitude: "+game.global.player[1].score,{fontSize:'48px'}).setDepth(1);
         stV2.setOrigin(0.5,0.5);
         
         //Hud
@@ -186,6 +186,7 @@ var GameScene = new Phaser.Class({
         
         HUD.startFollow(this.pb)
         HUD.ignore(this.pb)
+        //Fin HUD
         
     	camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         camera.setZoom(0.6);
@@ -202,10 +203,8 @@ var GameScene = new Phaser.Class({
 	    	blackHoleLayer.y= game.global.blackHolePosition;
 	    	
 	    	//Update puntuacion
-	    	if(startScoreV1){game.global.score[0]=Math.max(scoreInit-player[0].y,game.global.score[0]);}else{game.global.score[0]=0;}
-	    	if(startScoreV2){game.global.score[1]=Math.max(scoreInit-player[1].y,game.global.score[1]);}else{game.global.score[1]=0;}
-	    	stV1.setText("Max Altitude: "+game.global.score[0]);
-	    	stV2.setText("Max Altitude: "+game.global.score[1]);
+	    	if(startScoreV1){stV1.setText("Max Altitude: "+game.global.player[0].score);}else{game.global.player[0].score = 0;stV1.setText("Max Altitude: 0");}
+	    	if(startScoreV2){stV2.setText("Max Altitude: "+game.global.player[1].score);}else{game.global.player[1].score = 0;stV2.setText("Max Altitude: 0");}
 	    	
 			for(var i=0; i<bullet.length; i++) {
 				bullet[i].destroy();

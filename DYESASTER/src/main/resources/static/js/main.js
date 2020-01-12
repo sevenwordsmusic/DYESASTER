@@ -182,7 +182,8 @@ game.global = {
 		direction : "idle",
 		isAlive: true,
 		jump: false,
-		ground: false
+		ground: false,
+		score: 0
 	},{
 		x : 2888,
 		y : 3264,
