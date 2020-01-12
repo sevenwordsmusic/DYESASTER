@@ -28,7 +28,7 @@ var RankingScene = new Phaser.Class({
 		//Calculo del ganador
 		maxPoints = -100;
 		for(var i=0; i<2; i++){
-			if(game.global.score[i]>maxPoints){ maxPoints = game.global.player[i].score ;winner=i+1; }
+			if(game.global.player[i].score>maxPoints){ maxPoints = game.global.player[i].score ;winner=i+1; }
 		}
 		this.add.text(game.config.width/2-100, (game.config.height/2),("Winner: Player "+winner),{fontSize:'64px'}).setDepth(5);
 		
