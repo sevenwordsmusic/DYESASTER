@@ -13,6 +13,7 @@ import org.springframework.web.socket.WebSocketSession;
 public class Player {
 	private final WebSocketSession session;
 	private final int playerId;
+	private String nickname;
 	private int index;
 	private boolean isAlive;
 	private int posX;
@@ -46,6 +47,7 @@ public class Player {
 	
 	public Player(int playerId, WebSocketSession session) {
 		this.playerId= playerId;
+		this.nickname= "";
 		this.session= session;
 		this.isAlive= true;
 		this.jump= false;
@@ -235,7 +237,7 @@ public class Player {
 
 	public void setIndex(int index) {
 		this.index = index;
-		this.posX= this.posX+((this.index+1)*384);
+		this.posX= this.posX+(this.index*384);
 	}
 
 	public void changeColor() {
@@ -261,5 +263,13 @@ public class Player {
 
 	public void setJump(boolean jump) {
 		this.jump = jump;
+	}
+	
+	public void setNickname(String nickname) {
+		this.nickname= nickname;
+	}
+	
+	public String getNickname() {
+		return nickname;
 	}
 }

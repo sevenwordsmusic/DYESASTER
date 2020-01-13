@@ -154,7 +154,7 @@ var config = {
 	    physics: {
 	        default: 'arcade'
 	    },
-	    scene: [MainScene, MenuScene, JoinScene, LoadScene, GameScene, RankingScene, InProgress, ControlsScene, DownScene],
+	    scene: [MainScene, MenuScene, NewScene, JoinScene, LoadScene, GameScene, RankingScene, InProgress, ControlsScene, DownScene],
 	    roundPixels: true
 };
 
@@ -163,6 +163,7 @@ game = new Phaser.Game(config);
 // GLOBAL VARIABLES
 game.global = {
 	typeOfGame : 0,
+	nPlayers : 2,
 	DEBUG_MODE : true,
 	socket : "",
 	event : "",
@@ -182,7 +183,8 @@ game.global = {
 		direction : "idle",
 		isAlive: true,
 		jump: false,
-		ground: false
+		ground: false,
+		nickname: ""
 	},{
 		x : 0,
 		y : 0,
@@ -190,7 +192,8 @@ game.global = {
 		direction : "idle",
 		isAlive: true,
 		jump: false,
-		ground: false
+		ground: false,
+		nickname: ""
 	},{
 		x : 0,
 		y : 0,
@@ -198,7 +201,8 @@ game.global = {
 		direction : "idle",
 		isAlive: true,
 		jump: false,
-		ground: false
+		ground: false,
+		nickname: ""
 	},{
 		x : 0,
 		y : 0,
@@ -206,7 +210,8 @@ game.global = {
 		direction : "idle",
 		isAlive: true,
 		jump: false,
-		ground: false
+		ground: false,
+		nickname: ""
 	},{
 		x : 0,
 		y : 0,
@@ -214,7 +219,8 @@ game.global = {
 		direction : "idle",
 		isAlive: true,
 		jump: false,
-		ground: false
+		ground: false,
+		nickname: ""
 	},{
 		x : 0,
 		y : 0,
@@ -222,7 +228,8 @@ game.global = {
 		direction : "idle",
 		isAlive: true,
 		jump: false,
-		ground: false
+		ground: false,
+		nickname: ""
 	},{
 		x : 0,
 		y : 0,
@@ -230,7 +237,8 @@ game.global = {
 		direction : "idle",
 		isAlive: true,
 		jump: false,
-		ground: false
+		ground: false,
+		nickname: ""
 	},{
 		x : 0,
 		y : 0,
@@ -238,7 +246,8 @@ game.global = {
 		direction : "idle",
 		isAlive: true,
 		jump: false,
-		ground: false
+		ground: false,
+		nickname: ""
 	}],
 	bulletLength : 0,
 	bullet : [{

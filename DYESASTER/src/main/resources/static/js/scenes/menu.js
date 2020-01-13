@@ -83,15 +83,20 @@ var MenuScene = new Phaser.Class({
     				console.log('[DEBUG] Switching to controlsScene.');
     			}
     		}else if(btnIndex==2){
-    			startUp(btnIndex);
+    			startUp(2);
     			/*
     			this.scene.start('joinScene');
     			if (game.global.DEBUG_MODE) {
     				console.log('[DEBUG] Switching to joinScene.');
     			}
     			*/
-    		} else{console.log(btnIndex);
-        		startUp(btnIndex);
+    		}else if(btnIndex==1){
+    			this.scene.start('newScene');
+    			if (game.global.DEBUG_MODE) {
+    				console.log('[DEBUG] Switching to newScene.');
+    			}
+    		}else {
+    			startUp(0);
     		}
     	}
     	if(game.global.receivedMsg=='NEW_LEVEL_RETURN'){

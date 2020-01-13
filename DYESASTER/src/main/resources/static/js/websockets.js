@@ -7,8 +7,6 @@ function startUp(typeOfGame) {
 	
 	if(game.global.typeOfGame==0){
 		msg.event = 'NEW_LOCAL_GAMEMATCH';
-	}else if(game.global.typeOfGame==1){
-		msg.event = 'NEW_GAMEMATCH';
 	}else if(game.global.typeOfGame==2){
 		msg.event = 'JOIN_GAMEMATCH';
 		msg.gameMatch_code=0;
@@ -42,7 +40,9 @@ function startUp(typeOfGame) {
 		switch (msg.event) {
 			case 'NEW_LEVEL_RETURN':
 				game.global.receivedMsg=msg.event;
+				game.global.index=msg.index;
 				game.global.info=msg.tilemap;
+				game.global.nPlayers=msg.nPlayers;
 				if (game.global.DEBUG_MODE) {
 					console.log('[DEBUG] NEW_LEVEL_RETURN new tilemap generated.');
 				}
@@ -61,11 +61,12 @@ function startUp(typeOfGame) {
 			break
 			case 'UPDATE_GAMEMATCH':
 				game.global.receivedMsg=msg.event;
-				game.global.typeOfGame==msg.typeOfGame;
+				game.global.typeOfGame=msg.typeOfGame;
 				game.global.blackHolePosition=msg.blackHolePosition;
 				game.global.index=msg.index;
 				game.global.length=msg.length;
 				for(var i=0; i<msg.length; i++) {
+					game.global.player[i].nickname=msg.player[i].nickname;
 					game.global.player[i].x=msg.player[i].posX;
 					game.global.player[i].y=msg.player[i].posY;
 					game.global.player[i].colorId=msg.player[i].colorId;

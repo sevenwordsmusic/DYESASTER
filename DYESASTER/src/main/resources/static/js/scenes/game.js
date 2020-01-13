@@ -83,20 +83,17 @@ var GameScene = new Phaser.Class({
 		this.physics.world.bounds.width = groundLayer.width;
 		this.physics.world.bounds.height = groundLayer.height;
 
+		nicknames= new Array();
+		for(var i=0; i < game.global.nPlayers; i++){//For every player:
+			// create the player sprite    
+			player[i] = this.physics.add.sprite(200, 8688, 'playerSprite-'+i);
+			
+			// small fix to our player images, we resize the physics body object slightly
+			player[i].body.setSize(player[i].width, player[i].height);
+			
+			nicknames[i] = this.add.text(200, 8688, "", { font: "40px Arial", fill: "#FF0000", fontWeight: "bold", align: "center" });
 
-		// create the player sprite    
-		player[0] = this.physics.add.sprite(200, 8688, 'playerSprite-0');
-		player[0].setBounce(0.2); // our player will bounce from items
-
-		// small fix to our player images, we resize the physics body object slightly
-		player[0].body.setSize(player[0].width, player[0].height);
-		
-		player[1] = this.physics.add.sprite(600, 8688, 'playerSprite-0');
-		player[1].setBounce(0.2); // our player will bounce from items
-
-		// small fix to our player images, we resize the physics body object slightly
-		player[1].body.setSize(player[1].width, player[1].height);
-
+		}
 		
 		
 		
@@ -131,6 +128,7 @@ var GameScene = new Phaser.Class({
 
     	let msg = new Object();
     	msg.event = 'START_GAMEMATCH';
+    	msg.nickname = userNickname;
     	game.global.socket.send(JSON.stringify(msg));
 		 
         if(game.global.typeOfGame==0){
@@ -170,7 +168,7 @@ var GameScene = new Phaser.Class({
         
     	camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         camera.setZoom(0.6);
-        camera.startFollow(player[0]);
+        camera.startFollow(player[game.global.index]);
         
         if(game.global.typeOfGame==0){
 	        camera_B.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -224,7 +222,7 @@ var GameScene = new Phaser.Class({
 	    	//Update puntuacion
 		    camera.setBounds(0, 0, map.widthInPixels, this.physics.world.bounds.height);
 	    	if(startScoreV1){game.global.score[0]=Math.max(scoreInit-player[0].y,game.global.score[0]);}else{game.global.score[0]=0;}
-	    	stV1.setText("Max Altitude: "+game.global.score[0]);
+	    	stV1.setText("Max Altitude: "+game.global.score[game.global.index]);
 	    	
 	    	if(game.global.typeOfGame==0){
 	    		camera_B.setBounds(0, 0, map.widthInPixels, this.physics.world.bounds.height);
@@ -241,6 +239,9 @@ var GameScene = new Phaser.Class({
 			for(var i=0; i<game.global.length; i++) {
 				if(game.global.player[i].isAlive){
 					player[i].setPosition(game.global.player[i].x,game.global.player[i].y);
+					nicknames[i].text=game.global.player[i].nickname;
+					nicknames[i].x=game.global.player[i].x - 32;
+					nicknames[i].y=game.global.player[i].y - 128;
 					colorHudManager(i,game.global.player[i].colorId)
 						switch(game.global.player[i].direction){
 							case 'left':
@@ -284,7 +285,7 @@ var GameScene = new Phaser.Class({
 		//PLAYER A
 		if (cursors.left.isDown)
 		{
-			if(steps+300 < Date.now()  && game.global.player[0].ground  && !cursors.up.isDown){
+			if(steps+300 < Date.now()  && game.global.player[game.global.index].ground  && !cursors.up.isDown){
 				this.sound.play('steps');
 				steps=Date.now();
 			}
@@ -292,7 +293,7 @@ var GameScene = new Phaser.Class({
 		}
 		else if (cursors.right.isDown)
 		{
-			if(steps+300 < Date.now()  && game.global.player[0].ground  && !cursors.up.isDown){
+			if(steps+300 < Date.now()  && game.global.player[game.global.index].ground  && !cursors.up.isDown){
 				this.sound.play('steps');
 				steps=Date.now();
 			}
@@ -303,7 +304,7 @@ var GameScene = new Phaser.Class({
 		}
 		msg.jump = cursors.up.isDown;
 		if(cursors.up.isDown && !startScoreV1){startScoreV1=true;}
-		if(cursors.up.isDown && jumping+250 < Date.now() && game.global.player[0].ground){
+		if(cursors.up.isDown && jumping+250 < Date.now() && game.global.player[game.global.index].ground){
 
 			this.sound.play('jump');
 			jumping=Date.now();

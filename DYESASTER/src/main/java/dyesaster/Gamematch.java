@@ -76,6 +76,7 @@ public class Gamematch{
 					for(int i= 0; i< players.size(); i++) {
 						ObjectNode player = mapper.createObjectNode();
 						players.get(i).updateMovement();
+						player.put("nickname", players.get(i).getNickname());
 						player.put("posX", players.get(i).getPosX());
 						player.put("posY", players.get(i).getPosY());
 						player.put("colorId", players.get(i).getColorId());
@@ -101,14 +102,14 @@ public class Gamematch{
 							}
 						}
 						stop();
-					}
-					else {
+					} else {
 						msg.put("event", "UPDATE_GAMEMATCH");
 					}
 					msg.put("blackHolePosition", Math.floor(blackHolePosition));
 					msg.put("length", players.size());
 					if(typeOfGame==0)  {
 						msg.put("typeOfGame", typeOfGame);
+						msg.put("index", 0);
 						try {
 							CREATOR.WSSession().sendMessage(new TextMessage(msg.toString()));
 						} catch (IOException e) {}	

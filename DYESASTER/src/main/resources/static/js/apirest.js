@@ -1,6 +1,7 @@
 //CAMBIOS
 function createUser(item, callback) {
 	game.global.incPas=false;
+	userNickname= nickname.value;
     $.ajax({
         method: "POST",
         url: 'http://'+ip+':8080/api/createUser/' + nickname.value,

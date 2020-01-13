@@ -52,22 +52,27 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 							rooms.get(gameMatch_code).addPlayer(player);
 							msg.put("id", gameMatch_code);
 							msg.put("event", "NEW_LEVEL_RETURN");
+							msg.put("index", player.getIndex());
 							msg.put("tilemap", rooms.get(gameMatch_code).getLevel().getTileMapString());
+							msg.put("nPlayers", rooms.get(gameMatch_code).getMaxPlayers());
 							player.WSSession().sendMessage(new TextMessage(msg.toString()));
 						}
 					}
 					break;
 				case "NEW_GAMEMATCH":
-					if(node.get("typeOfGame").asInt()==1) {
+					if(node.get("typeOfGame").asInt()==1 && (node.get("nPlayers").asInt()>0 && node.get("nPlayers").asInt()<5 )) {
 						player.setIndex(0);
 						Gamematch newGamematch= new Gamematch(player);
 						newGamematch.addPlayer(player);
+						newGamematch.setMaxPlayers(node.get("nPlayers").asInt()*2);
 						rooms.add(newGamematch);
-						System.out.println("NEW ID GENERATED :" + rooms.indexOf(newGamematch));
 						player.setGameId(rooms.indexOf(newGamematch));
 						msg.put("id", player.getPlayerId());
 						msg.put("event", "NEW_LEVEL_RETURN");
+						msg.put("index", player.getIndex());
 						msg.put("tilemap", newGamematch.getLevel().randomize());
+						msg.put("nPlayers", newGamematch.getMaxPlayers());
+						msg.put("gameMatch_code", rooms.indexOf(newGamematch));
 						player.WSSession().sendMessage(new TextMessage(msg.toString()));
 					}
 					break;
@@ -88,7 +93,9 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 							
 							msg.put("id", player.getPlayerId());
 							msg.put("event", "NEW_LEVEL_RETURN");
+							msg.put("index", player.getIndex());
 							msg.put("tilemap", newGamematch.getLevel().randomize());
+							msg.put("nPlayers", 2);
 							player.WSSession().sendMessage(new TextMessage(msg.toString()));
 					}
 					break;
@@ -98,6 +105,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					player.WSSession().sendMessage(new TextMessage(msg.toString()));
 					break;
 				case "START_GAMEMATCH":
+					player.setNickname(node.get("nickname").asText());
 					msg.put("id", player.getPlayerId());
 					msg.put("event", "START_GAMEMATCH");
 					player.WSSession().sendMessage(new TextMessage(msg.toString()));
