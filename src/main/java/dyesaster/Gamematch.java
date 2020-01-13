@@ -75,7 +75,6 @@ public class Gamematch{
 					blackHolePosition-=BLACKHOLE_SPEED;
 					for(int i= 0; i< players.size(); i++) {
 						ObjectNode player = mapper.createObjectNode();
-						players.get(i).updateMovement();
 						player.put("nickname", players.get(i).getNickname());
 						player.put("posX", players.get(i).getPosX());
 						player.put("posY", players.get(i).getPosY());
@@ -94,20 +93,20 @@ public class Gamematch{
 					msg.putPOJO("player", playerArrayNode);
 					msg.putPOJO("bullet", updateBullets());
 					msg.put("bulletLength", bullets.size());
-					if(playersAlive<2) {	//GAME_OVER
-						msg.put("event", "GAME_OVER");
-						for(int i= 0; i< players.size(); i++) {
-							if(players.get(i).isAlive()) {
-								players.get(i).stop();
-							}
-						}
-						stop();
-					} else {
-						msg.put("event", "UPDATE_GAMEMATCH");
-					}
 					msg.put("blackHolePosition", Math.floor(blackHolePosition));
 					msg.put("length", players.size());
 					if(typeOfGame==0)  {
+						if(playersAlive<2) {
+							msg.put("event", "GAME_OVER");	
+							for(int i= 0; i< players.size(); i++) {
+								if(players.get(i).isAlive()) {
+									players.get(i).stop();
+								}
+							}
+							stop();
+						} else {
+							msg.put("event", "UPDATE_GAMEMATCH");
+						}
 						msg.put("typeOfGame", typeOfGame);
 						msg.put("index", 0);
 						try {
@@ -115,6 +114,16 @@ public class Gamematch{
 						} catch (IOException e) {}	
 					}else {
 						for(int i= 0; i< players.size(); i++) {
+							if(playersAlive<2) {
+								msg.put("event", "GAME_OVER");
+									if(players.get(i).isAlive()) {
+										players.get(i).stop();
+									}
+								stop();
+							} else {
+								msg.put("event", "UPDATE_GAMEMATCH");
+							}
+							
 							msg.put("typeOfGame", typeOfGame);
 							msg.put("id", players.get(i).getPlayerId());
 							msg.put("index",  i);

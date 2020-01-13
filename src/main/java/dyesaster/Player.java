@@ -1,6 +1,5 @@
 package dyesaster;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -23,11 +22,13 @@ public class Player {
 	private int gameId= 999999;
 	private String direction;
 	private String lastDirection;
-	//private boolean pushed;
+	private int pushed;
+	private long lastPushed; 
 	
 	private final long UPDATE_DELAY= 1000/60;
 	private final long UPDATE_LATENCY= 200;
-	private final long SHOOT_LATENCY= 500;
+	private final long SHOOT_LATENCY= 125;
+	private final long PUSH_LAPSE= 500;
 	private long updatePlayerColor;
 	private long updateShoot;
 	private final int WALK_SPEED= 10;
@@ -39,6 +40,7 @@ public class Player {
 	private int colorId;
 	private Thread tickThread;
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	private ScheduledExecutorService schedulerMovement = Executors.newScheduledThreadPool(1);
 	private Level level;
 	private int[][] stateMap;
 	
@@ -58,7 +60,7 @@ public class Player {
 		this.colorId=0;
 		this.updatePlayerColor= System.currentTimeMillis();
 		this.angularTime=0.1;
-		//this.pushed=false;
+		this.pushed=0;
 	}
 
 	public int getPlayerId() {
@@ -83,38 +85,50 @@ public class Player {
 
 	public void updateMovement() {
 		int aux;
-					switch (this.direction) {
-						case "left":
-							lastDirection="left";
-							if(posX>WALK_SPEED*2) {
-								aux=stateMap[Math.floorDiv(posX-WALK_SPEED, 96)][Math.floorDiv(posY, 96)];
-								if( (aux==0 || aux!=colorId+1 ) && aux!=5) {
-									posX-=WALK_SPEED;
-								}else {
-									this.direction="idle";
-								}
-							}	
-							break;
-						case "right":
-							lastDirection="right";
-							if(posX<stateMap.length*96-WALK_SPEED*2) {
-								aux=stateMap[Math.floorDiv(posX+WALK_SPEED, 96)][Math.floorDiv(posY, 96)];
-								if( (aux==0 || aux!=colorId+1 ) && aux!=5) {
-									posX+=WALK_SPEED;
-								}else {
-									this.direction="idle";
+		if(pushed==0) {
+						switch (this.direction) {
+							case "left":
+								lastDirection="left";
+								if(posX>WALK_SPEED*2) {
+									aux=stateMap[Math.floorDiv(posX-WALK_SPEED, 96)][Math.floorDiv(posY, 96)];
+									if( (aux==0 || aux!=colorId+1 ) && aux!=5) {
+										posX-=WALK_SPEED;
+									}else {
+										this.direction="idle";
+									}
 								}	
-							}
-							break;
-						default:
-							break;
-					}
-	
-		if(jump) {
-			aux=stateMap[Math.floorDiv(posX, 96)][Math.floorDiv(posY-JUMP_SPEED, 96)];
-			if(onGround && (aux==0 || aux!=colorId+1 ) && aux!=5){
-				posY-=JUMP_SPEED;
-				updateJumpPosition= System.currentTimeMillis() + JUMP_LAPSE;
+								break;
+							case "right":
+								lastDirection="right";
+								if(posX<stateMap.length*96-WALK_SPEED*2) {
+									aux=stateMap[Math.floorDiv(posX+WALK_SPEED, 96)][Math.floorDiv(posY, 96)];
+									if( (aux==0 || aux!=colorId+1 ) && aux!=5) {
+										posX+=WALK_SPEED;
+									}else {
+										this.direction="idle";
+									}	
+								}
+								break;
+							default:
+								break;
+						}
+		
+			if(jump) {
+				aux=stateMap[Math.floorDiv(posX, 96)][Math.floorDiv(posY-JUMP_SPEED, 96)];
+				if(onGround && (aux==0 || aux!=colorId+1 ) && aux!=5){
+					posY-=JUMP_SPEED;
+					updateJumpPosition= System.currentTimeMillis() + JUMP_LAPSE;
+				}
+			}
+		}else {
+			posX+=WALK_SPEED*(pushed*angularTime*MAX_GRAVITY_SPEED);
+			if(lastPushed<System.currentTimeMillis()) {
+				lastPushed=System.currentTimeMillis() + PUSH_LAPSE;
+				if(pushed<0) {
+					pushed+=1;
+				}else {
+					pushed-=1;
+				}
 			}
 		}
 	}
@@ -126,19 +140,22 @@ public class Player {
 	}
 
 	private void startPhysicsLoop() {
+		
 		scheduler = Executors.newScheduledThreadPool(1);	
 		scheduler.scheduleAtFixedRate(() -> {
-			try {
-				update();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			update();
+		}, UPDATE_DELAY, UPDATE_DELAY, TimeUnit.MILLISECONDS);
+		
+		schedulerMovement = Executors.newScheduledThreadPool(1);	
+		schedulerMovement.scheduleAtFixedRate(() -> {
+			updateMovement();
 		}, UPDATE_DELAY, UPDATE_DELAY, TimeUnit.MILLISECONDS);
 	}	
 
 
 	public void stop() {
 		if (scheduler != null) {
+			schedulerMovement.shutdown();
 			scheduler.shutdown();
 			this.isAlive= true;
 			this.jump= false;
@@ -152,7 +169,7 @@ public class Player {
 		}
 	}
 	
-	private void update() throws IOException {
+	private void update() {
 					stateMap=level.getStateMap();
 					int auxA=stateMap[Math.floorDiv(posX, 96)][Math.floorDiv(posY-JUMP_SPEED, 96)],
 						auxB=stateMap[Math.floorDiv( posX , 96 )][Math.floorDiv((int)Math.floor((MAX_GRAVITY_SPEED*angularTime)+posY+88) , 96 )];
@@ -253,7 +270,7 @@ public class Player {
 
 	public Bullet shoot(LinkedList<Player> players) {
 		if(System.currentTimeMillis() > updateShoot) {
-			Bullet newShoot= new Bullet(posX, posY, lastDirection,players);
+			Bullet newShoot= new Bullet(posX, posY, lastDirection, players, this);
 			newShoot.start();
 			updateShoot=System.currentTimeMillis() + SHOOT_LATENCY;
 			return newShoot;
@@ -271,5 +288,16 @@ public class Player {
 	
 	public String getNickname() {
 		return nickname;
+	}
+
+	public int getPushed() {
+		return pushed;
+	}
+
+	public void pushed(int pushed) {
+		if(pushed>-4 && pushed<4) {
+			this.pushed+=pushed;
+			this.lastPushed=System.currentTimeMillis() + PUSH_LAPSE;
+		}
 	}
 }

@@ -313,7 +313,7 @@ var GameScene = new Phaser.Class({
 		msg.changeColor = cursors.color.isDown;
 		//FIRE
 		msg.shoot = cursors.shoot.isDown;
-		if(cursors.shoot.isDown && shooting+354 < Date.now() ){
+		if(cursors.shoot.isDown && shooting+120 < Date.now() ){
 			this.sound.play('shoot');
 			shooting=Date.now();
 		}
@@ -350,7 +350,7 @@ var GameScene = new Phaser.Class({
 			msg.changeColor_B = cursors_B.color.isDown;
 			//FIRE
 			msg.shoot_B = cursors_B.shoot.isDown;
-			if(cursors_B.shoot.isDown && shooting_B+354 < Date.now() ){
+			if(cursors_B.shoot.isDown && shooting_B+120 < Date.now() ){
 				this.sound.play('shoot');
 				shooting_B=Date.now();
 			}

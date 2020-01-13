@@ -14,17 +14,19 @@ public class Bullet {
 	private int dY=32;
 	private String direction;
 	private Thread tickThread;
-	private final int FIRE_SPEED= 40;
-	private final int IDLE_SPEED= 30;
+	private final int FIRE_SPEED= 24;
+	private final int IDLE_SPEED= 16;
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	private final long TICK_DELAY= 1000/60;
 	private LinkedList<Player> players= new LinkedList<Player>();
+	private Player shooter;
 	
-	public Bullet(int x, int y, String dir, LinkedList<Player> players){
+	public Bullet(int x, int y, String dir, LinkedList<Player> players, Player player){
 		this.setPosX(x);
 		this.setPosY(y);
 		this.setDirection(dir);
 		this.setPlayers(players);
+		this.setShooter(player);
 	}
 
 
@@ -63,10 +65,13 @@ public class Bullet {
 			case "left":
 				posX-=FIRE_SPEED;
 				for(int i= 0; i< players.size(); i++) {
-					if(players.get(i).getPosX() > posX-dX && players.get(i).getPosX() < posX+dY) {
-						if(players.get(i).getPosY() > posY-dY && players.get(i).getPosY() < posY+dY) {
-							players.get(i).setPosX((int)players.get(i).getPosX()-192);
-							this.posX=6144;
+					if(players.get(i)!=shooter) {
+						if(players.get(i).getPosX() > posX-dX && players.get(i).getPosX() < posX+dY) {
+							if(players.get(i).getPosY() > posY-dY && players.get(i).getPosY() < posY+dY) {
+								players.get(i).pushed(-1);
+								this.posX=6144;
+								stop();
+							}
 						}
 					}
 				}
@@ -74,10 +79,13 @@ public class Bullet {
 			case "right":
 				posX+=FIRE_SPEED;
 				for(int i= 0; i< players.size(); i++) {
-					if(players.get(i).getPosX() > posX-dX && players.get(i).getPosX() < posX+dX) {
-						if(players.get(i).getPosY() > posY-dY && players.get(i).getPosY() < posY+dY) {
-							players.get(i).setPosX((int)players.get(i).getPosX()+192);
-							this.posX=6144;
+					if(players.get(i)!=shooter) {
+						if(players.get(i).getPosX() > posX-dX && players.get(i).getPosX() < posX+dX) {
+							if(players.get(i).getPosY() > posY-dY && players.get(i).getPosY() < posY+dY) {
+								players.get(i).pushed(1);
+								this.posX=6144;
+								stop();
+							}
 						}
 					}
 				}
@@ -85,10 +93,13 @@ public class Bullet {
 			case "idle":
 				posX+=IDLE_SPEED;
 				for(int i= 0; i< players.size(); i++) {
-					if(players.get(i).getPosX() > posX-dX && players.get(i).getPosX() < posX+dX) {
-						if(players.get(i).getPosY() > posY-dY && players.get(i).getPosY() < posY+dY) {
-							players.get(i).setPosX((int)players.get(i).getPosX()+192);
-							this.posX=6144;
+					if(players.get(i)!=shooter) {
+						if(players.get(i).getPosX() > posX-dX && players.get(i).getPosX() < posX+dX) {
+							if(players.get(i).getPosY() > posY-dY && players.get(i).getPosY() < posY+dY) {
+								players.get(i).pushed(1);
+								this.posX=6144;
+								stop();	
+							}
 						}
 					}
 				}
@@ -123,5 +134,15 @@ public class Bullet {
 
 		public void setPlayers(LinkedList<Player> players) {
 			this.players = players;
+		}
+
+
+		public Player getShooter() {
+			return shooter;
+		}
+
+
+		public void setShooter(Player shooter) {
+			this.shooter = shooter;
 		}
 }
