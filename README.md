@@ -2,9 +2,9 @@
 -----
 ## 1. Información general
 >
-> ### **1.1 Resumen y características generales**
->En Dyesaster tomamos el control de un trabajador de una gran estación espacial. Debido a un fallo en el sistema hemos generado un glitch-agujero negro que está expandiéndose y absorbiendo todo desde abajo, mientras al mismo tiempo expulsa objetos. Sólo hay sitio para un equipo en la cápsula de escape de emergencia situada arriba así que nuestro objetivo será sobrevivir a nuestros contrincantes.
->> + **Competitividad**: el principal objetivo del juego es superar al resto de jugadores en aguante con vida, no sólo mediante la rapidez de huida sino también obstaculizando el camino de los demás.
+> ### **1.1 Resumen y caracteristicas generales**
+>En Dyesaster tomamos el control de un trabajador de una gran estación espacial. Debido a un fallo en el sistema hemos generado un agujero negro que está expandiéndose y absorbiendo todo desde abajo, mientras al mismo tiempo expulsa objetos. Sólo hay sitio para un equipo en la cápsula de escape de emergencia situada arriba así que nuestro objetivo será ser el primero.
+>> + **Competitividad**: el principal objetivo del juego es superar al resto de jugadores en alcanzar la cima, no sólo mediante la rapidez sino también obstaculizando el camino de los demás.
 >> + **Estrategia:** los colores toman un papel esencial en la mecánica de juego.  Dependiendo del color del personaje seremos capaces de interactuar con distintas plataformas y objetos y será el deber del jugador saber cómo elegirlos..
 >> + **Rapidez:** pese a todas las posibilidades de acción que tiene cada jugador durante el juego para dificultar el camino al resto, al final lo más importante es ser el primero, lo cual sólo se podrá conseguir con reflejos y movimientos rápidos.
 >
@@ -30,35 +30,35 @@
 > Para la producción de la música del juego emplearemos FL Studio y Pro Tools.
 -----
 ## **3. Historia**
-> Dyesaster comienza en un futuro lejano con la aparición de un agujero negro a modo de glitch en la estación espacial donde se encuentran todos los personajes. En esta estación conviven un gran número de científicos de planetas diferentes y el agujero se ha generado a causa de un fallo del sistema que surge mientras hacían experimentos. 
+> Dyesaster comienza en un futuro lejano con la aparición de un agujero negro en la estación espacial donde se encuentran todos los personajes. En esta estación conviven un gran número de científicos de planetas diferentes y el agujero se ha generado a causa de un fallo del sistema que surge mientras hacían experimentos. 
 >
->Poco a poco el agujero está absorbiendo toda la energía de la nave y sus elementos, expandiéndose en todas las direcciones, engullendo todos los colores y haciendo que aparezcan glitches. 
+>Poco a poco el agujero está absorbiendo toda la energía de la nave y sus elementos, expandiéndose en todas las direcciones y no sólo eso sino que también expulsa objetos extraños. 
 >
-> En la cima de la estación espacial se cree que hay una única cápsula de emergencia que se pueda usar para escapar pues el resto se situaba en una zona que ya ha sido absorbida. Cada equipo intentará como pueda llegar a ser el último y luchar por su vida.
+> En la cima de la estación espacial hay una única cápsula de emergencia que se pueda usar para escapar pues el resto se situaba en una zona que ya ha sido absorbida. Cada equipo intentará como pueda llegar a esa cápsula y luchar por su vida.
 -----
 ## **4. Gameplay**
 > ### **4.1. Gameflow**
 >
-> ![alt text](/Imagenes/p1.jpg)
+> ![alt text](/Imagenes/p1.JPG)
 >
-> 
+> ![alt text](/Imagenes/p2.JPG)
+>
 > ### **4.2. Modos de juego**
-> Serán partidas a dos bandos, 1vs1, 2vs2, 3vs3 o 4vs4. Existirá un modo multijugador local y uno online, en el local se juega en pantalla dividida y sólo se permite el 1vs1, mientras que en el modo online cada jugador tendra una pantalla completa.
+> Serán partidas a dos bandos, 1vs1, 2vs2, 3vs3 o 4vs4. Existirá un modo multijugador local y uno online, en el local todos los jugadores ven la misma pantalla y sólo se permite el 1vs1, mientras
 >
 > ### **4.3. Objetivos y condiciones de victoria**
-> El objetivo es sobrevivir al contrario, utilizando las armas para entorpecerle e intentar tirarle. En el momento en que uno de los dos jugadores muere, en caso de ser una partida con equipos debe morir todo el equipo, la partida acaba.
+> El objetivo es llegar a la plataforma final antes que el contrario, utilizando las armas para entorpecerle e intentar tirarle. Una vez alcanzada la meta, la partida acaba.
 >
 > ### **4.4. Mecánicas de juego**
 > **Características principales:**
 >> + El jugador podrá moverse a la izquierda, derecha y saltar.
->> + En la parte de abajo de la pantalla habrá un agujero negro a modo de glitch que irá aumentando de tamaño y absorbiendo las plataformas, lo que añade un “contrarreloj” para llegar a la meta.
+>> + En la parte de abajo de la pantalla habrá un agujero negro que irá aumentando de tamaño y absorbiendo las plataformas, lo que añade un “contrarreloj” para llegar a la meta.
 >> + Si un jugador cae al agujero negro, quedará eliminado.
->> Los jugadores tendrán colores asignados. Pulsando las teclas G o K, el jugador puede cambiar de color a alguno de los colores libres del equipo en la pila de colores. Ejemplo: Tenemos equipo de 4 jugadores, con los colores: A, B, C, D. Si un jugador tiene el color A podría obtener el resto de colores de la pila: B, C o D, si quisiera.
->> + Existen pistolas para empujar a los contrincantes con el objetivo de tirarles de las plataformas.
->> + Hay plataformas de colores que solo podrán usar los jugadores que compartan su color.
->> + Hay plataformas que no tienen ningún color y que pueden usar todos los jugadores.
+>> Los jugadores tendrán colores asignados. Pulsando x tecla el jugador puede cambiar de color a alguno de los colores libres del equipo en la pila de colores. Ejemplo: Tenemos equipo de 4 jugadores, con los colores: A, B, C, D. Por el momento no tienen colores disponibles a los que cambiar. Si A muere, B podría obtener el color de A dejando el suyo propio libre para los demás jugadores en caso de que quieran cambiarlo.
+>> + Existen pistolas para tirar a los contrincantes de las plataformas. Estas tendrán x número de balas que al acabarse se recargarán solas después de x tiempo. 
+>> + Habrá plataformas de colores que estarán desactivadas de principio. Podrán ser activadas por el jugador del color correspondiente para que los demás las puedan usar. Estas estarán activas durante x tiempo pudiendo volver a activarlas.
 > ### **4.5. HUDs**
-> Durante el juego la interfaz que tiene el jugador en pantalla se basa únicamente en unos indicadores con los colores disponibles en ese momento con los que poder cambiarse. Esto será así tanto en el local como en el online con la única diferencia que en local aparecerán los colores disponibles de los respectivos jugadores a lados opuestos de la pantalla.
+> Durante el juego el interfaz que tiene el jugador en pantalla se basa únicamente en una barra con los colores disponibles en ese momento con los que poder cambiarse. Esto será así tanto en el local como en el online con la única diferencia que en local aparecerán los colores disponibles de los respectivos jugadores a lados opuestos de la pantalla.
 -----
 ## **5. Arte y temática**
 > ### **5.1. Estética**
@@ -77,42 +77,6 @@
 >
 > ## **5.3. Sonido**
 > Los sonidos para botones, menús e interacciones serán de reminiscencia Vaporwave, es decir, generados con sintetizadores, basados en aparatos retro o bien en efectos sonoros de computadores PC o Mac de los 80. Para los efectos sonoros de disparos, saltos y similar el tono será entre realista y cartoon. La banda sonora musical será de género vaporwave.
-
-> ## **PRÁCTICA 3**
->
-> ## **Introducción**
->
->A la hora de implementar ApiRest hemos decidido hacerlo para gestionar registros con contraseña de usuarios y hacer visible el estado del servidor para todos los jugadores.Para ello hemos creado una escena, Join Game, que muestra todos los usuarios registrados y su estado, online u offline. En caso de que caiga el servidor en el cliente se cambia de escena a otra que informa a los jugadores del estado del servidor, desde la cual se puede volver al menú principal.
->
->Para que los usuarios puedan seguir siendo conscientes del estado del servidor y no tengan que meterse continuamente a JoinGame, desde el menú aparece una indicación arriba a la izquierda que se actualiza cada cierto tiempo.
-Los datos que guardamos son por tanto los nombres, las contraseñas y las últimas conexiones de los usuarios. Pero sólo se muestran por pantalla los nombres y los estados. 
->
->Teniendo esto en cuenta, para poder registrar a los jugadores se les pide al introducir un usuario y una contraseña en la primera pantalla del juego. En caso de que el usuario ya exista e introduzcan mal la contraseña aparece un mensaje durante unos segundos que les avise y pide que lo intenten de nuevo. 
->
-> ## **Implementación Api Rest**
->
-> Capturas de la implementación
-> ![alt text](/Imagenes/down.PNG)
-> ![alt text](/Imagenes/InicioSesion.PNG)
-> ![alt text](/Imagenes/Join.PNG)
-> ![alt text](/Imagenes/oflineMenu.PNG)
-> ![alt text](/Imagenes/onlineMenu.PNG)
-
- >Diagrama de clases
-
-> ![alt text](/Imagenes/diagramaUML.png)
-> 
-> ## **Mejoras respecto a la anterior fase**
->
->En el apartado gráfico hemos actualizado todos los fondos a full HD. También hemos añadido la fuente utilizada para los botones en los inputs de lo usuarios y el resto del texto de las interfaces.
->
->Otra mejora ha sido que al volver al menú  desde las distintas opciones disponibles, no sucede lo que ocurría la fase anterior.Antes se reiniciaba el juego cada vez que se intentaba volver al menú, ahora el cambio de escenas funciona correctamente pulsando el botón Espacio, lo cual aparece indicado en cada escena.
------
-> ## **Intrucciones para la ejecución**
-> + Entrar al fichero "FicheroConfig" y poner la ip deseada.
-> + Ejecutar Dysaster para abrir el servidor 
-> + Entrar a firefox y entrar al juego con ip:8080
->
 -----
 ## Integrantes del equipo
 > **Pablo López Pérez-Esparza:**
@@ -132,13 +96,6 @@ Los datos que guardamos son por tanto los nombres, las contraseñas y las últim
 >> + **Cuenta github:** belen.gm15@gmail.com
 >
 -----
-### Funcionalidades a añadir en la siguientes fases
-> + Acumulación de disparos recibidos, con efecto proporcional en la distancia desplazada por cada disparo.
-> + Incluir un escalado del canvas para que se adapte a las distintas medidas requeridas para las plataformas.
-> + Inclusión de animaciones existentes de decoración y creación de nuevas.
-> + Modo multijugador en red disponible.
------
 ### Enlaces externos
 > **Trello:** <https://trello.com/b/zI3NdsXB/dyesaster>  
 > **Presentación:** <https://prezi.com/krbozzr-ajd-/?utm_campaign=share&utm_medium=copy>
-> **Presentación:** <https://docs.google.com/presentation/d/11VlxQw2wlvqx3wSC7MqWIzZSzeztwh_eZIFBwoafEhs/edit?usp=sharing>
