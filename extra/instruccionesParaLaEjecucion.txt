@@ -1,0 +1,4 @@
+1: Descargar Spring tool suite 4(STS4), que implementa ya SpringBoost y Maven en Eclipse
+2: Abrir el proyecto con STS4 e iniciar el juego en el spring tool dashboard y espera a que se inicialice,
+ se verá en la consola un mensaje de inicializado
+3: Abrir el navegador (Firefox o Chrome) y poner la direccion 127.0.0.1:8080
