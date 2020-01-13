@@ -174,7 +174,7 @@ game.global = {
 	incPas: false,
 	temp: 170,
 	tempaux: 0,
-	score: [0,0,0,0,0,0,0,0],
+	teamScore:[0,0],
 	player : [{
 		x : 2888,
 		y : 8612,
@@ -183,7 +183,8 @@ game.global = {
 		isAlive: true,
 		jump: false,
 		ground: false,
-		score: 0
+		score: 0,
+		bulletScore: 0,
 	},{
 		x : 2888,
 		y : 3264,

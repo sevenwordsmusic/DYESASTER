@@ -111,6 +111,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					if(node.get("shoot").asBoolean() ) {
 						Bullet newBullet = player.shoot(currentGame.getPlayers());
 						if(newBullet!=null) {
+							newBullet.setTeamId(player.getPlayerId());
 							currentGame.addBullet(newBullet);
 						}
 					}
@@ -124,6 +125,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 						if(node.get("shoot_B").asBoolean() ) {
 							Bullet newBullet = player_B.shoot(currentGame.getPlayers());
 							if(newBullet!=null) {
+								newBullet.setTeamId(player_B.getPlayerId());
 								currentGame.addBullet(newBullet);
 							}
 						}

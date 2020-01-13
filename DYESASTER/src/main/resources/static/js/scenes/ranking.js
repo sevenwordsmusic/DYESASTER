@@ -11,9 +11,6 @@ var RankingScene = new Phaser.Class({
 
     preload: function ()
     {
-    	
-    	this.load.image('pst', 'assets/pressSpaceTo.png');
-    	this.load.image('rtm', 'assets/returnToMenu.png');
     },
     
     create: function ()
@@ -22,13 +19,11 @@ var RankingScene = new Phaser.Class({
 
     	this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, "endScreenBackground");
 		this.background.setOrigin(0, 0);
-		this.pst = this.add.image(game.config.width/2, (game.config.height/2)+450, "pst");
-		this.rtm = this.add.image(game.config.width/2, (game.config.height/2)+500, "rtm");
 		
-		//Calculo del ganador
+		//Calculo del mvp
 		maxPoints = -100;
 		for(var i=0; i<2; i++){
-			if(game.global.player[i].score>maxPoints){ maxPoints = game.global.player[i].score ;winner=i+1; }
+			if(game.global.player[i].score+game.global.player[i].bulletScore>maxPoints){ maxPoints = game.global.player[i].score+game.global.player[i].bulletScore ;winner=i+1; }
 		}
 		this.add.text(game.config.width/2-100, (game.config.height/2),("Winner: Player "+winner),{fontSize:'64px'}).setDepth(5);
 		
@@ -36,8 +31,8 @@ var RankingScene = new Phaser.Class({
 		separacionX = 100; separacionY = 120; interlineado = 50;
 		stV1Name=this.add.text(game.config.width/2-100, (game.config.height/2)+separacionY+interlineado*0,"Player 1: ",{fontSize:'48px'}).setDepth(5);
 		stV2Name=this.add.text(game.config.width/2-100, (game.config.height/2)+separacionY+interlineado*1,"Player 2: ",{fontSize:'48px'}).setDepth(5);
-		stV1=this.add.text((game.config.width/2)+separacionX, (game.config.height/2)+separacionY+interlineado*0,game.global.player[0].score,{fontSize:'48px'}).setDepth(5);
-		stV2=this.add.text((game.config.width/2)+separacionX, (game.config.height/2)+separacionY+interlineado*1,game.global.player[1].score,{fontSize:'48px'}).setDepth(5);
+		stV1=this.add.text((game.config.width/2)+separacionX, (game.config.height/2)+separacionY+interlineado*0,game.global.player[0].score+game.global.player[0].bulletScore,{fontSize:'48px'}).setDepth(5);
+		stV2=this.add.text((game.config.width/2)+separacionX, (game.config.height/2)+separacionY+interlineado*1,game.global.player[1].score+game.global.player[1].bulletScore,{fontSize:'48px'}).setDepth(5);
 
     },
     

@@ -73,6 +73,7 @@ function startUp(typeOfGame) {
 					game.global.player[i].jump=msg.player[i].isJumping;
 					game.global.player[i].ground=msg.player[i].isGrounded;
 					game.global.player[i].score=msg.player[i].score;
+					game.global.player[i].bulletScore=msg.player[i].bulletScore;
 				}
 				game.global.bulletLength=msg.bulletLength;
 				for(var i=0; i<msg.bulletLength; i++) {

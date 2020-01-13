@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class Gamematch{
 	private final Player CREATOR;
 	private final Level LEVEL;
-	private final double BLACKHOLE_SPEED= 0.75;
+	private final double BLACKHOLE_SPEED= 0.25;
 	private final long TICK_DELAY= 1000/60;
 		
 	private LinkedList<Player> players= new LinkedList<Player>();
@@ -79,6 +79,7 @@ public class Gamematch{
 						player.put("posX", players.get(i).getPosX());
 						player.put("posY", players.get(i).getPosY());
 						player.put("score", puntuaciones[i]);
+						player.put("bulletScore", players.get(i).getBulletScore());
 						player.put("colorId", players.get(i).getColorId());
 						player.put("direction", players.get(i).getDirection());
 						player.put("isJumping", players.get(i).isJumping());
@@ -95,9 +96,9 @@ public class Gamematch{
 					msg.put("bulletLength", bullets.size());
 					if(playersAlive==1) {	//GAME_OVER
 						msg.put("event", "GAME_OVER");
-					}/*if(playersAlive==0) {	//GAME_OVER
+					}if(playersAlive==0) {	//GAME_OVER
 						msg.put("event", "GAME_OVER");
-					}*/
+					}
 					else {
 						msg.put("event", "UPDATE_GAMEMATCH");
 					}
@@ -131,6 +132,7 @@ public class Gamematch{
 							bullets.get(i).stop();
 							bullets.remove(i);
 						}else {
+							nullControl();
 							ObjectNode bullet = mapper.createObjectNode();
 							bullet.put("posX", bullets.get(i).getPosX());
 							bullet.put("posY", bullets.get(i).getPosY());
@@ -184,5 +186,15 @@ public class Gamematch{
 		
 		public void addBullet(Bullet bullet){
 			bullets.add(bullet);
+		}
+		
+		public void nullControl() {
+		
+			for(int i= 0; i< bullets.size(); i++) {	
+				if(bullets.get(i).getDirection()==null) {
+					bullets.get(i).setDirection("right");
+					System.out.println("dhffgffjfgjfgfghkghlkdhgkhgjkdvhjdgdd");
+				}
+			}
 		}
 }

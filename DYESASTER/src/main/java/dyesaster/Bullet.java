@@ -12,10 +12,11 @@ public class Bullet {
 	private int posY;
 	private int dX=24; 
 	private int dY=32;
+	private int teamId = -1;
 	private String direction;
 	private Thread tickThread;
 	private final int FIRE_SPEED= 40;
-	private final int IDLE_SPEED= 30;
+	//private final int IDLE_SPEED= 30;
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	private final long TICK_DELAY= 1000/60;
 	private LinkedList<Player> players= new LinkedList<Player>();
@@ -52,6 +53,14 @@ public class Bullet {
 		this.direction = direction;
 	}
 
+	public int getTeamId() {
+		return teamId;
+	}
+	
+	public void setTeamId(int teamId) {
+		this.teamId = teamId;
+	}
+	
 	public void stop() {
 		if (scheduler != null) {
 			scheduler.shutdown();
@@ -59,14 +68,20 @@ public class Bullet {
 	}
 	
 	private void tick() throws IOException {
+		//System.out.println(teamId);
 		switch (this.direction) {
 			case "left":
 				posX-=FIRE_SPEED;
+				
 				for(int i= 0; i< players.size(); i++) {
-					if(players.get(i).getPosX() > posX-dX && players.get(i).getPosX() < posX+dY) {
-						if(players.get(i).getPosY() > posY-dY && players.get(i).getPosY() < posY+dY) {
-							players.get(i).setPosX((int)players.get(i).getPosX()-192);
-							this.posX=6144;
+					if(players.get(i).getPlayerId()!=getTeamId()) {
+						if(players.get(i).getPosX() > posX-dX && players.get(i).getPosX() < posX+dY) {
+							if(players.get(i).getPosY() > posY-dY && players.get(i).getPosY() < posY+dY) {
+								players.get(i).setPosX((int)players.get(i).getPosX()-192);
+								players.get(teamId-1).updateBulletScore();
+								System.out.println(players.get(teamId-1).getBulletScore());
+								this.posX=6144;
+							}
 						}
 					}
 				}
@@ -74,25 +89,33 @@ public class Bullet {
 			case "right":
 				posX+=FIRE_SPEED;
 				for(int i= 0; i< players.size(); i++) {
-					if(players.get(i).getPosX() > posX-dX && players.get(i).getPosX() < posX+dX) {
-						if(players.get(i).getPosY() > posY-dY && players.get(i).getPosY() < posY+dY) {
-							players.get(i).setPosX((int)players.get(i).getPosX()+192);
-							this.posX=6144;
+					if(players.get(i).getPlayerId()!=getTeamId()) {
+						if(players.get(i).getPosX() > posX-dX && players.get(i).getPosX() < posX+dX) {
+							if(players.get(i).getPosY() > posY-dY && players.get(i).getPosY() < posY+dY) {
+								players.get(i).setPosX((int)players.get(i).getPosX()+192);
+								players.get(teamId-1).updateBulletScore();
+								System.out.println(players.get(teamId-1).getBulletScore());
+								this.posX=6144;
+							}
 						}
 					}
+					
 				}
 				break;
-			case "idle":
-				posX+=IDLE_SPEED;
+			/* Nunca entra
+			 * case "idle":
+				posX+=(IDLE_SPEED*2);
 				for(int i= 0; i< players.size(); i++) {
-					if(players.get(i).getPosX() > posX-dX && players.get(i).getPosX() < posX+dX) {
-						if(players.get(i).getPosY() > posY-dY && players.get(i).getPosY() < posY+dY) {
-							players.get(i).setPosX((int)players.get(i).getPosX()+192);
-							this.posX=6144;
+					if(players.get(i).getPlayerId()==getTeamId()) {
+						if(players.get(i).getPosX() > posX-dX && players.get(i).getPosX() < posX+dX) {
+							if(players.get(i).getPosY() > posY-dY && players.get(i).getPosY() < posY+dY) {
+								players.get(i).setPosX((int)players.get(i).getPosX()+192);
+								this.posX=6144;
+							}
 						}
 					}
 				}
-				break;
+				break;*/
 			default:
 				break;
 		}

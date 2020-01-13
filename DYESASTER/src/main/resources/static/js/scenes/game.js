@@ -202,9 +202,11 @@ var GameScene = new Phaser.Class({
     update: function (time, delta) {
 	    	blackHoleLayer.y= game.global.blackHolePosition;
 	    	
-	    	//Update puntuacion
-	    	if(startScoreV1){stV1.setText("Max Altitude: "+game.global.player[0].score);}else{game.global.player[0].score = 0;stV1.setText("Max Altitude: 0");}
-	    	if(startScoreV2){stV2.setText("Max Altitude: "+game.global.player[1].score);}else{game.global.player[1].score = 0;stV2.setText("Max Altitude: 0");}
+	    	//Update texto puntuaciones
+	    	if(startScoreV1){stV1.setText("Max Altitude: "+(game.global.player[0].score+game.global.player[0].bulletScore));}
+	    	else{game.global.player[0].score = 0; stV1.setText("Max Altitude: "+game.global.player[0].bulletScore);}
+	    	if(startScoreV2){stV2.setText("Max Altitude: "+(game.global.player[1].score+game.global.player[1].bulletScore));}
+	    	else{game.global.player[1].score = 0; stV2.setText("Max Altitude: "+game.global.player[1].bulletScore);}
 	    	
 			for(var i=0; i<bullet.length; i++) {
 				bullet[i].destroy();

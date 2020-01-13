@@ -18,6 +18,7 @@ public class Player {
 	private int posX;
 	private int posY;
 	private int score;
+	private int bulletScore;
 	private long updateJumpPosition;
 	private boolean onGround;
 	private int gameId= 999999;
@@ -53,6 +54,7 @@ public class Player {
 		this.posX= 2880;
 		this.posY= 8618;
 		this.score = 0;
+		this.bulletScore=0;
 		this.onGround= true;
 		this.direction= "idle";
 		this.colorId=0;
@@ -86,7 +88,14 @@ public class Player {
 	public void setScore(int score) {
 		this.score=score;
 	}
-
+	
+	public int getBulletScore() {
+		return bulletScore;
+	}
+	public void updateBulletScore() {
+		bulletScore+=100;
+	}
+	
 	public void updateMovement() {
 		int aux;
 					switch (this.direction) {
@@ -96,9 +105,9 @@ public class Player {
 								aux=stateMap[Math.floorDiv(posX-WALK_SPEED, 96)][Math.floorDiv(posY, 96)];
 								if( (aux==0 || aux!=colorId+1 ) && aux!=5) {
 									posX-=WALK_SPEED;
-								}else {
-									this.direction="idle";
 								}
+							}else {
+								this.direction="idle";
 							}	
 							break;
 						case "right":
@@ -107,15 +116,14 @@ public class Player {
 								aux=stateMap[Math.floorDiv(posX+WALK_SPEED, 96)][Math.floorDiv(posY, 96)];
 								if( (aux==0 || aux!=colorId+1 ) && aux!=5) {
 									posX+=WALK_SPEED;
-								}else {
-									this.direction="idle";
-								}	
-							}
+								}
+							}else {
+								this.direction="idle";
+							}	
 							break;
 						default:
 							break;
 					}
-	
 		if(jump) {
 			aux=stateMap[Math.floorDiv(posX, 96)][Math.floorDiv(posY-JUMP_SPEED, 96)];
 			if(onGround && (aux==0 || aux!=colorId+1 ) && aux!=5){
@@ -261,4 +269,6 @@ public class Player {
 	public void setJump(boolean jump) {
 		this.jump = jump;
 	}
+
+	
 }
