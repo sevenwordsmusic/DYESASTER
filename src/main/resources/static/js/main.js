@@ -175,7 +175,7 @@ game.global = {
 	incPas: false,
 	temp: 170,
 	tempaux: 0,
-	score: [0,0,0,0,0,0,0,0],
+	teamScore:[0,0],
 	player : [{
 		x : 0,
 		y : 0,
@@ -184,7 +184,9 @@ game.global = {
 		isAlive: true,
 		jump: false,
 		ground: false,
-		nickname: ""
+		nickname: "",
+		score: 0,
+		bulletScore: 0,
 	},{
 		x : 0,
 		y : 0,
@@ -193,7 +195,9 @@ game.global = {
 		isAlive: true,
 		jump: false,
 		ground: false,
-		nickname: ""
+		nickname: "",
+		score: 0,
+		bulletScore: 0,
 	},{
 		x : 0,
 		y : 0,
@@ -202,7 +206,9 @@ game.global = {
 		isAlive: true,
 		jump: false,
 		ground: false,
-		nickname: ""
+		nickname: "",
+		score: 0,
+		bulletScore: 0,
 	},{
 		x : 0,
 		y : 0,
@@ -211,7 +217,9 @@ game.global = {
 		isAlive: true,
 		jump: false,
 		ground: false,
-		nickname: ""
+		nickname: "",
+		score: 0,
+		bulletScore: 0,
 	},{
 		x : 0,
 		y : 0,
@@ -220,7 +228,9 @@ game.global = {
 		isAlive: true,
 		jump: false,
 		ground: false,
-		nickname: ""
+		nickname: "",
+		score: 0,
+		bulletScore: 0,
 	},{
 		x : 0,
 		y : 0,
@@ -229,7 +239,9 @@ game.global = {
 		isAlive: true,
 		jump: false,
 		ground: false,
-		nickname: ""
+		nickname: "",
+		score: 0,
+		bulletScore: 0,
 	},{
 		x : 0,
 		y : 0,
@@ -238,7 +250,9 @@ game.global = {
 		isAlive: true,
 		jump: false,
 		ground: false,
-		nickname: ""
+		nickname: "",
+		score: 0,
+		bulletScore: 0,
 	},{
 		x : 0,
 		y : 0,
@@ -247,7 +261,9 @@ game.global = {
 		isAlive: true,
 		jump: false,
 		ground: false,
-		nickname: ""
+		nickname: "",
+		score: 0,
+		bulletScore: 0
 	}],
 	bulletLength : 0,
 	bullet : [{

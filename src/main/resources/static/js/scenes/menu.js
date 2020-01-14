@@ -23,18 +23,7 @@ var MenuScene = new Phaser.Class({
     	serverOn= this.add.image(0, 0, "serverOnline");
     	serverOff= this.add.image(0, 0, "serverOffline");
     	serverOff.setVisible(false);
-    	/*ASÍ ESTABA:
-		btn1 = this.add.image(game.config.width/2, game.config.height/2, "LMimg");
-		btn2 = this.add.image(game.config.width/2, game.config.height/2+150, "CMimg");
-		btn3 = this.add.image(game.config.width/2, game.config.height/2+250, "JGimg");
-		btn4 = this.add.image(game.config.width/2, game.config.height/2+350, "Cimg");
-		btn1A = this.add.image(game.config.width/2, game.config.height/2, "LMimgA");
-		btn2A = this.add.image(game.config.width/2, game.config.height/2+150, "CMimgA");
-		btn3A = this.add.image(game.config.width/2, game.config.height/2+250, "JGimgA");
-		btn4A = this.add.image(game.config.width/2, game.config.height/2+350, "CimgA");
-		this.psts = this.add.image(game.config.width/2, (game.config.height/2)-100, "psts");
-		btnSurfer = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'down':Phaser.Input.Keyboard.KeyCodes.DOWN, 'space':Phaser.Input.Keyboard.KeyCodes.SPACE, 'enter':Phaser.Input.Keyboard.KeyCodes.ENTER});
-		ASÍ LO DEJO:*/		
+    		
 		for(var i=0; i< 4; i++){
 			button[i] = this.add.image(game.config.width/2, game.config.height/2 + (128*i), "menuButton-" + i);
 		}

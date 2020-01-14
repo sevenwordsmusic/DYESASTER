@@ -12,6 +12,7 @@ public class Bullet {
 	private int posY;
 	private int dX=24; 
 	private int dY=32;
+	private int teamId = -1;
 	private String direction;
 	private Thread tickThread;
 	private final int FIRE_SPEED= 24;
@@ -53,7 +54,15 @@ public class Bullet {
 	public void setDirection(String direction) {
 		this.direction = direction;
 	}
-
+	
+	public int getTeamId() {
+		return teamId;
+	}
+	
+	public void setTeamId(int teamId) {
+		this.teamId = teamId;
+	}
+	
 	public void stop() {
 		if (scheduler != null) {
 			scheduler.shutdown();
@@ -63,13 +72,21 @@ public class Bullet {
 	private void tick() throws IOException {
 		switch (this.direction) {
 			case "left":
+				System.out.println("left0");
 				posX-=FIRE_SPEED;
 				for(int i= 0; i< players.size(); i++) {
 					if(players.get(i)!=shooter) {
+						System.out.println("left1");
 						if(players.get(i).getPosX() > posX-dX && players.get(i).getPosX() < posX+dY) {
+							System.out.println("left2");
 							if(players.get(i).getPosY() > posY-dY && players.get(i).getPosY() < posY+dY) {
+								System.out.println("left3");
 								players.get(i).pushed(-1);
 								this.posX=6144;
+								System.out.println("left4");
+								System.out.println(teamId);
+								players.get(teamId-1).updateBulletScore();
+								System.out.println("left5");
 								stop();
 							}
 						}
@@ -77,6 +94,7 @@ public class Bullet {
 				}
 				break;
 			case "right":
+				System.out.println("right");
 				posX+=FIRE_SPEED;
 				for(int i= 0; i< players.size(); i++) {
 					if(players.get(i)!=shooter) {
@@ -84,6 +102,9 @@ public class Bullet {
 							if(players.get(i).getPosY() > posY-dY && players.get(i).getPosY() < posY+dY) {
 								players.get(i).pushed(1);
 								this.posX=6144;
+								System.out.println(players.get(teamId-1).getBulletScore());
+								players.get(teamId-1).updateBulletScore();
+								System.out.println(players.get(teamId-1).getBulletScore());
 								stop();
 							}
 						}
@@ -91,12 +112,15 @@ public class Bullet {
 				}
 				break;
 			case "idle":
+				System.out.println("Idle");
 				posX+=IDLE_SPEED;
 				for(int i= 0; i< players.size(); i++) {
 					if(players.get(i)!=shooter) {
 						if(players.get(i).getPosX() > posX-dX && players.get(i).getPosX() < posX+dX) {
 							if(players.get(i).getPosY() > posY-dY && players.get(i).getPosY() < posY+dY) {
 								players.get(i).pushed(1);
+								players.get(teamId-1).updateBulletScore();
+								System.out.println(players.get(teamId-1).getBulletScore());
 								this.posX=6144;
 								stop();	
 							}

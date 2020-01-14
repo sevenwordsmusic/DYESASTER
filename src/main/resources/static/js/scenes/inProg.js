@@ -22,7 +22,6 @@ var InProgress = new Phaser.Class({
     	this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, "wip");
 		this.background.setOrigin(0, 0);
 		this.pst = this.add.image(game.config.width/2, (game.config.height/2)+20, "pst");
-		//this.background.setOrigin(0, 0);
     },
     
     update: function ()

@@ -16,12 +16,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class Gamematch{
 	private final Player CREATOR;
 	private final Level LEVEL;
-	private final double BLACKHOLE_SPEED= 0.75;
+	private final double BLACKHOLE_SPEED= 0.1;
 	private final long TICK_DELAY= 1000/60;
 		
 	private LinkedList<Player> players= new LinkedList<Player>();
 	private ArrayList<Bullet> bullets= new ArrayList<Bullet>();
 	private double blackHolePosition;
+	private int puntuaciones[] = new int[8];
 	private ObjectMapper mapper = new ObjectMapper();
 	private Thread tickThread;
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -73,11 +74,14 @@ public class Gamematch{
 		ArrayNode playerArrayNode= mapper.createArrayNode();
 				synchronized(players) {
 					blackHolePosition-=BLACKHOLE_SPEED;
+					updateScores();
 					for(int i= 0; i< players.size(); i++) {
 						ObjectNode player = mapper.createObjectNode();
 						player.put("nickname", players.get(i).getNickname());
 						player.put("posX", players.get(i).getPosX());
 						player.put("posY", players.get(i).getPosY());
+						player.put("score", puntuaciones[i]);
+						player.put("bulletScore", players.get(i).getBulletScore());
 						player.put("colorId", players.get(i).getColorId());
 						player.put("direction", players.get(i).getDirection());
 						player.put("isJumping", players.get(i).isJumping());
@@ -136,7 +140,12 @@ public class Gamematch{
 				}
 		
 	}
-
+	private int[] updateScores(){
+		for(int i = 0; i<players.size();i++) {
+			puntuaciones[i]=(int) Math.max(8647-players.get(i).getPosY(), puntuaciones[i]);
+		}
+		return puntuaciones;
+	}
 
 	private ArrayNode updateBullets() {
 		ArrayNode bulletArrayNode= mapper.createArrayNode();
@@ -145,6 +154,7 @@ public class Gamematch{
 							bullets.get(i).stop();
 							bullets.remove(i);
 						}else {
+							nullControl();
 							ObjectNode bullet = mapper.createObjectNode();
 							bullet.put("posX", bullets.get(i).getPosX());
 							bullet.put("posY", bullets.get(i).getPosY());
@@ -200,5 +210,14 @@ public class Gamematch{
 
 		public void setMaxPlayers(int maxPlayers) {
 			this.maxPlayers = maxPlayers;
+		}
+		public void nullControl() {
+			
+			for(int i= 0; i< bullets.size(); i++) {	
+				if(bullets.get(i).getDirection()==null) {
+					bullets.get(i).setDirection("right");
+					System.out.println("dhffgffjfgjfgfghkghlkdhgkhgjkdvhjdgdd");
+				}
+			}
 		}
 }

@@ -34,34 +34,32 @@ var GameScene = new Phaser.Class({
     create: function ()
     {
     	for(var i = 0; i<3; i++){
-	    		
-				let bg_0 = this.add.image(0,0+(i*game.config.height*4),"bg-0");
+	    		//Es 3.2 porque la resolucion base de los fondos es 1536 de ancho que 
+    			//mas tarde ha sido multiplicado * 2. La resolucion base deberia ser
+    			//1920 por lo que en vez de ser *4 es *3.2 --> (3072/1920)*2 = 3.2
+				let bg_0 = this.add.image(0,100+(i*game.config.height*3.2),"bg-0");
 				if(i===1){bg_0.flipY=true};
-		    	bg_0.displayHeight = game.config.height*4;
+		    	bg_0.displayHeight = game.config.height*3.2;
 		    	bg_0.scaleX=bg_0.scaleY;
-		    	bg_0.y=(game.config.height*4*i)+(game.config.height/2)*4;
-		    	bg_0.x=(game.config.width/2)*4;
+		    	bg_0.x=(game.config.width/2)*3.2;
 		    	
-		    	let bg_1 = this.add.image(0,0+(i*game.config.height*4),"bg-1");
+		    	let bg_1 = this.add.image(0,100+(i*game.config.height*3.2),"bg-1");
 		    	if(i===1){bg_1.flipY=true};
-		    	bg_1.displayHeight = game.config.height*4;
+		    	bg_1.displayHeight = game.config.height*3.2;
 		    	bg_1.scaleX=bg_1.scaleY;
-		    	bg_1.y=(game.config.height*4*i)+(game.config.height/2)*4;
-		    	bg_1.x=(game.config.width/2)*4;
+		    	bg_1.x=(game.config.width/2)*3.2;
 		    	
-		    	let bg_2 = this.add.image(0,0+(i*game.config.height*4),"bg-2");
+		    	let bg_2 = this.add.image(0,100+(i*game.config.height*3.2),"bg-2");
 		    	if(i===1){bg_2.flipY=true};
-		    	bg_2.displayHeight = game.config.height*4;
+		    	bg_2.displayHeight = game.config.height*3.2;
 		    	bg_2.scaleX=bg_2.scaleY;
-		    	bg_2.y=(game.config.height*4*i)+(game.config.height/2)*4;
-		    	bg_2.x=(game.config.width/2)*4;
+		    	bg_2.x=(game.config.width/2)*3.2;
 	
-		    	let bg_3 =this.add.image(0,0+(i*game.config.height*4),"bg-3");
+		    	let bg_3 =this.add.image(0,100+(i*game.config.height*3.2),"bg-3");
 		    	if(i===1){bg_3.flipY=true};
-		    	bg_3.displayHeight = game.config.height*4;
+		    	bg_3.displayHeight = game.config.height*3.2;
 		    	bg_3.scaleX=bg_3.scaleY;
-		    	bg_3.y=(game.config.height*4*i)+(game.config.height/2)*4;
-		    	bg_3.x=(game.config.width/2)*4;
+		    	bg_3.x=(game.config.width/2)*3.2;
 		}
 		
 		// load the map 
@@ -145,16 +143,14 @@ var GameScene = new Phaser.Class({
         this.pb = this.add.image(10000,1000,"iRosa");
         
         //Puntuacion
-        stV1=0;
         startScoreV1=false;
-        stV1=this.add.text(10000-(game.config.width/2)+350,500,"Max Altitude: "+game.global.score[0],{fontSize:'48px'}).setDepth(1);
+        stV1=this.add.text(10000-(game.config.width/2)+350,500,"Score: "+game.global.player[0].score,{fontSize:'48px'}).setDepth(1);
         stV1.setOrigin(0.5,0.5);
         
         if(game.global.typeOfGame==0){
-        	stV2=0;
         	startScoreV2=false;
-	        stV2=this.add.text(10000+(game.config.width/2)-350,500,"Max Altitude: "+game.global.score[1],{fontSize:'48px'}).setDepth(1);
-	        stV2.setOrigin(0.5,0.5);
+        	stV2=this.add.text(10000+(game.config.width/2)-350,500,"Score: "+game.global.player[1].score,{fontSize:'48px'}).setDepth(1);
+            stV2.setOrigin(0.5,0.5);
 	        
 	        this.barra = this.add.image(10000,1000,"bg-4");
 	        this.barra.scaleX=0.25;
@@ -192,19 +188,19 @@ var GameScene = new Phaser.Class({
         HUDSVA = this.add.image(10000-(game.config.width/2)+Ax,c4,"HUDSelect").setVisible(false);
         
 
-	        this.hudPngB = this.add.image(10000+(game.config.width/2)-70,1000,"hud");
-	        this.hudPngB.displayHeight = game.config.height/3;
-	        this.hudPngB.scaleX=this.hudPngB.scaleY;
+        this.hudPngB = this.add.image(10000+(game.config.width/2)-70,1000,"hud");
+        this.hudPngB.displayHeight = game.config.height/3;
+        this.hudPngB.scaleX=this.hudPngB.scaleY;
 	        
-	        azulB = this.add.image(10000+(game.config.width/2)-Bx,c1,"iAzul");
-	        rosaB = this.add.image(10000+(game.config.width/2)-Bx,c2,"iRosa");
-	        amarilloB = this.add.image(10000+(game.config.width/2)-Bx,c3,"iAmarillo");
-	        verdeB = this.add.image(10000+(game.config.width/2)-Bx,c4,"iVerde");
+        azulB = this.add.image(10000+(game.config.width/2)-Bx,c1,"iAzul");
+        rosaB = this.add.image(10000+(game.config.width/2)-Bx,c2,"iRosa");
+        amarilloB = this.add.image(10000+(game.config.width/2)-Bx,c3,"iAmarillo");
+        verdeB = this.add.image(10000+(game.config.width/2)-Bx,c4,"iVerde");
 	        
-	        HUDSAZB = this.add.sprite(10000+(game.config.width/2)-Bx,c1,"HUDSelect").setVisible(true);
-	        HUDSRB = this.add.image(10000+(game.config.width/2)-Bx,c2,"HUDSelect").setVisible(false);
-	        HUDSAMB = this.add.image(10000+(game.config.width/2)-Bx,c3,"HUDSelect").setVisible(false);
-	        HUDSVB = this.add.image(10000+(game.config.width/2)-Bx,c4,"HUDSelect").setVisible(false);
+        HUDSAZB = this.add.sprite(10000+(game.config.width/2)-Bx,c1,"HUDSelect").setVisible(true);
+        HUDSRB = this.add.image(10000+(game.config.width/2)-Bx,c2,"HUDSelect").setVisible(false);
+        HUDSAMB = this.add.image(10000+(game.config.width/2)-Bx,c3,"HUDSelect").setVisible(false);
+        HUDSVB = this.add.image(10000+(game.config.width/2)-Bx,c4,"HUDSelect").setVisible(false);
 
 
 	
@@ -216,18 +212,16 @@ var GameScene = new Phaser.Class({
 			
 		    this.physics.world.bounds.height = groundLayer.height - 96 + game.global.blackHolePosition;
 	        
-	       
-	    	
-	    	
-	    	//Update puntuacion
+	       //Update puntuacion
 		    camera.setBounds(0, 0, map.widthInPixels, this.physics.world.bounds.height);
-	    	if(startScoreV1){game.global.score[0]=Math.max(scoreInit-player[0].y,game.global.score[0]);}else{game.global.score[0]=0;}
-	    	stV1.setText("Max Altitude: "+game.global.score[game.global.index]);
+		    if(startScoreV1){stV1.setText("Score: "+(game.global.player[0].score+game.global.player[0].bulletScore));}
+	    	else{game.global.player[0].score = 0; stV1.setText("Score: "+game.global.player[0].bulletScore);}
 	    	
 	    	if(game.global.typeOfGame==0){
 	    		camera_B.setBounds(0, 0, map.widthInPixels, this.physics.world.bounds.height);
-	    		if(startScoreV2){game.global.score[1]=Math.max(scoreInit-player[1].y,game.global.score[1]);}else{game.global.score[1]=0;}
-	    		stV2.setText("Max Altitude: "+game.global.score[1]);
+	    		if(startScoreV2){stV2.setText("Score: "+(game.global.player[1].score+game.global.player[1].bulletScore));}
+		    	else{game.global.player[1].score = 0; stV2.setText("Score: "+game.global.player[1].bulletScore);}
+		    	
 	    	}
 	    	
 			for(var i=0; i<bullet.length; i++) {

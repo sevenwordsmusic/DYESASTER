@@ -17,6 +17,8 @@ public class Player {
 	private boolean isAlive;
 	private int posX;
 	private int posY;
+	private int score;
+	private int bulletScore;
 	private long updateJumpPosition;
 	private boolean onGround;
 	private int gameId= 999999;
@@ -55,6 +57,8 @@ public class Player {
 		this.jump= false;
 		this.posX= 2880;
 		this.posY= 8618;
+		this.score = 0;
+		this.bulletScore=0;
 		this.onGround= true;
 		this.direction= "idle";
 		this.colorId=0;
@@ -81,6 +85,20 @@ public class Player {
 
 	public void setAlive(boolean isAlive) {
 		this.isAlive = isAlive;
+	}
+	
+	public int getScore() {
+		return score;
+	}
+	public void setScore(int score) {
+		this.score=score;
+	}
+	
+	public int getBulletScore() {
+		return bulletScore;
+	}
+	public void updateBulletScore() {
+		bulletScore+=100;
 	}
 
 	public void updateMovement() {
