@@ -223,13 +223,21 @@ var GameScene = new Phaser.Class({
 	        HUDSAMB = this.add.image(10000+(game.config.width/2)-Bx,c3,"HUDSelect").setVisible(false);
 	        HUDSVB = this.add.image(10000+(game.config.width/2)-Bx,c4,"HUDSelect").setVisible(false);
         }
-        if(game.global.typeOfGame==0){game.global.player[0].nickname = "Left Player";game.global.player[1].nickname = "Right Player";}
+        if(game.global.typeOfGame==0){game.global.player[0].nickname = "LeftP";game.global.player[1].nickname = "RightP";}
 	
     },
 	
     update: function (time, delta) {
     	
-    	
+    	    if(game.global.event=="FAIL_GLOBAL"){
+    	    	game.global=gameRestart;
+        		this.scene.start('playerDesconectionScene');
+        		btnIndex = 0;
+        		//a = Date.now();
+        		if (game.global.DEBUG_MODE) {
+    				console.log('[DEBUG] Switching to DesconectionScene.'); 
+    			}
+    	    }
 	    	blackHoleLayer.y= game.global.blackHolePosition;
 	    	map.heightInPixels = groundLayer.height - 96 + game.global.blackHolePosition;
 		    this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);

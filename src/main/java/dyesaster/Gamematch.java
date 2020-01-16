@@ -14,6 +14,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class Gamematch{
+	private int indexOfRoom;
+	
 	private final Player CREATOR;
 	private final Level LEVEL;
 	private final double BLACKHOLE_SPEED= 0.2;
@@ -24,6 +26,7 @@ public class Gamematch{
 	private double blackHolePosition;
 	private double maxHblackHole;
 	private int puntuaciones[] = new int[8];
+	private boolean lastAlive[] = new boolean[8];
 	private ObjectMapper mapper = new ObjectMapper();
 	private Thread tickThread;
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -70,6 +73,7 @@ public class Gamematch{
 
 	public void stop() {
 		running=false;
+		WebsocketGameHandler.getRooms().remove(this);
 		if (scheduler != null) {
 			scheduler.shutdown();
 		}
@@ -117,6 +121,7 @@ public class Gamematch{
 				} catch (IOException e) {}	
 			}else {
 				for(int r= 0; r< players.size(); r++) {
+					lastAlive[r]=true;
 					try {
 						players.get(r).WSSession().sendMessage(new TextMessage(msg.toString()));
 					} catch (IOException e) {}
@@ -164,6 +169,7 @@ public class Gamematch{
 							msg.put("event", "GAME_OVER");	
 							for(int i= 0; i< players.size(); i++) {
 								if(players.get(i).isAlive()) {
+									setIndexOfRoom(players.get(i).getGameId());
 									players.get(i).stop();
 								}
 							}
@@ -183,6 +189,7 @@ public class Gamematch{
 									if(players.get(i).isAlive()) {
 										players.get(i).stop();
 									}
+								setIndexOfRoom(players.get(i).getGameId());
 								stop();
 							} else {
 								msg.put("event", "UPDATE_GAMEMATCH");
@@ -191,9 +198,14 @@ public class Gamematch{
 							msg.put("typeOfGame", typeOfGame);
 							msg.put("id", players.get(i).getPlayerId());
 							msg.put("index",  i);
-							try {
-								players.get(i).WSSession().sendMessage(new TextMessage(msg.toString()));
-							} catch (IOException e) {}
+							if(lastAlive[i]) {
+								if(!players.get(i).isAlive()) {
+									lastAlive[i]=false;
+								}
+								try {
+									players.get(i).WSSession().sendMessage(new TextMessage(msg.toString()));
+								} catch (IOException e) {}
+							}
 						}
 					}
 				}
@@ -283,6 +295,14 @@ public class Gamematch{
 
 		public boolean isRunning() {
 			return running;
+		}
+
+		public int getIndexOfRoom() {
+			return indexOfRoom;
+		}
+
+		public void setIndexOfRoom(int indexOfRoom) {
+			this.indexOfRoom = indexOfRoom;
 		}
 
 }

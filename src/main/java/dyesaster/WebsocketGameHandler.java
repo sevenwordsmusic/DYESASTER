@@ -170,13 +170,14 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				if(!rooms.get(player.getGameId()).isRunning()) {
 					rooms.get(player.getGameId()).waitingRoom();
 				}else {
-					rooms.get(player.getGameId()).stop();
+					rooms.get(player.getGameId()).setIndexOfRoom(player.getGameId());
 					for(int i= 0; i< rooms.get(player.getGameId()).getPlayers().size(); i++) {
 						rooms.get(player.getGameId()).getPlayer(i).setAlive(false);
 						msg = mapper.createObjectNode();
 						msg.put("event", "FAIL");
 						rooms.get(player.getGameId()).getPlayer(i).WSSession().sendMessage(new TextMessage(msg.toString()));
 					}
+					rooms.get(player.getGameId()).stop();
 				}
 			}
 		}

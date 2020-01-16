@@ -31,6 +31,8 @@ var MenuScene = new Phaser.Class({
 		}
 		button_hover[0].setVisible(true);
 		btnSurfer = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'down':Phaser.Input.Keyboard.KeyCodes.DOWN, 'space':Phaser.Input.Keyboard.KeyCodes.SPACE, 'enter':Phaser.Input.Keyboard.KeyCodes.ENTER});
+		console.log("Hola 1 vez");
+		game.global.event="";
     },
     
     update: function (time, delta) {

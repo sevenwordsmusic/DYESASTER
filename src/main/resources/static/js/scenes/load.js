@@ -23,6 +23,7 @@ var LoadScene = new Phaser.Class({
     
     update: function ()
     {
+    	if(game.global.typeOfGame==0){game.global.player[0].nickname = "LeftP"; game.global.player[1].nickname = "RightP";}
     	if(game.global.receivedMsg=='LOAD_GAMEMATCH' && !onCountDown){
         	let msg = new Object();
         	msg.event = 'START_GAMEMATCH';

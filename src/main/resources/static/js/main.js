@@ -71,6 +71,7 @@ var MainScene = new Phaser.Class({
 		this.load.image('loadBackground', 'assets/waiting.png');
 		this.load.image('newBackground', 'assets/chooseYourRoom.png');
 		this.load.image('creditos', 'assets/creditos.png');
+		this.load.image('fail', 'assets/fail.png');
 		
 		//LoadAssets
 		this.load.image('playerJoin1', 'assets/playerJoin1.png');
@@ -175,7 +176,7 @@ var config = {
 	    physics: {
 	        default: 'arcade'
 	    },
-	    scene: [MainScene, MenuScene, NewScene, JoinScene, LoadScene, GameScene, RankingScene, InProgress, ControlsScene,CreditsScene, DownScene],
+	    scene: [MainScene, MenuScene, NewScene, JoinScene, LoadScene, GameScene, RankingScene, InProgress, ControlsScene,CreditsScene, PlayerDesconectionScene ,DownScene],
 	    roundPixels: true
 };
 

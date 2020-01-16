@@ -21,7 +21,7 @@ var RankingScene = new Phaser.Class({
     	this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, "endScreenBackground");
 		this.background.setOrigin(0, 0);
 		
-		if(game.global.typeOfGame==0){game.global.player[0].nickname = "Left Player"; game.global.player[1].nickname = "Right Player";}
+		if(game.global.typeOfGame==0){game.global.player[0].nickname = "LeftP"; game.global.player[1].nickname = "RightP";}
 		//Calculo del MVP y lastSurvivor
 		maxPoints = -100;
 		for(var i=0; i<game.global.nJugadoresSala; i++){
@@ -38,7 +38,7 @@ var RankingScene = new Phaser.Class({
 		
 		
 		//Pintado de puntuaciones
-		separacionX = 350; separacionY = 0; interlineado = 80;
+		separacionX = 350; separacionY = -50; interlineado = 80;
 		stV1Name=this.add.text((game.config.width/2)+separacionX, 
 				(game.config.height/2)+separacionY+interlineado*0,
 				game.global.player[0].nickname+": "+(game.global.player[0].score+game.global.player[0].bulletScore),

@@ -72,7 +72,7 @@ var player=[""];
 				game.global.index=msg.index;
 				game.global.length=msg.length;
 				for(var i=0; i<msg.length; i++) {
-					game.global.player[i].nickname=msg.player[i].nickname;
+					if(game.global.typeOfGame!=0){game.global.player[i].nickname=msg.player[i].nickname;}
 					game.global.player[i].x=msg.player[i].posX;
 					game.global.player[i].y=msg.player[i].posY;
 					game.global.player[i].colorId=msg.player[i].colorId;
@@ -142,8 +142,10 @@ var player=[""];
 
 				if (game.global.DEBUG_MODE) {
 					if(game.global.typeOfGame==0){
+						game.global.event = "FAIL_LOCAL";
 						console.log('[DEBUG] FAIL in LOCAL mode.');
 					}else{
+						game.global.event = "FAIL_GLOBAL";
 						console.log('[DEBUG] FAIL.');
 					}	
 				}
