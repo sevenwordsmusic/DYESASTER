@@ -12,8 +12,6 @@ var RankingScene = new Phaser.Class({
     preload: function ()
     {
     	
-    	this.load.image('pst', 'assets/pressSpaceTo.png');
-    	this.load.image('rtm', 'assets/returnToMenu.png');
     },
     
     create: function ()
@@ -22,23 +20,77 @@ var RankingScene = new Phaser.Class({
 
     	this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, "endScreenBackground");
 		this.background.setOrigin(0, 0);
-		this.pst = this.add.image(game.config.width/2, (game.config.height/2)+450, "pst");
-		this.rtm = this.add.image(game.config.width/2, (game.config.height/2)+500, "rtm");
 		
-		//Calculo del ganador
+		if(game.global.typeOfGame==0){game.global.player[0].nickname = "Left Player"; game.global.player[1].nickname = "Right Player";}
+		//Calculo del MVP y lastSurvivor
 		maxPoints = -100;
-		for(var i=0; i<2; i++){
-			if(game.global.player[i].score+game.global.player[i].bulletScore>maxPoints){ maxPoints = game.global.player[i].score+game.global.player[i].bulletScore ;winner=i+1; }
+		for(var i=0; i<game.global.nJugadoresSala; i++){
+			if(game.global.player[i].score+game.global.player[i].bulletScore>maxPoints){ maxPoints = game.global.player[i].score+game.global.player[i].bulletScore ;mvp=game.global.player[i].nickname; }
+			if(game.global.player[i].isAlive){lastSurvivor = game.global.player[i].nickname; empate = false;}
 		}
-		this.add.text(game.config.width/2-100, (game.config.height/2),("Winner: Player "+winner),{fontSize:'64px'}).setDepth(5);
+		if(empate){
+			lastSurvivor="No Survivors";
+		}
+		
+		this.add.text((game.config.width/2)-370, (game.config.height/2)+170,mvp,{fontSize:'64px'}).setOrigin(0.5,0.5);
+		this.add.text((game.config.width/2)-370, (game.config.height/2)-60,lastSurvivor,{fontSize:'64px'}).setOrigin(0.5,0.5);
+		
+		
 		
 		//Pintado de puntuaciones
-		separacionX = 100; separacionY = 120; interlineado = 50;
-		stV1Name=this.add.text(game.config.width/2-100, (game.config.height/2)+separacionY+interlineado*0,"Player 1: ",{fontSize:'48px'}).setDepth(5);
-		stV2Name=this.add.text(game.config.width/2-100, (game.config.height/2)+separacionY+interlineado*1,"Player 2: ",{fontSize:'48px'}).setDepth(5);
-		stV1=this.add.text((game.config.width/2)+separacionX, (game.config.height/2)+separacionY+interlineado*0,game.global.player[0].score+game.global.player[0].bulletScore,{fontSize:'48px'}).setDepth(5);
-		stV2=this.add.text((game.config.width/2)+separacionX, (game.config.height/2)+separacionY+interlineado*1,game.global.player[1].score+game.global.player[1].bulletScore,{fontSize:'48px'}).setDepth(5);
-
+		separacionX = 350; separacionY = 0; interlineado = 80;
+		stV1Name=this.add.text((game.config.width/2)+separacionX, 
+				(game.config.height/2)+separacionY+interlineado*0,
+				game.global.player[0].nickname+": "+(game.global.player[0].score+game.global.player[0].bulletScore),
+				{fontSize:'64px'}).setDepth(5);
+		/*stV1=this.add.text(
+				(game.config.width/2)+separacionX, 
+				(game.config.height/2)+separacionY+interlineado*0,
+				(game.global.player[0].score+game.global.player[0].bulletScore),
+				{fontSize:'48px'}).setDepth(5);*/
+		stV2Name=this.add.text((game.config.width/2)+separacionX,
+				(game.config.height/2)+separacionY+interlineado*1,
+				game.global.player[1].nickname+": "+(game.global.player[1].score+game.global.player[1].bulletScore),
+				{fontSize:'64px'}).setDepth(5);
+		/*stV2=this.add.text((game.config.width/2)+separacionX, 
+				(game.config.height/2)+separacionY+interlineado*1,
+				(game.global.player[1].score+game.global.player[1].bulletScore),
+				{fontSize:'48px'}).setDepth(5);stV1.setOrigin(0.5, 0.5);*/
+		    	
+				/*stV1.setOrigin(0.5, 0.5);
+		    	stV2.setOrigin(0.5, 0.5);*/
+		    	stV1Name.setOrigin(0.5, 0.5);
+		    	stV2Name.setOrigin(0.5, 0.5);
+		
+		if(game.global.nJugadoresSala==3||game.global.nJugadoresSala==4){
+			stV3Name=this.add.text((game.config.width/2)+separacionX, 
+					(game.config.height/2)+separacionY+interlineado*2,
+					game.global.player[2].nickname+": "+(game.global.player[2].score+game.global.player[2].bulletScore),
+					{fontSize:'64px'}).setDepth(5);
+			/*stV3=this.add.text(
+					(game.config.width/2)+separacionX, 
+					(game.config.height/2)+separacionY+interlineado*2,
+					game.global.player[2].score+game.global.player[2].bulletScore,
+					{fontSize:'48px'}).setDepth(5);*/
+			//stV3.setOrigin(0.5, 0.5);
+			stV3Name.setOrigin(0.5, 0.5);
+		}
+		if(game.global.nJugadoresSala==4){
+			stV4Name=this.add.text((game.config.width/2)+separacionX, 
+					(game.config.height/2)+separacionY+interlineado*3,
+					game.global.player[3].nickname+": "+(game.global.player[3].score+game.global.player[3].bulletScore),
+					{fontSize:'64px'}).setDepth(5);
+			/*stV4=this.add.text((game.config.width/2)+separacionX, 
+					(game.config.height/2)+separacionY+interlineado*3,
+					game.global.player[3].score+game.global.player[3].bulletScore,
+					{fontSize:'48px'}).setDepth(5);*/
+			//stV4.setOrigin(0.5, 0.5);
+			stV4Name.setOrigin(0.5, 0.5);
+		}
+		console.log(game.global.player[0].nickname+" "+game.global.player[0].isAlive);
+		console.log(game.global.player[1].nickname+" "+game.global.player[1].isAlive);
+		console.log(game.global.player[2].nickname+" "+game.global.player[2].isAlive);
+		console.log(game.global.player[3].nickname+" "+game.global.player[3].isAlive);
     },
     
     update: function ()
@@ -52,16 +104,13 @@ var RankingScene = new Phaser.Class({
 				console.log('[DEBUG] Switching to Menu.'); 
 			}
     	}
-    	stV1.setOrigin(0.5, 0.5);
-    	stV2.setOrigin(0.5, 0.5);
-    	stV1Name.setOrigin(0.5, 0.5);
-    	stV2Name.setOrigin(0.5, 0.5);
     }
 
 });
-var maxPoints;
-var winner;
-var stV1, stV2, stV1Name, stV2Name;
+var maxPoints, maxTime;
+var mvp, lastSurvivor;
+var stV1, stV2, stV1Name, stV2Name, stV3, stV4, stV3Name, stV4Name;
 var separacionX;
 var separacionY;
 var interlineado;
+var empate=true;

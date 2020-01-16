@@ -42,35 +42,35 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 			player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
 			
 			switch (node.get("event").asText()) {
-				case "JOIN_GAMEMATCH":
-					if(node.get("typeOfGame").asInt()==2) {
-						//int gameMatch_code= node.get("gameMatch_code").asInt();
-						int gameMatch_code= rooms.size()-1;
-						if( gameMatch_code < rooms.size()){
-							player.setGameId(gameMatch_code);
-							player.setIndex(rooms.get(gameMatch_code).getPlayers().size());
-							rooms.get(gameMatch_code).addPlayer(player);
-							msg.put("id", gameMatch_code);
+				case "NEW_GAMEMATCH":
+					int r=0;
+					boolean roomFound=false;
+					while(r< rooms.size() && !roomFound) {
+						if(rooms.get(r).getTypeOfGame()==1 && rooms.get(r).getMaxPlayers()==node.get("nPlayers").asInt() && rooms.get(r).getPlayers().size()< rooms.get(r).getMaxPlayers()){
+							player.setGameId(rooms.indexOf(rooms.get(r)));
+							player.setIndex(rooms.get(r).getPlayers().size());
+							rooms.get(r).addPlayer(player);
+							msg.put("id", r);
 							msg.put("event", "NEW_LEVEL_RETURN");
 							msg.put("index", player.getIndex());
-							msg.put("tilemap", rooms.get(gameMatch_code).getLevel().getTileMapString());
-							msg.put("nPlayers", rooms.get(gameMatch_code).getMaxPlayers());
+							msg.put("tilemap", rooms.get(r).getLevel().getTileMapString());
+							msg.put("nPlayers", rooms.get(r).getMaxPlayers());
 							player.WSSession().sendMessage(new TextMessage(msg.toString()));
+							roomFound=true;
 						}
+						r++;
 					}
-					break;
-				case "NEW_GAMEMATCH":
-					if(node.get("typeOfGame").asInt()==1 && (node.get("nPlayers").asInt()>0 && node.get("nPlayers").asInt()<5 )) {
+					if(!roomFound) {
 						player.setIndex(0);
 						Gamematch newGamematch= new Gamematch(player);
 						newGamematch.addPlayer(player);
-						newGamematch.setMaxPlayers(node.get("nPlayers").asInt()*2);
+						newGamematch.setMaxPlayers(node.get("nPlayers").asInt());
 						rooms.add(newGamematch);
 						player.setGameId(rooms.indexOf(newGamematch));
 						msg.put("id", player.getPlayerId());
 						msg.put("event", "NEW_LEVEL_RETURN");
 						msg.put("index", player.getIndex());
-						msg.put("tilemap", newGamematch.getLevel().randomize());
+						msg.put("tilemap", newGamematch.getLevel().randomize(newGamematch.getMaxPlayers()));
 						msg.put("nPlayers", newGamematch.getMaxPlayers());
 						msg.put("gameMatch_code", rooms.indexOf(newGamematch));
 						player.WSSession().sendMessage(new TextMessage(msg.toString()));
@@ -94,7 +94,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 							msg.put("id", player.getPlayerId());
 							msg.put("event", "NEW_LEVEL_RETURN");
 							msg.put("index", player.getIndex());
-							msg.put("tilemap", newGamematch.getLevel().randomize());
+							msg.put("tilemap", newGamematch.getLevel().randomize(2));
 							msg.put("nPlayers", 2);
 							player.WSSession().sendMessage(new TextMessage(msg.toString()));
 					}
@@ -107,9 +107,13 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				case "START_GAMEMATCH":
 					player.setNickname(node.get("nickname").asText());
 					msg.put("id", player.getPlayerId());
-					msg.put("event", "START_GAMEMATCH");
+					msg.put("event", "START_GAMEMATCH");					
 					player.WSSession().sendMessage(new TextMessage(msg.toString()));
-					if(rooms.get(player.getGameId()).getMaxPlayers()==rooms.get(player.getGameId()).getPlayers().size()) {
+					//ESTO
+					rooms.get(player.getGameId()).waitingRoom();
+					//
+					if(rooms.get(player.getGameId()).getMaxPlayers()==rooms.get(player.getGameId()).getPlayers().size() && !rooms.get(player.getGameId()).isRunning()) {
+						rooms.get(player.getGameId()).countDown();
 						rooms.get(player.getGameId()).start();
 					}
 					break;
@@ -155,15 +159,24 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+		ObjectNode msg = mapper.createObjectNode();
 		synchronized(this) {
 			if(!session.getAttributes().isEmpty()){
 				Player player;
 				player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
-				if(rooms.size()>0) {
-					if(rooms.get(player.getGameId()).getCreator().getPlayerId()==player.getPlayerId()) {
-						rooms.get(player.getGameId()).stop();
+				player.setAlive(false);
+				player.stop();
+				rooms.get(player.getGameId()).getPlayers().remove(player);
+				if(!rooms.get(player.getGameId()).isRunning()) {
+					rooms.get(player.getGameId()).waitingRoom();
+				}else {
+					rooms.get(player.getGameId()).stop();
+					for(int i= 0; i< rooms.get(player.getGameId()).getPlayers().size(); i++) {
+						rooms.get(player.getGameId()).getPlayer(i).setAlive(false);
+						msg = mapper.createObjectNode();
+						msg.put("event", "FAIL");
+						rooms.get(player.getGameId()).getPlayer(i).WSSession().sendMessage(new TextMessage(msg.toString()));
 					}
-					player.stop();
 				}
 			}
 		}

@@ -33,67 +33,95 @@ var GameScene = new Phaser.Class({
     
     create: function ()
     {
-    	for(var i = 0; i<3; i++){
-	    		//Es 3.2 porque la resolucion base de los fondos es 1536 de ancho que 
-    			//mas tarde ha sido multiplicado * 2. La resolucion base deberia ser
-    			//1920 por lo que en vez de ser *4 es *3.2 --> (3072/1920)*2 = 3.2
-				let bg_0 = this.add.image(0,100+(i*game.config.height*3.2),"bg-0");
-				if(i===1){bg_0.flipY=true};
-		    	bg_0.displayHeight = game.config.height*3.2;
-		    	bg_0.scaleX=bg_0.scaleY;
-		    	bg_0.x=(game.config.width/2)*3.2;
-		    	
-		    	let bg_1 = this.add.image(0,100+(i*game.config.height*3.2),"bg-1");
-		    	if(i===1){bg_1.flipY=true};
-		    	bg_1.displayHeight = game.config.height*3.2;
-		    	bg_1.scaleX=bg_1.scaleY;
-		    	bg_1.x=(game.config.width/2)*3.2;
-		    	
-		    	let bg_2 = this.add.image(0,100+(i*game.config.height*3.2),"bg-2");
-		    	if(i===1){bg_2.flipY=true};
-		    	bg_2.displayHeight = game.config.height*3.2;
-		    	bg_2.scaleX=bg_2.scaleY;
-		    	bg_2.x=(game.config.width/2)*3.2;
-	
-		    	let bg_3 =this.add.image(0,100+(i*game.config.height*3.2),"bg-3");
-		    	if(i===1){bg_3.flipY=true};
-		    	bg_3.displayHeight = game.config.height*3.2;
-		    	bg_3.scaleX=bg_3.scaleY;
-		    	bg_3.x=(game.config.width/2)*3.2;
-		}
+		 
+    	fps=30;
+    	nextFrameUpdate=Date.now();
+    	updateLapse=1000/fps;
+  
+    	
+    	if(game.global.typeOfGame==0){
+	    	for(var i = 0; i<3; i++){
+		    		//Es 3.2 porque la resolucion base de los fondos es 1536 de ancho que 
+	    			//mas tarde ha sido multiplicado * 2. La resolucion base deberia ser
+	    			//1920 por lo que en vez de ser *4 es *3.2 --> (3072/1920)*2 = 3.2
+					let bg_0 = this.add.image(0,100+(i*game.config.height*3.2),"bg-0");
+					if(i===1){bg_0.flipY=true};
+			    	bg_0.displayHeight = game.config.height*3.2;
+			    	bg_0.scaleX=bg_0.scaleY;
+			    	bg_0.x=(game.config.width/2)*3.2;
+			    	
+			    	let bg_1 = this.add.image(0,100+(i*game.config.height*3.2),"bg-1");
+			    	if(i===1){bg_1.flipY=true};
+			    	bg_1.displayHeight = game.config.height*3.2;
+			    	bg_1.scaleX=bg_1.scaleY;
+			    	bg_1.x=(game.config.width/2)*3.2;
+			    	
+			    	let bg_2 = this.add.image(0,100+(i*game.config.height*3.2),"bg-2");
+			    	if(i===1){bg_2.flipY=true};
+			    	bg_2.displayHeight = game.config.height*3.2;
+			    	bg_2.scaleX=bg_2.scaleY;
+			    	bg_2.x=(game.config.width/2)*3.2;
 		
+			    	let bg_3 =this.add.image(0,100+(i*game.config.height*3.2),"bg-3");
+			    	if(i===1){bg_3.flipY=true};
+			    	bg_3.displayHeight = game.config.height*3.2;
+			    	bg_3.scaleX=bg_3.scaleY;
+			    	bg_3.x=(game.config.width/2)*3.2;
+			    	
+		        	camera = this.cameras.add(0, 0, game.config.width/2, game.config.height);
+		        	camera_B = this.cameras.add(game.config.width/2, 0, game.config.width/2, game.config.height);
+			    	
+			}
+    	}else{  
+    		bg_0 = this.add.tileSprite(0, 0, game.config.width*3.2, game.config.height*3.2, "bg-0");
+    		bg_0.setOrigin(0, 0);		
+    		bg_1 = this.add.tileSprite(0, 0, game.config.width*3.2, game.config.height*3.2, "bg-1");
+    		bg_1.setOrigin(0, 0);
+    		/*
+    		bg_2 = this.add.tileSprite(0, 0, game.config.width*3.2, game.config.height*3.2, "bg-2");
+    		bg_2.setOrigin(0, 0);		
+    		bg_3 = this.add.tileSprite(0, 0, game.config.width*3.2, game.config.height*3.2, "bg-3");
+    		bg_3.setOrigin(0, 0);
+	    	*/
+	    	camera = this.cameras.add(0, 0, game.config.width, game.config.height);
+        	
+    	}
+    	
+
+    	
+    	
 		// load the map 
 		map = this.make.tilemap({key: 'map'});
 
 		// tiles for the ground layer
 		allTiles = map.addTilesetImage('tiles');
 		// create the ground layer
+		backgroundLayer = map.createDynamicLayer('Background', allTiles, 0, 0);
+		// the player will collide with this layer
+		//groundLayer.setCollisionByExclusion([-1]);
+
+		nicknames= new Array();
+		for(var i=0; i < game.global.nPlayers; i++){//For every player:
+			// create the player sprite    
+			player[i] = this.add.sprite(200, 8688, 'playerSprite-'+i);
+			
+		}
+		
+		nicknames[0] = this.add.text(200, 8688, "", { font: "40px Arial", fill: "#FF0000", fontWeight: "bold", align: "left" });
+		nicknames[1] = this.add.text(200, 8688, "", { font: "40px Arial", fill: "#00FF00", fontWeight: "bold", align: "left" });
+		nicknames[2] = this.add.text(200, 8688, "", { font: "40px Arial", fill: "#0000FF", fontWeight: "bold", align: "left" });
+		nicknames[3] = this.add.text(200, 8688, "", { font: "40px Arial", fill: "#FFFF00", fontWeight: "bold", align: "left" });
+		
 		groundLayer = map.createDynamicLayer('World', allTiles, 0, 0);
 		// the player will collide with this layer
 		//groundLayer.setCollisionByExclusion([-1]);
-		
+
 		
 		blackHoleLayer = map.createDynamicLayer('BlackHole', allTiles, 0, 0);
 		//blackHoleLayer.setCollisionByExclusion([-1]);
 		blackHoleLayer.setPosition(0, 96);
 
-		// set the boundaries of our game world
-		this.physics.world.bounds.width = groundLayer.width;
-		this.physics.world.bounds.height = groundLayer.height;
 
-		nicknames= new Array();
-		for(var i=0; i < game.global.nPlayers; i++){//For every player:
-			// create the player sprite    
-			player[i] = this.physics.add.sprite(200, 8688, 'playerSprite-'+i);
-			
-			// small fix to our player images, we resize the physics body object slightly
-			player[i].body.setSize(player[i].width, player[i].height);
-			
-			nicknames[i] = this.add.text(200, 8688, "", { font: "40px Arial", fill: "#FF0000", fontWeight: "bold", align: "center" });
-
-		}
-		
-		
 		
 		for(var c=0; c<4; c++){//For every color:
 			// player walk animation
@@ -122,21 +150,7 @@ var GameScene = new Phaser.Class({
             frameRate: 8,
             repeat: 1
         });
-		
 
-    	let msg = new Object();
-    	msg.event = 'START_GAMEMATCH';
-    	msg.nickname = userNickname;
-    	game.global.socket.send(JSON.stringify(msg));
-		 
-        if(game.global.typeOfGame==0){
-        	this.cameras.main.setSize(game.config.width/2, game.config.height);
-        	camera = this.cameras.main;
-        	camera_B = this.cameras.add(game.config.width/2, 0, game.config.width/2, game.config.height);
-        }else{
-        	this.cameras.main.setSize(game.config.width, game.config.height);
-        	camera = this.cameras.main;
-        }
         
         HUD = this.cameras.add(0,0,game.config.width,game.config.height);
         
@@ -144,7 +158,7 @@ var GameScene = new Phaser.Class({
         
         //Puntuacion
         startScoreV1=false;
-        stV1=this.add.text(10000-(game.config.width/2)+350,500,"Score: "+game.global.player[0].score,{fontSize:'48px'}).setDepth(1);
+        stV1=this.add.text(10000-(game.config.width/2)+350,500,"Score: "+game.global.player[game.global.index].score,{fontSize:'48px'}).setDepth(1);
         stV1.setOrigin(0.5,0.5);
         
         if(game.global.typeOfGame==0){
@@ -162,14 +176,21 @@ var GameScene = new Phaser.Class({
         HUD.startFollow(this.pb)
         HUD.ignore(this.pb)
         
-    	camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        camera.setZoom(0.6);
-        camera.startFollow(player[game.global.index]);
-        
+        this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         if(game.global.typeOfGame==0){
+        	camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+            camera.setZoom(0.6);
+            camera.startFollow(player[0]);
+            
 	        camera_B.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 	        camera_B.setZoom(0.6);
 			camera_B.startFollow(player[1]);
+        }else{       	
+        	camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+            camera.setZoom(0.6);
+            camera.startFollow(player[game.global.index]);
+
+            
         }
         
         c1=870;c2=955;c3=1045;c4=1130;Ax=72;Bx=68;
@@ -187,42 +208,56 @@ var GameScene = new Phaser.Class({
         HUDSAMA = this.add.image(10000-(game.config.width/2)+Ax,c3,"HUDSelect").setVisible(false);
         HUDSVA = this.add.image(10000-(game.config.width/2)+Ax,c4,"HUDSelect").setVisible(false);
         
-
-        this.hudPngB = this.add.image(10000+(game.config.width/2)-70,1000,"hud");
-        this.hudPngB.displayHeight = game.config.height/3;
-        this.hudPngB.scaleX=this.hudPngB.scaleY;
-	        
-        azulB = this.add.image(10000+(game.config.width/2)-Bx,c1,"iAzul");
-        rosaB = this.add.image(10000+(game.config.width/2)-Bx,c2,"iRosa");
-        amarilloB = this.add.image(10000+(game.config.width/2)-Bx,c3,"iAmarillo");
-        verdeB = this.add.image(10000+(game.config.width/2)-Bx,c4,"iVerde");
-	        
-        HUDSAZB = this.add.sprite(10000+(game.config.width/2)-Bx,c1,"HUDSelect").setVisible(true);
-        HUDSRB = this.add.image(10000+(game.config.width/2)-Bx,c2,"HUDSelect").setVisible(false);
-        HUDSAMB = this.add.image(10000+(game.config.width/2)-Bx,c3,"HUDSelect").setVisible(false);
-        HUDSVB = this.add.image(10000+(game.config.width/2)-Bx,c4,"HUDSelect").setVisible(false);
-
-
+        if(game.global.typeOfGame==0){
+	        this.hudPngB = this.add.image(10000+(game.config.width/2)-70,1000,"hud");
+	        this.hudPngB.displayHeight = game.config.height/3;
+	        this.hudPngB.scaleX=this.hudPngB.scaleY;
+		        
+	        azulB = this.add.image(10000+(game.config.width/2)-Bx,c1,"iAzul");
+	        rosaB = this.add.image(10000+(game.config.width/2)-Bx,c2,"iRosa");
+	        amarilloB = this.add.image(10000+(game.config.width/2)-Bx,c3,"iAmarillo");
+	        verdeB = this.add.image(10000+(game.config.width/2)-Bx,c4,"iVerde");
+		        
+	        HUDSAZB = this.add.sprite(10000+(game.config.width/2)-Bx,c1,"HUDSelect").setVisible(true);
+	        HUDSRB = this.add.image(10000+(game.config.width/2)-Bx,c2,"HUDSelect").setVisible(false);
+	        HUDSAMB = this.add.image(10000+(game.config.width/2)-Bx,c3,"HUDSelect").setVisible(false);
+	        HUDSVB = this.add.image(10000+(game.config.width/2)-Bx,c4,"HUDSelect").setVisible(false);
+        }
+        if(game.global.typeOfGame==0){game.global.player[0].nickname = "Left Player";game.global.player[1].nickname = "Right Player";}
 	
     },
 	
     update: function (time, delta) {
+    	
+    	
 	    	blackHoleLayer.y= game.global.blackHolePosition;
-	    	
-			
-		    this.physics.world.bounds.height = groundLayer.height - 96 + game.global.blackHolePosition;
-	        
+	    	map.heightInPixels = groundLayer.height - 96 + game.global.blackHolePosition;
+		    this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+		    
+		    camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+		    
 	       //Update puntuacion
-		    camera.setBounds(0, 0, map.widthInPixels, this.physics.world.bounds.height);
-		    if(startScoreV1){stV1.setText("Score: "+(game.global.player[0].score+game.global.player[0].bulletScore));}
-	    	else{game.global.player[0].score = 0; stV1.setText("Score: "+game.global.player[0].bulletScore);}
+		    
+		    if(startScoreV1){stV1.setText("Score: "+(game.global.player[game.global.index].score+game.global.player[game.global.index].bulletScore));}
+	    	else{game.global.player[game.global.index].score = 0; stV1.setText("Score: "+game.global.player[game.global.index].bulletScore);}
 	    	
-	    	if(game.global.typeOfGame==0){
-	    		camera_B.setBounds(0, 0, map.widthInPixels, this.physics.world.bounds.height);
+	    	if(game.global.typeOfGame==0){		
+	    		camera_B.setBounds(0, 0, map.widthInPixels,map.heightInPixels);
 	    		if(startScoreV2){stV2.setText("Score: "+(game.global.player[1].score+game.global.player[1].bulletScore));}
 		    	else{game.global.player[1].score = 0; stV2.setText("Score: "+game.global.player[1].bulletScore);}
 		    	
-	    	}
+	    	}else {
+	    		bg_0.tilePositionX = camera.scrollX * .25;   		
+	    		bg_1.tilePositionX = camera.scrollX * .35;
+	    		//bg_2.tilePositionX = camera.scrollX * .95;
+	    		//bg_3.tilePositionX = camera.scrollX * 3.2;
+	    		
+	    		bg_0.tilePositionX = camera.scrollX * .25; 
+	    		bg_1.tilePositionY = camera.scrollY * .35;
+	    		//bg_2.tilePositionY = camera.scrollY * .85;
+	    		//bg_3.tilePositionY = camera.scrollY * 3.2;
+			}
+	    	
 	    	
 			for(var i=0; i<bullet.length; i++) {
 				bullet[i].destroy();
@@ -236,7 +271,7 @@ var GameScene = new Phaser.Class({
 					nicknames[i].text=game.global.player[i].nickname;
 					nicknames[i].x=game.global.player[i].x - 32;
 					nicknames[i].y=game.global.player[i].y - 128;
-					colorHudManager(i,game.global.player[i].colorId)
+					
 						switch(game.global.player[i].direction){
 							case 'left':
 								player[i].anims.play('walk-'+game.global.player[i].colorId, true); // walk left
@@ -277,6 +312,7 @@ var GameScene = new Phaser.Class({
     	let msg = new Object();
     	msg.event = 'UPDATE_CONTROLS';
 		//PLAYER A
+		colorHudManager(0,game.global.player[1,game.global.index].colorId);
 		if (cursors.left.isDown)
 		{
 			if(steps+300 < Date.now()  && game.global.player[game.global.index].ground  && !cursors.up.isDown){
@@ -307,12 +343,13 @@ var GameScene = new Phaser.Class({
 		msg.changeColor = cursors.color.isDown;
 		//FIRE
 		msg.shoot = cursors.shoot.isDown;
-		if(cursors.shoot.isDown && shooting+120 < Date.now() ){
+		if(cursors.shoot.isDown && shooting+245 < Date.now() ){
 			this.sound.play('shoot');
 			shooting=Date.now();
 		}
 		
 		if(game.global.typeOfGame==0){
+			colorHudManager(1,game.global.player[1].colorId);
 			//PLAYER B
 			if (cursors_B.left.isDown)
 			{
@@ -335,7 +372,7 @@ var GameScene = new Phaser.Class({
 			}
 			msg.jump_B = cursors_B.up.isDown;
 			if(cursors_B.up.isDown && !startScoreV2){startScoreV2=true;}
-			if(cursors_B.up.isDown && jumping_B+250 < Date.now() && game.global.player[1].ground){
+			if(cursors_B.up.isDown && jumping_B+245 < Date.now() && game.global.player[1].ground){
 		
 				this.sound.play('jump');
 				jumping_B=Date.now();
@@ -344,7 +381,7 @@ var GameScene = new Phaser.Class({
 			msg.changeColor_B = cursors_B.color.isDown;
 			//FIRE
 			msg.shoot_B = cursors_B.shoot.isDown;
-			if(cursors_B.shoot.isDown && shooting_B+120 < Date.now() ){
+			if(cursors_B.shoot.isDown && shooting_B+225 < Date.now() ){
 				this.sound.play('shoot');
 				shooting_B=Date.now();
 			}
@@ -352,12 +389,21 @@ var GameScene = new Phaser.Class({
 		
 		//JUST ONE CONTROLS MSG IS SENT.
 		game.global.socket.send(JSON.stringify(msg));
+	
+		
 		
 		if(nextFrameUpdate<Date.now()){
 			animatedTilesBySeven(211,15);
+			animatedTV(136);
+			animatedTV(151);
+			animatedTV(166);
+			animatedTV(181);
 			nextFrameUpdate=Date.now()+updateLapse;
 		}
 		
+
+			
+			
 		if(game.global.receivedMsg=='GAME_OVER'){
 			this.scene.start('rankingScene');
 			if (game.global.DEBUG_MODE) {
@@ -382,6 +428,18 @@ function animatedTilesBySeven(animatedTile,totalFrames){
 		}	
 }
 
+
+function animatedTV(tileCod){
+	if(TVsteps==14){
+		backgroundLayer.replaceByIndex(tileCod+TVsteps, tileCod);
+		TVsteps=0;
+	}else{
+		backgroundLayer.replaceByIndex(tileCod+TVsteps, tileCod+TVsteps+1);
+		TVsteps++;
+	}
+}
+
+
 function colorHudManager(id,color){
 	switch(id){
 	case 0:
@@ -392,29 +450,29 @@ function colorHudManager(id,color){
 	break
 	}
 }
+
+
 function colorHudManager(id,color){
-	switch(id){	
-	case 1:
+	if(id==1){
 		switch(color){
-		case 0:	
-			HUDSAZB.setVisible(true);
-			HUDSVB.setVisible(false);
-		break
-		case 1:
-			HUDSAZB.setVisible(false);
-			HUDSRB.setVisible(true);
-		break
-		case 2:
-			HUDSRB.setVisible(false);
-			HUDSAMB.setVisible(true);
-		break
-		case 3:
-			HUDSAMB.setVisible(false);
-			HUDSVB.setVisible(true);
-		break
+			case 0:	
+				HUDSAZB.setVisible(true);
+				HUDSVB.setVisible(false);
+			break
+			case 1:
+				HUDSAZB.setVisible(false);
+				HUDSRB.setVisible(true);
+			break
+			case 2:
+				HUDSRB.setVisible(false);
+				HUDSAMB.setVisible(true);
+			break
+			case 3:
+				HUDSAMB.setVisible(false);
+				HUDSVB.setVisible(true);
+			break
 		}
-	break
-	case 0:
+	}else{
 		switch(color){
 		case 0:
 			HUDSAZA.setVisible(true);
@@ -433,9 +491,9 @@ function colorHudManager(id,color){
 			HUDSVA.setVisible(true);
 		break
 		}
-	break
 	}
 }
+
 var c1,c2,c3,c4,Ax,Bx;
 
 var azulA, verdeA, rosaA, amarilloA;
@@ -447,10 +505,9 @@ var scoreInit = 8647;
 var stV1, stV2;
 var startScoreV1, startScoreV2;
 
-var fps=15, nextFrameUpdate=Date.now(), updateLapse=1000/fps;
-var jumping=Date.now(), shooting=Date.now(), jumping_B=Date.now(), shooting_B=Date.now(), steps=Date.now();
+var jumping=Date.now(), shooting=Date.now(), jumping_B=Date.now(), shooting_B=Date.now(), steps=Date.now(), TVsteps=0;
 var shootTime= 0;
 var steps=[];
 var bullet=new Array();
-var groundLayer, blackHoleLayer, coinLayer;
+var groundLayer, blackHoleLayer, backgroundLayer;
 var camera, camera_B, HUD;

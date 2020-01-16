@@ -1,24 +1,6 @@
 var map;
 var player=[""];
 
-function startUp(typeOfGame) {
-	game.global.typeOfGame=typeOfGame;
-	let msg = new Object();
-	
-	if(game.global.typeOfGame==0){
-		msg.event = 'NEW_LOCAL_GAMEMATCH';
-	}else if(game.global.typeOfGame==2){
-		msg.event = 'JOIN_GAMEMATCH';
-		msg.gameMatch_code=0;
-	}
-	msg.typeOfGame = game.global.typeOfGame;
-	game.global.socket.send(JSON.stringify(msg));
-	
-	if (game.global.DEBUG_MODE) {
-		console.log('[DEBUG] ' + msg.event + '  waiting for response...');
-	}
-	
-}	
 	
 	// WEBSOCKET CONFIGURATOR
 	game.global.socket = new WebSocket("ws://"+ip+":8080/dyesaster");
@@ -53,6 +35,30 @@ function startUp(typeOfGame) {
 					console.log('[DEBUG] LOAD_GAMEMATCH the game has been loaded.');
 				}
 			break
+			//ESTO
+			case 'WAITING_ROOM':
+				game.global.receivedMsg=msg.event;
+				game.global.length=msg.length;
+				game.global.info=msg.maxPlayers;
+				for(var i=0; i<msg.length; i++) {
+					game.global.player[i].nickname=msg.player[i].nickname;
+				}
+				if (game.global.DEBUG_MODE) {
+					console.log('[DEBUG] WAITING_ROOM waiting for players.');
+				}
+			break
+			case 'COUNTDOWN':
+				game.global.receivedMsg=msg.event;
+				game.global.length=msg.length;
+				for(var i=0; i<msg.length; i++) {
+					game.global.player[i].nickname=msg.player[i].nickname;
+				}
+				game.global.info=msg.countdown;
+				if (game.global.DEBUG_MODE) {
+					console.log('[DEBUG] COUNTDOWN ' + game.global.info);
+				}
+			break
+			//
 			case 'START_GAMEMATCH':
 				game.global.receivedMsg=msg.event;
 				if (game.global.DEBUG_MODE) {
@@ -77,12 +83,15 @@ function startUp(typeOfGame) {
 					game.global.player[i].bulletScore=msg.player[i].bulletScore;
 				}
 				game.global.bulletLength=msg.bulletLength;
-				for(var i=0; i<msg.bulletLength; i++) {
-					game.global.bullet[i]= new Object();
-					game.global.bullet[i].x=msg.bullet[i].posX;
-					game.global.bullet[i].y=msg.bullet[i].posY;
-					game.global.bullet[i].direction=msg.bullet[i].direction;
-				}
+					for(var i=0; i<msg.bulletLength; i++) {
+						if(msg.bullet[i]!=undefined){
+							game.global.bullet[i]= {
+								x: msg.bullet[i].posX,
+								y: msg.bullet[i].posY,
+								direction: msg.bullet[i].direction
+							}
+						}
+					}
 				if (game.global.DEBUG_MODE) {
 					if(game.global.typeOfGame==0){
 						console.log('[DEBUG] UPDATE_GAMEMATCH in LOCAL mode.');
@@ -93,8 +102,50 @@ function startUp(typeOfGame) {
 			break
 			case 'GAME_OVER':
 				game.global.receivedMsg=msg.event;
+				game.global.typeOfGame=msg.typeOfGame;
+				game.global.blackHolePosition=msg.blackHolePosition;
+				game.global.index=msg.index;
+				game.global.length=msg.length;
+				for(var i=0; i<msg.length; i++) {
+					game.global.player[i].nickname=msg.player[i].nickname;
+					game.global.player[i].x=msg.player[i].posX;
+					game.global.player[i].y=msg.player[i].posY;
+					game.global.player[i].colorId=msg.player[i].colorId;
+					game.global.player[i].direction=msg.player[i].direction;
+					game.global.player[i].isAlive=msg.player[i].isAlive;
+					game.global.player[i].jump=msg.player[i].isJumping;
+					game.global.player[i].ground=msg.player[i].isGrounded;game.global.player[i].score=msg.player[i].score;
+					game.global.player[i].bulletScore=msg.player[i].bulletScore;
+				}
+				game.global.bulletLength=msg.bulletLength;
+					for(var i=0; i<msg.bulletLength; i++) {
+						if(msg.bullet[i]!=undefined){
+							game.global.bullet[i]= {
+								x: msg.bullet[i].posX,
+								y: msg.bullet[i].posY,
+								direction: msg.bullet[i].direction
+							}
+						}
+					}
+					
+				console.log(game.global.player);
 				if (game.global.DEBUG_MODE) {
-					console.log('[DEBUG] GAME_OVER in LOCAL mode.');
+					if(game.global.typeOfGame==0){
+						console.log('[DEBUG] GAME_OVER in LOCAL mode.');
+					}else{
+						console.log('[DEBUG] GAME_OVER.');
+					}	
+				}
+			break
+			case 'FAIL':
+
+
+				if (game.global.DEBUG_MODE) {
+					if(game.global.typeOfGame==0){
+						console.log('[DEBUG] FAIL in LOCAL mode.');
+					}else{
+						console.log('[DEBUG] FAIL.');
+					}	
 				}
 			break
 			default :

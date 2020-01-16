@@ -16,12 +16,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class Gamematch{
 	private final Player CREATOR;
 	private final Level LEVEL;
-	private final double BLACKHOLE_SPEED= 0.1;
-	private final long TICK_DELAY= 1000/60;
+	private final double BLACKHOLE_SPEED= 0.2;
+	private final long TICK_DELAY= 1000/120;
 		
 	private LinkedList<Player> players= new LinkedList<Player>();
 	private ArrayList<Bullet> bullets= new ArrayList<Bullet>();
 	private double blackHolePosition;
+	private double maxHblackHole;
 	private int puntuaciones[] = new int[8];
 	private ObjectMapper mapper = new ObjectMapper();
 	private Thread tickThread;
@@ -29,6 +30,7 @@ public class Gamematch{
 	private int typeOfGame;
 	private int playersAlive;
 	private int maxPlayers;
+	private boolean running;
 	
 	public Gamematch(Player player){
 		this.CREATOR= player;
@@ -37,6 +39,7 @@ public class Gamematch{
 		this.typeOfGame=1;
 		this.playersAlive=2;
 		this.setMaxPlayers(2);
+		this.running=false;
 	}
 	
 	public Player getCreator() {
@@ -57,23 +60,80 @@ public class Gamematch{
 	
 	public void setPlayers(LinkedList<Player> players) {
 		this.players = players;
+		playersAlive=players.size();
 	}
 	
 	public void addPlayer(Player player){
 		players.add(player);
+		playersAlive=players.size();
 	}
 
 	public void stop() {
+		running=false;
 		if (scheduler != null) {
 			scheduler.shutdown();
 		}
 	}
 
+	//ESTO
+	public void waitingRoom() throws IOException {
+		ObjectNode msg= mapper.createObjectNode();
+		ArrayNode playerArrayNode= mapper.createArrayNode();
+		msg.put("event", "WAITING_ROOM");
+		for(int i= 0; i< players.size(); i++) {
+			ObjectNode player = mapper.createObjectNode();
+			player.put("nickname", players.get(i).getNickname());
+			playerArrayNode.addPOJO(player);
+		}
+		msg.putPOJO("player", playerArrayNode);
+		msg.put("length", players.size());
+		msg.put("maxPlayers", maxPlayers);
+		for(int i= 0; i< players.size(); i++) {
+			try {
+				players.get(i).WSSession().sendMessage(new TextMessage(msg.toString()));
+			} catch (IOException e) {}
+		}
+	}
+
+	public void countDown() throws IOException {
+		for(int i= 4; i> 0; i--) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {}
+			ObjectNode msg= mapper.createObjectNode();
+			ArrayNode playerArrayNode= mapper.createArrayNode();
+			msg.put("event", "COUNTDOWN");
+			for(int x= 0; x< players.size(); x++) {
+				ObjectNode player = mapper.createObjectNode();
+				player.put("nickname", players.get(x).getNickname());
+				playerArrayNode.addPOJO(player);
+			}
+			msg.putPOJO("player", playerArrayNode);
+			msg.put("length", players.size());		
+			msg.put("countdown", i);
+			if(typeOfGame==0) {
+				try {
+					CREATOR.WSSession().sendMessage(new TextMessage(msg.toString()));
+				} catch (IOException e) {}	
+			}else {
+				for(int r= 0; r< players.size(); r++) {
+					try {
+						players.get(r).WSSession().sendMessage(new TextMessage(msg.toString()));
+					} catch (IOException e) {}
+				}
+			}
+		}
+
+	}	
+	//
+	
 	private void tick() throws IOException {
 		ObjectNode msg= mapper.createObjectNode();
 		ArrayNode playerArrayNode= mapper.createArrayNode();
 				synchronized(players) {
-					blackHolePosition-=BLACKHOLE_SPEED;
+					if(blackHolePosition-BLACKHOLE_SPEED > maxHblackHole) {
+						blackHolePosition-=BLACKHOLE_SPEED;
+					}
 					updateScores();
 					for(int i= 0; i< players.size(); i++) {
 						ObjectNode player = mapper.createObjectNode();
@@ -86,7 +146,7 @@ public class Gamematch{
 						player.put("direction", players.get(i).getDirection());
 						player.put("isJumping", players.get(i).isJumping());
 						player.put("isGrounded", players.get(i).isGrounded());
-						if(players.get(i).isAlive() && players.get(i).getPosY()>=(8976+blackHolePosition)) {
+						if(players.get(i).isAlive() && players.get(i).getPosY()+32>=(8976+blackHolePosition)) {
 							players.get(i).setAlive(false);
 							players.get(i).stop();
 							playersAlive--;
@@ -136,10 +196,9 @@ public class Gamematch{
 							} catch (IOException e) {}
 						}
 					}
-
 				}
-		
 	}
+	
 	private int[] updateScores(){
 		for(int i = 0; i<players.size();i++) {
 			puntuaciones[i]=(int) Math.max(8647-players.get(i).getPosY(), puntuaciones[i]);
@@ -165,7 +224,8 @@ public class Gamematch{
 		return bulletArrayNode;
 	}
 	
-		public void start() {
+		public void start() throws IOException {
+			running=true;
 			tickThread = new Thread(() -> startGameLoop());
 			tickThread.start();
 			for(int i= 0; i< players.size(); i++) {
@@ -210,14 +270,19 @@ public class Gamematch{
 
 		public void setMaxPlayers(int maxPlayers) {
 			this.maxPlayers = maxPlayers;
+			this.maxHblackHole=-8976+((74-(maxPlayers*4))*96);
 		}
 		public void nullControl() {
 			
 			for(int i= 0; i< bullets.size(); i++) {	
 				if(bullets.get(i).getDirection()==null) {
 					bullets.get(i).setDirection("right");
-					System.out.println("dhffgffjfgjfgfghkghlkdhgkhgjkdvhjdgdd");
 				}
 			}
 		}
+
+		public boolean isRunning() {
+			return running;
+		}
+
 }

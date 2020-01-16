@@ -20,22 +20,23 @@ var MainScene = new Phaser.Class({
         this.load.audio('steps', 'assets/sfx/steps.mp3');
         this.load.audio('deepTab', 'assets/bgm/deepTab_By_SevenWordsMusic.mp3');
           
-        
-		// map made with Tiled in JSON format
-		this.load.tilemapTiledJSON('map', 'assets/map.json');  
-
-		// tiles in spritesheet 
-		this.load.spritesheet('tiles', 'assets/tiles/tt6.png', {frameWidth: 96, frameHeight: 96});
-
-		this.load.image('bulletSprite', 'assets/bullet.png');
+		
 		// load all assets tile sprites
 		this.load.image('bg-0', 'assets/bg-0.png');
 		this.load.image('bg-1', 'assets/bg-1.png');
 		this.load.image('bg-2', 'assets/bg-2.png');
 		this.load.image('bg-3', 'assets/bg-3.png');
 		this.load.image('bg-4', 'assets/separador.png');
-		this.load.image('bg-5', 'assets/bg-5.png');
-		this.load.image('quidi','assets/quidi.png');
+		
+
+		// map made with Tiled in JSON format
+		this.load.tilemapTiledJSON('map', 'assets/map.json');  
+
+		// tiles in spritesheet 
+		this.load.spritesheet('tiles', 'assets/tiles/00.png', {frameWidth: 96, frameHeight: 96});
+		this.load.image('bulletSprite', 'assets/bullet.png');
+		
+		
 		this.load.image('hud','assets/HUD.png');
 		this.load.image('iAzul','assets/iAzul.png');
 		this.load.image('iRosa','assets/iRosa.png');
@@ -52,6 +53,10 @@ var MainScene = new Phaser.Class({
 		this.load.image('menuButton_hover-1','assets/buttons/newGameHover.png');
 		this.load.image('menuButton_hover-2','assets/buttons/joinGameHover.png');
 		this.load.image('menuButton_hover-3','assets/buttons/controlsHover.png');
+
+		this.load.image('menuButton-4','assets/buttons/credits.png');
+		this.load.image('menuButton_hover-4','assets/buttons/creditsHover.png');
+		
 		this.load.image('incPasButton','assets/wrongPS.png');
 		
 		this.load.image('psts', 'assets/pressSpaceToSelect.png');
@@ -63,7 +68,17 @@ var MainScene = new Phaser.Class({
 		this.load.image('ServerOff', 'assets/ServerOff.png');
 		this.load.image('serverOffline', 'assets/serverOffline.png');
 		this.load.image('serverOnline', 'assets/serverOnline.png');
-	   	 		
+		this.load.image('loadBackground', 'assets/waiting.png');
+		this.load.image('newBackground', 'assets/chooseYourRoom.png');
+		this.load.image('creditos', 'assets/creditos.png');
+		
+		//LoadAssets
+		this.load.image('playerJoin1', 'assets/playerJoin1.png');
+		this.load.image('playerJoin2', 'assets/playerJoin2.png');
+		this.load.image('playerJoin3', 'assets/playerJoin3.png');
+		this.load.image('playerJoin4', 'assets/playerJoin4.png');
+		//this.load.bitmapFont('myfont', 'assets/font.png', 'assets/font.fnt');
+	   	 
 		// player animations
 			for(var c=0; c<4; c++){
 					this.load.atlas('playerSprite-'+c, 'assets/playerSprite-'+c+'.png', 'assets/player.json');
@@ -98,12 +113,14 @@ var MainScene = new Phaser.Class({
 		var password=document.getElementById("password");
 		nickname.style.display= "block";
 		password.style.display= "block";
+		
+		var waitingLog=10;
     },
     
     update: function (time, delta) {
     	apiRestRoutine();
     	waitingLog++;
-    	if((btnSurfer.space.isDown || btnSurfer.enter.isDown ) && waitingLog>14){
+    	if((btnSurfer.space.isDown || btnSurfer.enter.isDown ) && waitingLog>10){
     		waitingLog=0;
     		if(nickname.value.length>0 && password.value.length>0){
     	        var item = {
@@ -116,6 +133,10 @@ var MainScene = new Phaser.Class({
     		}
     	}
 		if(success){
+	    	
+	    	deepTab= this.sound.add('deepTab');
+	    	this.sound.play('deepTab', {volume: 0.25, loop: true});
+	    	
     		nickname.style.display= "none";
     		password.style.display= "none";
     		this.sound.play('button');
@@ -154,7 +175,7 @@ var config = {
 	    physics: {
 	        default: 'arcade'
 	    },
-	    scene: [MainScene, MenuScene, NewScene, JoinScene, LoadScene, GameScene, RankingScene, InProgress, ControlsScene, DownScene],
+	    scene: [MainScene, MenuScene, NewScene, JoinScene, LoadScene, GameScene, RankingScene, InProgress, ControlsScene,CreditsScene, DownScene],
 	    roundPixels: true
 };
 
@@ -176,12 +197,13 @@ game.global = {
 	temp: 170,
 	tempaux: 0,
 	teamScore:[0,0],
+	nJugadoresSala: 2,
 	player : [{
 		x : 0,
 		y : 0,
 		colorId : 0,
 		direction : "idle",
-		isAlive: true,
+		isAlive: false,
 		jump: false,
 		ground: false,
 		nickname: "",
@@ -192,7 +214,7 @@ game.global = {
 		y : 0,
 		colorId : 0,
 		direction : "idle",
-		isAlive: true,
+		isAlive: false,
 		jump: false,
 		ground: false,
 		nickname: "",
@@ -203,7 +225,7 @@ game.global = {
 		y : 0,
 		colorId : 0,
 		direction : "idle",
-		isAlive: true,
+		isAlive: false,
 		jump: false,
 		ground: false,
 		nickname: "",
@@ -214,7 +236,7 @@ game.global = {
 		y : 0,
 		colorId : 0,
 		direction : "idle",
-		isAlive: true,
+		isAlive: false,
 		jump: false,
 		ground: false,
 		nickname: "",
@@ -225,7 +247,7 @@ game.global = {
 		y : 0,
 		colorId : 0,
 		direction : "idle",
-		isAlive: true,
+		isAlive: false,
 		jump: false,
 		ground: false,
 		nickname: "",
@@ -236,7 +258,7 @@ game.global = {
 		y : 0,
 		colorId : 0,
 		direction : "idle",
-		isAlive: true,
+		isAlive: false,
 		jump: false,
 		ground: false,
 		nickname: "",
@@ -247,7 +269,7 @@ game.global = {
 		y : 0,
 		colorId : 0,
 		direction : "idle",
-		isAlive: true,
+		isAlive: false,
 		jump: false,
 		ground: false,
 		nickname: "",
@@ -258,7 +280,7 @@ game.global = {
 		y : 0,
 		colorId : 0,
 		direction : "idle",
-		isAlive: true,
+		isAlive: false,
 		jump: false,
 		ground: false,
 		nickname: "",

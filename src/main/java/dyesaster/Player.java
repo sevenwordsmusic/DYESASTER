@@ -21,7 +21,7 @@ public class Player {
 	private int bulletScore;
 	private long updateJumpPosition;
 	private boolean onGround;
-	private int gameId= 999999;
+	private int gameId;
 	private String direction;
 	private String lastDirection;
 	private int pushed;
@@ -29,16 +29,16 @@ public class Player {
 	
 	private final long UPDATE_DELAY= 1000/60;
 	private final long UPDATE_LATENCY= 200;
-	private final long SHOOT_LATENCY= 125;
+	private final long SHOOT_LATENCY= 250;
 	private final long PUSH_LAPSE= 500;
 	private long updatePlayerColor;
 	private long updateShoot;
 	private final int WALK_SPEED= 10;
-	private final long JUMP_LAPSE= 800;
-	private final int JUMP_SPEED= 14;
-		
-	private final int MAX_GRAVITY_SPEED= 12;
-	private final double CONST_GRAVITY_ACC= 0.04;
+	private final long JUMP_LAPSE= 1500;
+	private final int JUMP_SPEED= 12;
+	private final int MAX_GRAVITY_SPEED= 16;
+	private final int EFECTO_DEL_DISPARO_CUANDO_SALTAS=8;
+	private final double CONST_GRAVITY_ACC= 0.02;
 	private int colorId;
 	private Thread tickThread;
 	private ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -55,7 +55,6 @@ public class Player {
 		this.session= session;
 		this.isAlive= true;
 		this.jump= false;
-		this.posX= 2880;
 		this.posY= 8618;
 		this.score = 0;
 		this.bulletScore=0;
@@ -139,9 +138,11 @@ public class Player {
 				}
 			}
 		}else {
-			posX+=WALK_SPEED*(pushed*angularTime*MAX_GRAVITY_SPEED);
-			if(lastPushed<System.currentTimeMillis()) {
-				lastPushed=System.currentTimeMillis() + PUSH_LAPSE;
+			if(posX>WALK_SPEED*5 && posX<stateMap.length*96-WALK_SPEED*5) {
+				posX+=WALK_SPEED*(pushed*angularTime*EFECTO_DEL_DISPARO_CUANDO_SALTAS);
+			}
+			if(lastPushed<System.currentTimeMillis() && pushed!=0) {
+				lastPushed=System.currentTimeMillis() + SHOOT_LATENCY;
 				if(pushed<0) {
 					pushed+=1;
 				}else {
@@ -152,6 +153,19 @@ public class Player {
 	}
 	
 	public void start(Level level) {
+		this.isAlive= true;
+		this.jump= false;
+		this.posX= (2880+(this.index*384))+(int)(Math.random()*129+1);
+		this.posY= 8618;
+		this.score = 0;
+		this.bulletScore=0;
+		this.onGround= true;
+		this.direction= "idle";
+		this.lastDirection= "right";
+		this.colorId=0;
+		this.updatePlayerColor= System.currentTimeMillis();
+		this.angularTime=0.1;
+		this.pushed=0;
 		this.level=level;
 		tickThread = new Thread(() -> startPhysicsLoop());
 		tickThread.start();
@@ -173,17 +187,9 @@ public class Player {
 
 	public void stop() {
 		if (scheduler != null) {
+			this.isAlive= false;
 			schedulerMovement.shutdown();
-			scheduler.shutdown();
-			this.isAlive= true;
-			this.jump= false;
-			this.posX= 2880;
-			this.posY= 8618;
-			this.onGround= true;
-			this.direction= "idle";
-			this.colorId=0;
-			this.updatePlayerColor= System.currentTimeMillis();
-			this.angularTime=0.1;
+			scheduler.shutdown();			
 		}
 	}
 	
@@ -272,7 +278,6 @@ public class Player {
 
 	public void setIndex(int index) {
 		this.index = index;
-		this.posX= this.posX+(this.index*384);
 	}
 
 	public void changeColor() {

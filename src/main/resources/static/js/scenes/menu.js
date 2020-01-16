@@ -13,9 +13,6 @@ var MenuScene = new Phaser.Class({
     create: function ()
     {   
     	
-    	//deepTab= this.sound.add('deepTab');
-    	//this.sound.play('deepTab', {volume: 0.25});
-    	
 		this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, "background");
 		this.background.setOrigin(0, 0);
 		this.background.setScrollFactor(0);
@@ -24,12 +21,12 @@ var MenuScene = new Phaser.Class({
     	serverOff= this.add.image(0, 0, "serverOffline");
     	serverOff.setVisible(false);
     		
-		for(var i=0; i< 4; i++){
-			button[i] = this.add.image(game.config.width/2, game.config.height/2 + (128*i), "menuButton-" + i);
+		for(var i=0; i< 5; i++){
+			button[i] = this.add.image(game.config.width/2, game.config.height/2 + (100*i), "menuButton-" + i);
 		}
 		button[0].setVisible(false);
-		for(var i=0; i< 4; i++){
-			button_hover[i] = this.add.image(game.config.width/2, game.config.height/2 + (128*i), "menuButton_hover-" + i);
+		for(var i=0; i< 5; i++){
+			button_hover[i] = this.add.image(game.config.width/2, game.config.height/2 + (100*i), "menuButton_hover-" + i);
 			button_hover[i].setVisible(false);
 		}
 		button_hover[0].setVisible(true);
@@ -72,20 +69,32 @@ var MenuScene = new Phaser.Class({
     				console.log('[DEBUG] Switching to controlsScene.');
     			}
     		}else if(btnIndex==2){
-    			startUp(2);
-    			/*
     			this.scene.start('joinScene');
     			if (game.global.DEBUG_MODE) {
     				console.log('[DEBUG] Switching to joinScene.');
     			}
-    			*/
+    		}else if(btnIndex==4){
+    			this.scene.start('creditsScene');
+    			if (game.global.DEBUG_MODE) {
+    				console.log('[DEBUG] Switching to creditsScene.');
+    			}
     		}else if(btnIndex==1){
     			this.scene.start('newScene');
     			if (game.global.DEBUG_MODE) {
     				console.log('[DEBUG] Switching to newScene.');
     			}
     		}else {
-    			startUp(0);
+    				game.global.typeOfGame=0;
+    				let msg = new Object();
+    				msg.event = 'NEW_LOCAL_GAMEMATCH';
+
+    				msg.typeOfGame = game.global.typeOfGame;
+    				game.global.socket.send(JSON.stringify(msg));
+    				
+    				if (game.global.DEBUG_MODE) {
+    					console.log('[DEBUG] ' + msg.event + '  waiting for response...');
+    				}
+    				
     		}
     	}
     	if(game.global.receivedMsg=='NEW_LEVEL_RETURN'){

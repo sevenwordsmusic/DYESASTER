@@ -28,6 +28,7 @@ var JoinScene = new Phaser.Class({
     	serverOn= this.add.image(0, 0, "serverOnline");
     	serverOff= this.add.image(0, 0, "serverOffline");
     	serverOff.setVisible(false);
+    	
 	},
     
     update: function (time, delta) {
@@ -49,6 +50,8 @@ var JoinScene = new Phaser.Class({
 				console.log('[DEBUG] Switching to Main.'); 
 			}
     	}
+    	
+    	
     	//FIN CAMBIOS
     	
 		var userTable= "<table>";
@@ -62,6 +65,15 @@ var JoinScene = new Phaser.Class({
     	}
     	userTable+="</table>";
     	userList.innerHTML= userTable;
+    	
+    	if(game.global.receivedMsg=='NEW_LEVEL_RETURN'){
+			this.cache.tilemap.entries.entries.map.data.layers[0].data = game.global.info.split(',');
+			this.scene.start('loadScene');
+			if (game.global.DEBUG_MODE) {
+				console.log('[DEBUG] Switching to LoadScene.');
+			}
+    	} 
+    	
     }
 
 });

@@ -24,19 +24,30 @@ public class Level {
 	
 		
 		
-	public String randomize() {
-		int platformRange=8, platformLevel=0;
-		for(int y=0; y < yLength; y++) {
-				if(y < 91 ) {
+	public String randomize(int nPlayers) {
+		int platformRange=32, platformLevel=0, initPR=64-(nPlayers*4);
+		boolean putFinal= true;
+			for(int y=0; y < yLength; y++) {
+				if(y < initPR) {
+					tileMapString+= fullSpace(0);
+				}else if(y < 91 ) {
 					if((y+2)%3 == 0) {
 						if(platformLevel < 3) {
-							tileMapString+= generatePlatforms(platformRange);
-							platformLevel++;
+							if(putFinal) {
+								tileMapString+= finalPlatform();
+								tileMapString+= fullSpace(0)+fullSpace(0)+fullSpace(0);
+								y+=6;
+								platformLevel++;
+								putFinal=false;
+							}else {
+								tileMapString+= generatePlatforms(platformRange);
+								platformLevel++;
+							}
+
 						}else {
 							tileMapString+= generatePlatforms(platformRange);
 							platformLevel=0;
-							platformRange+=8;
-							
+							platformRange+=8;	
 						}						
 					} else {
 						tileMapString+= fullSpace(0);
@@ -46,6 +57,7 @@ public class Level {
 				}
 				
 		}
+		
 		String[] parts = tileMapString.split(",");
 		int counter=0,aux=0;
 		for(int y=0; y < yLength; y++) {
@@ -60,7 +72,7 @@ public class Level {
 					aux=3;
 				}else if(aux>45 && aux<51) {
 					aux=4;
-				}else if((aux>60 && aux<66) || aux==15) {
+				}else if((aux>60 && aux<66) || (aux>126 && aux<132) || aux==15) {
 					aux=5;
 				}
 				stateMap[x][y]=aux;
@@ -71,6 +83,43 @@ public class Level {
 		return tileMapString;
 	}
 
+	
+	private String finalPlatform() {
+		String finalLine="";
+		for(int i=0; i<28; i++) {
+			finalLine+= "0,";
+		}
+		finalLine+= "0,0,83,84,85,0,0,";
+		for(int i=0; i<29; i++) {
+			finalLine+= "0,";
+		}
+		
+		for(int i=0; i<28; i++) {
+			finalLine+= "0,";
+		}
+		finalLine+= "0,0,98,99,100,0,0,";
+		for(int i=0; i<29; i++) {
+			finalLine+= "0,";
+		}
+		
+		for(int i=0; i<28; i++) {
+			finalLine+= "0,";
+		}
+		finalLine+= "0,0,113,114,115,0,0,";
+		for(int i=0; i<29; i++) {
+			finalLine+= "0,";
+		}
+		
+		for(int i=0; i<18; i++) {
+			finalLine+= "0,";
+		}
+		finalLine+= "127,128,129,130,131,0,0,0,0,127,128,129,129,129,129,129,130,131,0,0,0,0,127,128,129,130,131,";
+		for(int i=0; i<19; i++) {
+			finalLine+= "0,";
+		}
+		return finalLine;		
+	}
+	
 	private String generatePlatforms(int range) {
 		String spaceLine="";
 		int x= 0, rndMargin, reservedSpace= xLength-range, padding= (int)Math.floor(Math.random() * reservedSpace), largura=0;

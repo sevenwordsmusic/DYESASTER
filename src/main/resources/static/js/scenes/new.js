@@ -11,41 +11,39 @@ var NewScene = new Phaser.Class({
 
     create: function ()
     {
+
+    	this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, "newBackground");
+		this.background.setOrigin(0, 0);
+		this.background.setScrollFactor(0);
+		
     	game.global.typeOfGame=1;
-    	
-    	nPlayers=1;	//De 1 a 4 (es decir, por equipo)
-    	btnIndex=4;	//4 será el índice del botón CREATE, así que luego esto se inicializará a 0 (5 botones, índice 0 a 3 para los de escoger nPlayers y el 4 para el CREATE)
-    	btnSurfer = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'left': Phaser.Input.Keyboard.KeyCodes.LEFT, 'right': Phaser.Input.Keyboard.KeyCodes.RIGHT, 'down':Phaser.Input.Keyboard.KeyCodes.DOWN, 'space':Phaser.Input.Keyboard.KeyCodes.SPACE});
-    	waiting= 10;
-    	
-    	/*
-    	 * 
-    	 * LO NECESARIO PARA IMPRIMIR SELECCIONAR 1, 2 ,3 o 4
-    	 * Y UN BOTON DE
-    	 * 
-    	 */
+    	nPlayers=3;
+    	done=false;
+    	btnSurfer = this.input.keyboard.addKeys({ 'two': Phaser.Input.Keyboard.KeyCodes.TWO,'three': Phaser.Input.Keyboard.KeyCodes.THREE,'four': Phaser.Input.Keyboard.KeyCodes.FOUR, 'space':Phaser.Input.Keyboard.KeyCodes.SPACE});
+    	waiting= 10;    	
     },
     
     update: function ()
     {
     	waiting++;
-    	/*
-    	 * 
-    	 * LO NECESARIO PARA ESCOGER 1, 2, 3 o 4
-    	 * 
-    	 */
-    	
-    	if(btnIndex==4 && btnSurfer.space.isDown && waiting>10){
-    		let msg = new Object();
-    		msg.event = 'NEW_GAMEMATCH';
-    		msg.typeOfGame = game.global.typeOfGame;
-    		msg.nPlayers = nPlayers;
-        	game.global.socket.send(JSON.stringify(msg));
-        	
-        	if (game.global.DEBUG_MODE) {
-        		console.log('[DEBUG] ' + msg.event + '  waiting for response...');
-        	}
+
+    	if(btnSurfer.two.isDown && waiting>10 && !done){
+    		game.global.nJugadoresSala=2;
+        	done=newGamematch(2);
+    	}else if(btnSurfer.three.isDown && waiting>10 && !done){
+    		game.global.nJugadoresSala=3;
+    		done=newGamematch(3);
+    	}else if(btnSurfer.four.isDown && waiting>10 && !done){
+    		game.global.nJugadoresSala=4;
+    		done=newGamematch(4);
+    	}else if(btnSurfer.space.isDown && waiting>10 && !done){
+    		done=true;
+    		this.scene.start('menuScene');
+    		if (game.global.DEBUG_MODE) {
+				console.log('[DEBUG] Switching to Main.'); 
+			}
     	}
+
     	if(game.global.receivedMsg=='NEW_LEVEL_RETURN'){
 			this.cache.tilemap.entries.entries.map.data.layers[0].data = game.global.info.split(',');
 			this.scene.start('loadScene');
@@ -57,3 +55,16 @@ var NewScene = new Phaser.Class({
     }
 
 });
+
+function newGamematch(n){
+	let msg = new Object();
+	msg.event = 'NEW_GAMEMATCH';
+	msg.typeOfGame = game.global.typeOfGame;
+	msg.nPlayers = n;
+	game.global.socket.send(JSON.stringify(msg));
+	
+	if (game.global.DEBUG_MODE) {
+		console.log('[DEBUG] ' + msg.event + '  waiting for response...');
+	}
+	return true;
+}
