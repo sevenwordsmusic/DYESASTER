@@ -116,6 +116,9 @@ var MainScene = new Phaser.Class({
 		password.style.display= "block";
 		
 		var waitingLog=10;
+		
+		//game.global.ipServer=prompt("Introducir IP del servidor: ", ip);
+		
     },
     
     update: function (time, delta) {

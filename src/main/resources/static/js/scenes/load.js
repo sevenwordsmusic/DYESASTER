@@ -23,6 +23,7 @@ var LoadScene = new Phaser.Class({
     
     update: function ()
     {
+    	console.log(game.global.event);
     	if(game.global.typeOfGame==0){game.global.player[0].nickname = "LeftP"; game.global.player[1].nickname = "RightP";}
     	if(game.global.receivedMsg=='LOAD_GAMEMATCH' && !onCountDown){
         	let msg = new Object();
@@ -32,6 +33,7 @@ var LoadScene = new Phaser.Class({
     	}else if(game.global.receivedMsg=='WAITING_ROOM' && !onCountDown){
     		console.log("TOTAL JUGADORES: " + game.global.info);
     		console.log("CONECTADOS: " + game.global.length);
+    		console.log("LAST EVENT: "+game.global.event);
     		for(var i=0; i<game.global.length; i++){
     			this.add.image( 370 + i * 370, game.config.height/2 , "playerJoin" + (i+1)).setOrigin(0.5, 0.5);
     			this.add.text(320 + i * 370, game.config.height/2 + 180, game.global.player[i].nickname, { fontFamily: '"Impact"', fontSize: "40px", color: "#00ffff"  }).setOrigin(0.5, 0.5);

@@ -22,16 +22,15 @@ var MenuScene = new Phaser.Class({
     	serverOff.setVisible(false);
     		
 		for(var i=0; i< 5; i++){
-			button[i] = this.add.image(game.config.width/2, game.config.height/2 + (100*i), "menuButton-" + i);
+			button[i] = this.add.image(game.config.width/2, game.config.height/2 -110  + (100*i), "menuButton-" + i);
 		}
 		button[0].setVisible(false);
 		for(var i=0; i< 5; i++){
-			button_hover[i] = this.add.image(game.config.width/2, game.config.height/2 + (100*i), "menuButton_hover-" + i);
+			button_hover[i] = this.add.image(game.config.width/2, game.config.height/2 -110 + (100*i), "menuButton_hover-" + i);
 			button_hover[i].setVisible(false);
 		}
 		button_hover[0].setVisible(true);
 		btnSurfer = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'down':Phaser.Input.Keyboard.KeyCodes.DOWN, 'space':Phaser.Input.Keyboard.KeyCodes.SPACE, 'enter':Phaser.Input.Keyboard.KeyCodes.ENTER});
-		console.log("Hola 1 vez");
 		game.global.event="";
     },
     
