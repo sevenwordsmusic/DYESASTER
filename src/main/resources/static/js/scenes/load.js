@@ -14,11 +14,16 @@ var LoadScene = new Phaser.Class({
     	this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, "loadBackground");
 		this.background.setOrigin(0, 0);
 		this.background.setScrollFactor(0);
-		
     	let msg = new Object();
     	msg.event = 'LOAD_GAMEMATCH';
     	game.global.socket.send(JSON.stringify(msg));
     	onCountDown=false;
+    	for(var i=0; i<4; i++){
+			names[i] = this.add.text(320 + i * 370 , game.config.height/2 + 180, "", { fontFamily: '"Impact"', fontSize: "40px", color: "#00ffff"  }).setOrigin(0.5, 0.5);
+			img[i] = this.add.image( 370 + i * 370, game.config.height/2 , "playerJoin" + (i+1)).setOrigin(0.5, 0.5);
+			img[i].setVisible(false);
+    	}
+    	
     },
     
     update: function ()
@@ -34,11 +39,16 @@ var LoadScene = new Phaser.Class({
     		console.log("TOTAL JUGADORES: " + game.global.info);
     		console.log("CONECTADOS: " + game.global.length);
     		console.log("LAST EVENT: "+game.global.event);
+
     		for(var i=0; i<game.global.length; i++){
-    			this.add.image( 370 + i * 370, game.config.height/2 , "playerJoin" + (i+1)).setOrigin(0.5, 0.5);
-    			this.add.text(320 + i * 370, game.config.height/2 + 180, game.global.player[i].nickname, { fontFamily: '"Impact"', fontSize: "40px", color: "#00ffff"  }).setOrigin(0.5, 0.5);
     			
-    			console.log("NICKNAMES: " + game.global.player[i].nickname);
+    			img[i].setVisible(true);
+    			names[i].setText(game.global.player[i].nickname);
+    		}
+    		
+    		for(var j = game.global.length; j<game.global.info; j++){
+    			names[j].setText("");
+    			img[i].setVisible(false);
     		}
     		//ESTO ES LA ESPERA
     		
@@ -68,3 +78,6 @@ var LoadScene = new Phaser.Class({
     }
 
 });
+var names = [];
+var img = [];
+var n = 0;

@@ -1,0 +1,13 @@
+## **7. Instrucciones de ejecución**
+> Descargar el zip del github con la tag fase4 y descomprimirlo
+>
+>Enlace a github:
+> <https://github.com/SevenWordsMusic/juegosEnRedURJC2019GrupoB/tree/fase4>
+>
+>Abrir el escritorio de desarrollo para utilizar Spring Tool Suite
+>
+>Abrir la carpeta del proyecto, ir a ipConfig e introducir la dirección deseada para ser el host del juego (en este caso la del propio ordenador), tras ello, hay que esperar hasta que aparezca Dyesaster en el Boot Dashboard
+>
+>Darle al play e iniciar el servidor
+>
+>Abrir Firefox o Google e introducir la dirección ip anterior con puerto 8080 para iniciar el juego

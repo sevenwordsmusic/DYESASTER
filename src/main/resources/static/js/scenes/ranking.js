@@ -18,6 +18,8 @@ var RankingScene = new Phaser.Class({
     {
     	btnSurfer1 = this.input.keyboard.addKeys({ 'up': Phaser.Input.Keyboard.KeyCodes.UP, 'left': Phaser.Input.Keyboard.KeyCodes.LEFT, 'right': Phaser.Input.Keyboard.KeyCodes.RIGHT, 'down':Phaser.Input.Keyboard.KeyCodes.DOWN, 'space':Phaser.Input.Keyboard.KeyCodes.SPACE});
 
+    	if(game.global.typeOfGame == 0){game.global.nJugadoresSala = 2}
+    	
     	this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, "endScreenBackground");
 		this.background.setOrigin(0, 0);
 		

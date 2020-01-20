@@ -412,7 +412,7 @@ var GameScene = new Phaser.Class({
 
 			
 			
-		if(game.global.receivedMsg=='GAME_OVER'){
+		if(game.global.receivedMsg=='GAME_OVER' || !game.global.player[game.global.index].isAlive){
 			this.scene.start('rankingScene');
 			if (game.global.DEBUG_MODE) {
 				console.log('[DEBUG] Switching to ranking.');

@@ -213,7 +213,7 @@ public class Gamematch{
 	
 	private int[] updateScores(){
 		for(int i = 0; i<players.size();i++) {
-			puntuaciones[i]=(int) Math.max(8647-players.get(i).getPosY(), puntuaciones[i]);
+			puntuaciones[i]=(int) Math.max(8676-players.get(i).getPosY(), puntuaciones[i]);
 		}
 		return puntuaciones;
 	}
