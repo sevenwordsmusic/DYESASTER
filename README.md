@@ -1,11 +1,13 @@
 # Dyesaster
 -----
+## Vídeo de Youtube
+>(https://www.youtube.com/watch?v=WZ9HVHNQlCU)
 ## 1. Información general
 >
 > ### **1.1 Resumen y caracteristicas generales**
->En Dyesaster tomamos el control de un trabajador de una gran estación espacial. Debido a un fallo en el sistema hemos generado un agujero negro que está expandiéndose y absorbiendo todo desde abajo, mientras al mismo tiempo expulsa objetos. Sólo hay sitio para un equipo en la cápsula de escape de emergencia situada arriba así que nuestro objetivo será ser el primero.
+>En Dyesaster tomamos el control de un trabajador de una gran estación espacial. Debido a un fallo en el sistema hemos generado un agujero negro que está expandiéndose y absorbiendo todo desde abajo, mientras al mismo tiempo expulsa objetos. Sólo hay sitio para un jugador en la cápsula de escape de emergencia situada arriba así que nuestro objetivo será ser el primero.
 >> + **Competitividad**: el principal objetivo del juego es superar al resto de jugadores en alcanzar la cima, no sólo mediante la rapidez sino también obstaculizando el camino de los demás.
->> + **Estrategia:** los colores toman un papel esencial en la mecánica de juego.  Dependiendo del color del personaje seremos capaces de interactuar con distintas plataformas y objetos y será el deber del jugador saber cómo elegirlos..
+>> + **Estrategia:** los colores toman un papel esencial en la mecánica de juego.  Dependiendo del color del personaje seremos capaces de interactuar con distintas plataformas y será el deber del jugador saber cómo elegirlos.
 >> + **Rapidez:** pese a todas las posibilidades de acción que tiene cada jugador durante el juego para dificultar el camino al resto, al final lo más importante es ser el primero, lo cual sólo se podrá conseguir con reflejos y movimientos rápidos.
 >
 > ### **1.2 Género**
@@ -34,20 +36,18 @@
 >
 >Poco a poco el agujero está absorbiendo toda la energía de la nave y sus elementos, expandiéndose en todas las direcciones y no sólo eso sino que también expulsa objetos extraños. 
 >
-> En la cima de la estación espacial hay una única cápsula de emergencia que se pueda usar para escapar pues el resto se situaba en una zona que ya ha sido absorbida. Cada equipo intentará como pueda llegar a esa cápsula y luchar por su vida.
+> En la cima de la estación espacial hay una única cápsula de emergencia que se pueda usar para escapar pues el resto se situaba en una zona que ya ha sido absorbida. Cada jugador intentará como pueda llegar a esa cápsula y luchar por su vida.
 -----
 ## **4. Gameplay**
-> ### **4.1. Gameflow**
+> ### **4.1. Diagrama de clases**
 >
-> ![alt text](/Imagenes/p1.JPG)
->
-> ![alt text](/Imagenes/p2.JPG)
+> ![alt text](/src/main/resources/static/assets/DiagramaDeClases.jpeg)
 >
 > ### **4.2. Modos de juego**
-> Serán partidas a dos bandos, 1vs1, 2vs2, 3vs3 o 4vs4. Existirá un modo multijugador local y uno online, en el local todos los jugadores ven la misma pantalla y sólo se permite el 1vs1, mientras
+> Serán partidas todos contra todos de 2, 3 o 4 jugadores. Existirá un modo multijugador local y uno online, en el local todos los jugadores ven la misma pantalla y sólo se permite el 1vs1, mientras que en el multijugador cada uno ve su propio personaje.
 >
 > ### **4.3. Objetivos y condiciones de victoria**
-> El objetivo es llegar a la plataforma final antes que el contrario, utilizando las armas para entorpecerle e intentar tirarle. Una vez alcanzada la meta, la partida acaba.
+> El objetivo es conseguir el mayor número de puntos, ya sea llegando más alto o disparando al mayor número de jugadores. Una vez solo queda un jugador vivo, la partida acaba.
 >
 > ### **4.4. Mecánicas de juego**
 > **Características principales:**
@@ -77,6 +77,12 @@
 >
 > ## **5.3. Sonido**
 > Los sonidos para botones, menús e interacciones serán de reminiscencia Vaporwave, es decir, generados con sintetizadores, basados en aparatos retro o bien en efectos sonoros de computadores PC o Mac de los 80. Para los efectos sonoros de disparos, saltos y similar el tono será entre realista y cartoon. La banda sonora musical será de género vaporwave.
+
+>## **5.4. Protocolo de websockets**
+>El protocolo asíncrono de comunicación mediante websockets empleado centraliza toda la información, la lógica y físicas del juego en el servidor, siendo todos los usuarios clientes.
+>Los clientes se comunican con el servidor mediante mensajes pero no guardan información alguna en el mismo; funcionan como meros mandos de juego enviando únicamente las entradas de controles por teclado.
+>El servidor realiza todos los cálculos necesarios empleando hilos para aligerar los tiempos de proceso (un hilo por partida, para las físicas de cada jugador un hilo independiente, para las balas diferentes hilos etc...) cuya concurrencia se resuelve en la mayoría de los casos mediante sincronismos sobre las propias clases, o bien con estructuras de datos específicas y sus respectivos métodos concurrentes para garantizar la integridad del funcionamiento del sistema.
+>Los clientes reciben mensajes que actualizan variables globales en Phaser activando los distintos cambios en el juego; desde pasar de una escena a otra hasta los movimientos de cada jugador o el nivel generado aleatoriamente adaptado al número de jugadores. De este modo recae en Phaser exclusivamente el peso gráfico del juego, evitando así la posibilidad de que los usuarios efectúen cambios anómalos en el funcionamiento del videojuego
 -----
 ## Integrantes del equipo
 > **Pablo López Pérez-Esparza:**
